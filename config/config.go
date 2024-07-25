@@ -1,7 +1,9 @@
 package config
 
 import (
+	t_rep "eco_points/internal/features/trashes/repository"
 	u_rep "eco_points/internal/features/users/repository"
+	d_rep "eco_points/internal/features/waste_deposits/repository"
 	"fmt"
 	"os"
 
@@ -47,13 +49,13 @@ func ConnectDB() (*gorm.DB, error) {
 	var connStr = fmt.Sprintf("host=%s user=%s password=%s port=%s dbname=%s", s.Host, s.User, s.Password, s.Port, s.DBName)
 	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix: "eco_points.",
+			TablePrefix: "eco_points_dev.",
 		},
 	})
 	if err != nil {
 		return nil, err
 	}
-	err = db.AutoMigrate(&u_rep.User{})
+	err = db.AutoMigrate(&u_rep.User{}, &t_rep.Trash{}, &d_rep.WasteDeposit{})
 	if err != nil {
 		return nil, err
 	}
