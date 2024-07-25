@@ -2,6 +2,7 @@ package routes
 
 import (
 	"eco_points/config"
+	"eco_points/internal/features/locations"
 	"eco_points/internal/features/trashes"
 	users "eco_points/internal/features/users"
 	deposits "eco_points/internal/features/waste_deposits"
@@ -11,13 +12,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerInterface, dh deposits.HandlerInterface) {
+func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerInterface, dh deposits.HandlerInterface, l locations.HandlerInterface) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
 
 	UsersRoute(e, uh)
 	TrashRoute(e, th, dh)
+	LocRoute(e, l)
 }
 
 func UsersRoute(e *echo.Echo, uh users.Handler) {
@@ -37,9 +39,16 @@ func TrashRoute(e *echo.Echo, th trashes.HandlerInterface, dh deposits.HandlerIn
 	d := e.Group("/deposit")
 	d.Use(JWTConfig())
 	d.POST("", dh.DepositTrash())
+	d.GET("", dh.GetUserDeposit())
 
 }
 
+func LocRoute(e *echo.Echo, l locations.HandlerInterface) {
+	t := e.Group("/location")
+	t.Use(JWTConfig())
+	t.POST("", l.AddLocation())
+
+}
 func JWTConfig() echo.MiddlewareFunc {
 	return echojwt.WithConfig(
 		echojwt.Config{

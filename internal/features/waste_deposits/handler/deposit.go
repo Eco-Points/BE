@@ -16,7 +16,7 @@ type depositHandler struct {
 	mdl utils.JwtUtilityInterface
 }
 
-func NewDepositService(h deposits.ServiceInterface, m utils.JwtUtilityInterface) deposits.HandlerInterface {
+func NewDepositHandler(h deposits.ServiceInterface, m utils.JwtUtilityInterface) deposits.HandlerInterface {
 	return &depositHandler{
 		srv: h,
 		mdl: m,
@@ -41,5 +41,22 @@ func (h *depositHandler) DepositTrash() echo.HandlerFunc {
 		}
 
 		return helpers.EasyHelper(c, http.StatusCreated, "succes", "waste deposit was successfully created", nil)
+	}
+}
+func (h *depositHandler) GetUserDeposit() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID := h.mdl.DecodToken(c.Get("user").(*jwt.Token))
+		if userID < 1 {
+			log.Println("error from Bind")
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautorized", "bad request/invalid jwt", nil)
+		}
+		result, err := h.srv.GetUserDeposit(uint(userID))
+		if err != nil {
+			log.Println("error get data", err)
+			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
+		}
+
+		return helpers.EasyHelper(c, http.StatusCreated, "succes", "waste deposit was successfully created", toListWasteDepositResponse(result))
+
 	}
 }

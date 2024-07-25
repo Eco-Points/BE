@@ -15,6 +15,10 @@ import (
 	d_rep "eco_points/internal/features/waste_deposits/repository"
 	d_srv "eco_points/internal/features/waste_deposits/service"
 
+	l_hnd "eco_points/internal/features/locations/handler"
+	l_rep "eco_points/internal/features/locations/repository"
+	l_srv "eco_points/internal/features/locations/service"
+
 	"eco_points/internal/routes"
 	"eco_points/internal/utils"
 
@@ -36,13 +40,19 @@ func InitFactory(e *echo.Echo) {
 	tu := t_srv.NewTrashService(tq)
 	th := t_hnd.NewTrashHandler(tu, jwt)
 
-	dq := d_rep.NewTrashQuery(db)
+	dq := d_rep.NewDepoQuery(db)
+	dq.SetDbSchema(config.ImportSetting().Schema)
+
 	du := d_srv.NewDepositsService(dq)
-	dh := d_hnd.NewDepositService(du, jwt)
+	dh := d_hnd.NewDepositHandler(du, jwt)
+
+	lq := l_rep.NewLocQuery(db)
+	lu := l_srv.NewLocService(lq)
+	lh := l_hnd.NewLocHandler(lu, jwt)
 
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORS())
 
-	routes.InitRoute(e, uh, th, dh)
+	routes.InitRoute(e, uh, th, dh, lh)
 }
