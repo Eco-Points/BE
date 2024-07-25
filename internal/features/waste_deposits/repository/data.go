@@ -33,6 +33,6 @@ func toWasteDeposit(data deposits.WasteDepositInterface) WasteDeposit {
 		LocationID: data.LocationID,
 		Quantity:   data.Quantity,
 		Point:      (data.Point * data.Quantity),
-		Status:     data.Status,
+		Status:     "pending",
 	}
 }
