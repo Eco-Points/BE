@@ -1,6 +1,7 @@
 package repository
 
 import (
+	trashQuery "eco_points/internal/features/trashes/repository"
 	"eco_points/internal/features/users"
 
 	"gorm.io/gorm"
@@ -14,6 +15,7 @@ type User struct {
 	Phone    string
 	Address  string
 	ImgURL   string
+	UserID   []trashQuery.Trash `gorm:"foreignKey:UserID"`
 }
 
 // dari database di pindah ke entity

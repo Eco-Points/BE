@@ -1,5 +1,7 @@
 package helpers
 
+import "github.com/labstack/echo/v4"
+
 func ResponseFormat(code int, message string, data any) map[string]any {
 	var result = make(map[string]any)
 
@@ -11,4 +13,9 @@ func ResponseFormat(code int, message string, data any) map[string]any {
 	}
 
 	return result
+}
+
+func EasyHelper(c echo.Context, code int, message string, data any) error {
+	return c.JSON(code, ResponseFormat(code, message, data))
+
 }
