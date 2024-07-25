@@ -32,13 +32,13 @@ func (h *trashHandler) AddTrash() echo.HandlerFunc {
 		if err != nil {
 			log.Println("error from bind", err)
 			// return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "error on request data", nil))
-			return helpers.EasyHelper(c, http.StatusBadRequest, "bad request/invalid jwt", nil)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
 		}
 
 		file, err := c.FormFile("images")
 		if err != nil {
 			log.Println("error when get image", err)
-			return helpers.EasyHelper(c, http.StatusBadRequest, "bad request/invalid jwt", nil)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
 		}
 
 		err = h.srv.AddTrash(toTrashEntity(input, uint(userID)), file)
@@ -46,10 +46,10 @@ func (h *trashHandler) AddTrash() echo.HandlerFunc {
 		if err != nil {
 			log.Println("error insert data", err)
 			// return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error database insert data", nil))
-			return helpers.EasyHelper(c, http.StatusInternalServerError, "something wrong with server", nil)
+			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
 		}
 
-		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "success", "trash was successfully created"))
+		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "success", "trash was successfully created", nil))
 
 	}
 }

@@ -31,15 +31,15 @@ func (h *depositHandler) DepositTrash() echo.HandlerFunc {
 
 		if err != nil {
 			log.Println("error from Bind", err)
-			return helpers.EasyHelper(c, http.StatusBadRequest, "bad request/invalid jwt", nil)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautorized", "bad request/invalid jwt", nil)
 		}
 
 		err = h.srv.DepositTrash(toWasteDepositInterface(input, uint(userID)))
 		if err != nil {
 			log.Println("error insert data", err)
-			return helpers.EasyHelper(c, http.StatusInternalServerError, "something wrong with server", nil)
+			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
 		}
 
-		return helpers.EasyHelper(c, http.StatusCreated, "succes", "")
+		return helpers.EasyHelper(c, http.StatusCreated, "succes", "waste deposit was successfully created", nil)
 	}
 }
