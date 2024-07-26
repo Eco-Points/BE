@@ -7,6 +7,7 @@ import (
 	"log"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type UserServices struct {
@@ -31,7 +32,7 @@ func (us *UserServices) Register(newUser users.User) error {
 		log.Println("register generete password error", err.Error())
 		return err
 	}
-
+	newUser.IsAdmin = false
 	newUser.Password = string(hashPw)
 
 	// register
@@ -71,10 +72,12 @@ func (us *UserServices) Login(email string, password string) (users.User, string
 
 func (us *UserServices) GetUser(ID uint) (users.User, error) {
 	result, err := us.qry.GetUser(ID)
-
+	msg := "terjadi kesalahan pada server"
 	if err != nil {
-		log.Print("get user query error", err.Error())
-		return users.User{}, errors.New("internal server error")
+		if err.Error() == gorm.ErrRecordNotFound.Error() {
+			msg = "data tidak ditemukan"
+		}
+		return users.User{}, errors.New(msg)
 	}
 
 	return result, nil

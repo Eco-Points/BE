@@ -18,7 +18,7 @@ func UploadToCloudinary(file io.Reader, filename string) (string, error) {
 
 	// upload file to cloudinary
 	uploadParams := uploader.UploadParams{
-		Folder:   "user_picture",
+		Folder:   "image_profile",
 		PublicID: filename,
 	}
 

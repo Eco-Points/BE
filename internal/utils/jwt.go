@@ -10,7 +10,7 @@ import (
 
 type JwtUtilityInterface interface {
 	GenereteJwt(id uint) (string, error)
-	DecodToken(token *jwt.Token) float64
+	DecodToken(token *jwt.Token) uint
 }
 
 type JwtUtility struct{}
@@ -38,8 +38,8 @@ func (ju *JwtUtility) GenereteJwt(id uint) (string, error) {
 	return result, nil
 }
 
-func (ju *JwtUtility) DecodToken(token *jwt.Token) float64 {
-	var result float64
+func (ju *JwtUtility) DecodToken(token *jwt.Token) uint {
+	var result uint
 
 	claim := token.Claims.(jwt.MapClaims)
 
@@ -48,7 +48,7 @@ func (ju *JwtUtility) DecodToken(token *jwt.Token) float64 {
 	}
 
 	if value, found := claim["id"]; found {
-		result = value.(float64)
+		result = value.(uint)
 	}
 
 	return result

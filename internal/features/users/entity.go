@@ -9,6 +9,8 @@ type User struct {
 	Password string
 	Phone    string
 	Address  string
+	IsAdmin  bool
+	Point    uint
 	ImgURL   string
 }
 
