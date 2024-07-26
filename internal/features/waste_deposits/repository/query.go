@@ -32,3 +32,12 @@ func (d *depositQuery) DepositTrash(data deposits.WasteDepositInterface) error {
 	}
 	return nil
 }
+
+func (d *depositQuery) UpdateWasteDepositStatus(waste_id uint, status string) error {
+	err := d.db.Debug().Model(&WasteDeposit{}).Where("id = ?", waste_id).Update("status", status).Error
+	if err != nil {
+		log.Println("error updating waste deposit status", err)
+		return err
+	}
+	return nil
+}

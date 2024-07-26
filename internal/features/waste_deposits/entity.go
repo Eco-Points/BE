@@ -14,12 +14,15 @@ type WasteDepositInterface struct {
 
 type QueryInterface interface {
 	DepositTrash(data WasteDepositInterface) error
+	UpdateWasteDepositStatus(waste_id uint, status string) error
 }
 
 type ServiceInterface interface {
 	DepositTrash(data WasteDepositInterface) error
+	UpdateWasteDepositStatus(waste_id uint, status string) error
 }
 
 type HandlerInterface interface {
 	DepositTrash() echo.HandlerFunc
+	UpdateWasteDepositStatus() echo.HandlerFunc
 }
