@@ -46,10 +46,7 @@ func (h *depositHandler) DepositTrash() echo.HandlerFunc {
 
 func (h *depositHandler) UpdateWasteDepositStatus() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var input struct {
-			WasteID uint   `json:"waste_id"`
-			Status  string `json:"status"`
-		}
+		var input UpdateWasteDepositStatusRequest
 		if err := c.Bind(&input); err != nil {
 			log.Println("error from Bind", err)
 			return helpers.EasyHelper(c, http.StatusBadRequest, "bad request", "invalid input", nil)
