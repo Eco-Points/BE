@@ -40,15 +40,13 @@ func (q *depositQuery) DepositTrash(data deposits.WasteDepositInterface) error {
 	return nil
 }
 
-func (q *depositQuery) GetUserDeposit(id uint) (deposits.ListWasteDepositInterface, error) {
+func (q *depositQuery) GetUserDeposit(id uint, limit uint, offset uint) (deposits.ListWasteDepositInterface, error) {
 	result := ListWasteDeposit{}
-	// quary := `select wd.id, t.trash_type, wd.point, wd.quantity, wd.updated_at
-	// 		from "eco_points_dev".waste_deposits wd
-	// 		join "eco_points_dev".trashes t on t.id = wd.trash_id
-	// 		where wd.user_id = 1 and wd."deleted_at" IS NULL;`
-	query := fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.quantity, wd.updated_at from "%s".waste_deposits wd join "%s".trashes t on t.id = wd.trash_id where wd.user_id = ? and wd."deleted_at" IS NULL;`, DbSchema, DbSchema)
+	query := fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.quantity, wd.updated_at from "%s".waste_deposits wd 
+	join "%s".trashes t on t.id = wd.trash_id 
+	where wd.user_id = %d and wd."deleted_at" IS NULL limit %d offset %d;`, DbSchema, DbSchema, id, limit, offset)
 
-	err := q.db.Debug().Raw(query, &id).Scan(&result).Error
+	err := q.db.Debug().Raw(query).Scan(&result).Error
 	if err != nil {
 		log.Println("error select to table", err)
 		return deposits.ListWasteDepositInterface{}, err

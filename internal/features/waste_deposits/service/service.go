@@ -24,8 +24,8 @@ func (s *depositService) DepositTrash(data deposits.WasteDepositInterface) error
 	return nil
 
 }
-func (s *depositService) GetUserDeposit(id uint) (deposits.ListWasteDepositInterface, error) {
-	result, err := s.qry.GetUserDeposit(id)
+func (s *depositService) GetUserDeposit(id uint, limit uint, offset uint) (deposits.ListWasteDepositInterface, error) {
+	result, err := s.qry.GetUserDeposit(id, limit, offset)
 	if err != nil {
 		log.Println("error insert data", err)
 		return deposits.ListWasteDepositInterface{}, err

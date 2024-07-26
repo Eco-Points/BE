@@ -23,12 +23,12 @@ type ListWasteDepositInterface []struct {
 type QueryInterface interface {
 	SetDbSchema(schema string)
 	DepositTrash(data WasteDepositInterface) error
-	GetUserDeposit(id uint) (ListWasteDepositInterface, error)
+	GetUserDeposit(id uint, limit uint, offset uint) (ListWasteDepositInterface, error)
 }
 
 type ServiceInterface interface {
 	DepositTrash(data WasteDepositInterface) error
-	GetUserDeposit(id uint) (ListWasteDepositInterface, error)
+	GetUserDeposit(id uint, limit uint, offset uint) (ListWasteDepositInterface, error)
 }
 
 type HandlerInterface interface {
