@@ -74,21 +74,3 @@ func (h *depositHandler) GetUserDeposit() echo.HandlerFunc {
 
 	}
 }
-
-// func (h *depositHandler) GetUserDeposit() echo.HandlerFunc {
-// 	return func(c echo.Context) error {
-// 		userID := h.mdl.DecodToken(c.Get("user").(*jwt.Token))
-// 		if userID < 1 {
-// 			log.Println("error from Bind")
-// 			return helpers.EasyHelper(c, http.StatusBadRequest, "unautorized", "bad request/invalid jwt", nil)
-// 		}
-// 		result, err := h.srv.GetUserDeposit(uint(userID))
-// 		if err != nil {
-// 			log.Println("error get data", err)
-// 			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
-// 		}
-
-// 		return helpers.EasyHelper(c, http.StatusCreated, "succes", "waste deposit was successfully created", toListWasteDepositResponse(result))
-
-// 	}
-// }
