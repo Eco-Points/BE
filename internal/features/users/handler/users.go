@@ -94,24 +94,13 @@ func (uc *UserHandler) UpdateUser() echo.HandlerFunc {
 
 		// Bagian updaload Image
 		file, err := c.FormFile("image_picture")
-
-		if err == nil {
-			// open file
-			src, err := file.Open()
+		if file != nil {
 			if err != nil {
+				log.Print("Error", err.Error())
 				return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
 			}
-			defer src.Close()
-
-			urlImage, err := utils.UploadToCloudinary(src, file.Filename)
-			if err != nil {
-				return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
-			}
-			updateUser.ImgURL = urlImage
-
 		}
-
-		err = uc.srv.UpdateUser(uint(ID), UpdateToUser(updateUser))
+		err = uc.srv.UpdateUser(uint(ID), UpdateToUser(updateUser), file)
 		if err != nil {
 			log.Print("Error", err.Error())
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))

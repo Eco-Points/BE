@@ -5,6 +5,7 @@ import (
 	"eco_points/internal/utils"
 	"errors"
 	"log"
+	"mime/multipart"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -83,7 +84,7 @@ func (us *UserServices) GetUser(ID uint) (users.User, error) {
 	return result, nil
 }
 
-func (us *UserServices) UpdateUser(ID uint, updateUser users.User) error {
+func (us *UserServices) UpdateUser(ID uint, updateUser users.User, file *multipart.FileHeader) error {
 
 	if updateUser.Password != "" {
 		hashPw, err := us.pwd.GeneratePassword(updateUser.Password)
@@ -93,7 +94,19 @@ func (us *UserServices) UpdateUser(ID uint, updateUser users.User) error {
 		}
 		updateUser.Password = string(hashPw)
 	}
+	if file != nil {
+		src, err := file.Open()
+		if err != nil {
+			return errors.New("interval server error")
+		}
+		defer src.Close()
 
+		urlImage, err := utils.UploadToCloudinary(src, file.Filename)
+		if err != nil {
+			return errors.New("interval server error")
+		}
+		updateUser.ImgURL = urlImage
+	}
 	// update user
 	err := us.qry.UpdateUser(ID, updateUser)
 
