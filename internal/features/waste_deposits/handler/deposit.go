@@ -6,6 +6,7 @@ import (
 	"eco_points/internal/utils"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -16,7 +17,7 @@ type depositHandler struct {
 	mdl utils.JwtUtilityInterface
 }
 
-func NewDepositService(h deposits.ServiceInterface, m utils.JwtUtilityInterface) deposits.HandlerInterface {
+func NewDepositHandler(h deposits.ServiceInterface, m utils.JwtUtilityInterface) deposits.HandlerInterface {
 	return &depositHandler{
 		srv: h,
 		mdl: m,
@@ -59,5 +60,36 @@ func (h *depositHandler) UpdateWasteDepositStatus() echo.HandlerFunc {
 		}
 
 		return helpers.EasyHelper(c, http.StatusOK, "success", "waste deposit status updated successfully", nil)
+	}
+}
+
+func (h *depositHandler) GetUserDeposit() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID := h.mdl.DecodToken(c.Get("user").(*jwt.Token))
+		if userID < 1 {
+			log.Println("error from Bind")
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautorized", "bad request/invalid jwt", nil)
+		}
+
+		limitPage, err := strconv.Atoi(c.QueryParam("limit"))
+
+		if err != nil || limitPage == 0 {
+			limitPage = 10
+		}
+
+		offsetData, err := strconv.Atoi(c.QueryParam("offset"))
+
+		if err != nil || offsetData == 0 {
+			offsetData = 0
+		}
+
+		result, err := h.srv.GetUserDeposit(uint(userID), uint(limitPage), uint(offsetData))
+		if err != nil {
+			log.Println("error get data", err)
+			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
+		}
+
+		return helpers.EasyHelper(c, http.StatusCreated, "succes", "waste deposit was successfully created", toListWasteDepositResponse(result))
+
 	}
 }

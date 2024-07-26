@@ -5,8 +5,10 @@ import (
 	"eco_points/internal/utils"
 	"errors"
 	"log"
+	"mime/multipart"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type UserServices struct {
@@ -31,7 +33,7 @@ func (us *UserServices) Register(newUser users.User) error {
 		log.Println("register generete password error", err.Error())
 		return err
 	}
-
+	newUser.IsAdmin = false
 	newUser.Password = string(hashPw)
 
 	// register
@@ -71,16 +73,18 @@ func (us *UserServices) Login(email string, password string) (users.User, string
 
 func (us *UserServices) GetUser(ID uint) (users.User, error) {
 	result, err := us.qry.GetUser(ID)
-
+	msg := "terjadi kesalahan pada server"
 	if err != nil {
-		log.Print("get user query error", err.Error())
-		return users.User{}, errors.New("internal server error")
+		if err.Error() == gorm.ErrRecordNotFound.Error() {
+			msg = "data tidak ditemukan"
+		}
+		return users.User{}, errors.New(msg)
 	}
 
 	return result, nil
 }
 
-func (us *UserServices) UpdateUser(ID uint, updateUser users.User) error {
+func (us *UserServices) UpdateUser(ID uint, updateUser users.User, file *multipart.FileHeader) error {
 
 	if updateUser.Password != "" {
 		hashPw, err := us.pwd.GeneratePassword(updateUser.Password)
@@ -90,7 +94,19 @@ func (us *UserServices) UpdateUser(ID uint, updateUser users.User) error {
 		}
 		updateUser.Password = string(hashPw)
 	}
+	if file != nil {
+		src, err := file.Open()
+		if err != nil {
+			return errors.New("interval server error")
+		}
+		defer src.Close()
 
+		urlImage, err := utils.UploadToCloudinary(src, file.Filename)
+		if err != nil {
+			return errors.New("interval server error")
+		}
+		updateUser.ImgURL = urlImage
+	}
 	// update user
 	err := us.qry.UpdateUser(ID, updateUser)
 
