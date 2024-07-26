@@ -6,6 +6,7 @@ func ResponseFormat(code int, status string, message string, data any) map[strin
 	var result = make(map[string]any)
 
 	result["code"] = code
+	result["status"] = status
 	result["message"] = message
 	result["status"] = status
 	if data != nil {

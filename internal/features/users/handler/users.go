@@ -6,6 +6,7 @@ import (
 	"eco_points/internal/utils"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -30,16 +31,16 @@ func (uc *UserHandler) Register() echo.HandlerFunc {
 		err := c.Bind(&input)
 		if err != nil {
 			log.Print("error", err.Error())
-			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "bad request", "bad request/invalid jwt", nil))
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "user register failed", nil))
 		}
 
 		err = uc.srv.Register(RegisterToUser(input))
 		if err != nil {
 			log.Print("Error", err.Error())
-			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", "something wrong with server", nil))
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
 		}
 
-		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "register success", "succes cerated account", nil))
+		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "success", "user register successful", nil))
 	}
 }
 
@@ -50,16 +51,16 @@ func (uc *UserHandler) Login() echo.HandlerFunc {
 		err := c.Bind(&input)
 		if err != nil {
 			log.Print("Error", err.Error())
-			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "bad request", "bad request/invalid jwt", nil))
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "user login failed", nil))
 		}
 
-		_, token, err := uc.srv.Login(input.Email, input.Password)
+		result, token, err := uc.srv.Login(input.Email, input.Password)
 		if err != nil {
 			log.Print("Error", err.Error())
-			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", "something wrong with server", nil))
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
 		}
 
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "succes", "user logged in", ToLoginResponse(token)))
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "user login successful", ToLoginResponse(result, token)))
 	}
 }
 
@@ -67,14 +68,15 @@ func (uc *UserHandler) GetUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		ID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
-		log.Print("================================> id = ", ID)
 		result, err := uc.srv.GetUser(uint(ID))
 		if err != nil {
-			log.Print("Error", err.Error())
-			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", "something wrong with server", nil))
+			if strings.ContainsAny(err.Error(), "tidak ditemukan") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "user data not found", nil))
+			}
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
 		}
 
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "User successfully retrieved", ToGetUserResponse(result)))
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "All user data fetched successfully", ToGetUserResponse(result)))
 	}
 }
 
@@ -87,35 +89,24 @@ func (uc *UserHandler) UpdateUser() echo.HandlerFunc {
 		err := c.Bind(&updateUser)
 		if err != nil {
 			log.Println("Error", err.Error())
-			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "Invalid request parameters", nil))
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "Failed to update account", nil))
 		}
 
 		// Bagian updaload Image
 		file, err := c.FormFile("image_picture")
-
-		if err == nil {
-			// open file
-			src, err := file.Open()
+		if file != nil {
 			if err != nil {
-				return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "failed", "profile image error", nil))
+				log.Print("Error", err.Error())
+				return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
 			}
-			defer src.Close()
-
-			urlImage, err := utils.UploadToCloudinary(src, file.Filename)
-			if err != nil {
-				return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "failed", "profile image error", nil))
-			}
-			updateUser.ImgURL = urlImage
-
 		}
-
-		err = uc.srv.UpdateUser(uint(ID), UpdateToUser(updateUser))
+		err = uc.srv.UpdateUser(uint(ID), UpdateToUser(updateUser), file)
 		if err != nil {
 			log.Print("Error", err.Error())
-			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "failed", "Internal server error", nil))
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
 		}
 
-		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "failed", "User profile updated", nil))
+		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "success", "Successfully updated account", nil))
 	}
 }
 
@@ -127,9 +118,9 @@ func (uc *UserHandler) DeleteUser() echo.HandlerFunc {
 
 		if err != nil {
 			log.Print("Error", err.Error())
-			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", "Internal server error", nil))
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
 		}
 
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "succes", "User account deleted", nil))
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "Successfully deleted account", nil))
 	}
 }

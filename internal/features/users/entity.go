@@ -1,6 +1,10 @@
 package users
 
-import "github.com/labstack/echo/v4"
+import (
+	"mime/multipart"
+
+	"github.com/labstack/echo/v4"
+)
 
 type User struct {
 	ID       uint
@@ -9,6 +13,8 @@ type User struct {
 	Password string
 	Phone    string
 	Address  string
+	IsAdmin  bool
+	Point    uint
 	ImgURL   string
 }
 
@@ -32,6 +38,6 @@ type Service interface {
 	Register(newUser User) error
 	Login(email string, password string) (User, string, error)
 	GetUser(ID uint) (User, error)
-	UpdateUser(ID uint, updateUser User) error
+	UpdateUser(ID uint, updateUser User, file *multipart.FileHeader) error
 	DeleteUser(ID uint) error
 }

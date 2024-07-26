@@ -3,7 +3,9 @@ package handler
 import "eco_points/internal/features/users"
 
 type LoginResponse struct {
-	Token string `json:"token"`
+	IsAdmin bool   `json:"is_admin"`
+	Point   uint   `json:"point"`
+	Token   string `json:"token"`
 }
 
 type UserResponse struct {
@@ -15,9 +17,11 @@ type UserResponse struct {
 	ImgURL   string `json:"image_url"`
 }
 
-func ToLoginResponse(token string) LoginResponse {
+func ToLoginResponse(result users.User, token string) LoginResponse {
 	return LoginResponse{
-		Token: token,
+		IsAdmin: result.IsAdmin,
+		Point:   result.Point,
+		Token:   token,
 	}
 }
 

@@ -14,6 +14,8 @@ type User struct {
 	Password string
 	Phone    string
 	Address  string
+	IsAdmin  bool
+	Point    uint
 	ImgURL   string
 	UserID   []trashQuery.Trash `gorm:"foreignKey:UserID"`
 }
@@ -27,6 +29,8 @@ func (u *User) ToUserEntity() users.User {
 		Password: u.Password,
 		Phone:    u.Phone,
 		Address:  u.Address,
+		IsAdmin:  u.IsAdmin,
+		Point:    u.Point,
 		ImgURL:   u.ImgURL,
 	}
 }
@@ -39,6 +43,8 @@ func ToUserQuery(input users.User) User {
 		Password: input.Password,
 		Phone:    input.Phone,
 		Address:  input.Address,
+		IsAdmin:  input.IsAdmin,
+		Point:    input.Point,
 		ImgURL:   input.ImgURL,
 	}
 }
