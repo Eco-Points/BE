@@ -15,12 +15,20 @@ func NewDepositsService(q deposits.QueryInterface) deposits.ServiceInterface {
 	}
 }
 
-func (q *depositService) DepositTrash(data deposits.WasteDepositInterface) error {
-	err := q.qry.DepositTrash(data)
+func (s *depositService) DepositTrash(data deposits.WasteDepositInterface) error {
+	err := s.qry.DepositTrash(data)
 	if err != nil {
 		log.Println("error insert data", err)
 		return err
 	}
 	return nil
 
+}
+func (s *depositService) GetUserDeposit(id uint, limit uint, offset uint) (deposits.ListWasteDepositInterface, error) {
+	result, err := s.qry.GetUserDeposit(id, limit, offset)
+	if err != nil {
+		log.Println("error insert data", err)
+		return deposits.ListWasteDepositInterface{}, err
+	}
+	return result, nil
 }

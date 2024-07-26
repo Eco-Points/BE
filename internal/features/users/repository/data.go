@@ -1,8 +1,10 @@
 package repository
 
 import (
+	lochQuery "eco_points/internal/features/locations/repository"
 	trashQuery "eco_points/internal/features/trashes/repository"
 	"eco_points/internal/features/users"
+	depoQuery "eco_points/internal/features/waste_deposits/repository"
 
 	"gorm.io/gorm"
 )
@@ -17,7 +19,9 @@ type User struct {
 	IsAdmin  bool
 	Point    uint
 	ImgURL   string
-	UserID   []trashQuery.Trash `gorm:"foreignKey:UserID"`
+	Trash    []trashQuery.Trash       `gorm:"foreignKey:UserID"`
+	Location []lochQuery.Location     `gorm:"foreignKey:UserID"`
+	Deposit  []depoQuery.WasteDeposit `gorm:"foreignKey:UserID"`
 }
 
 // dari database di pindah ke entity
