@@ -8,6 +8,11 @@ type WasteDeposit struct {
 	Quantity   uint `json:"quantity"`
 }
 
+type UpdateWasteDepositStatusRequest struct {
+	WasteID uint   `json:"waste_id"`
+	Status  string `json:"status"`
+}
+
 func toWasteDepositInterface(data WasteDeposit, id uint) deposits.WasteDepositInterface {
 	return deposits.WasteDepositInterface{
 		TrashID:    data.TrashID,

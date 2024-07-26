@@ -28,7 +28,6 @@ func UsersRoute(e *echo.Echo, uh users.Handler) {
 	u.GET("", uh.GetUser())
 	u.PUT("", uh.UpdateUser())
 	u.DELETE("", uh.DeleteUser())
-
 }
 
 func TrashRoute(e *echo.Echo, th trashes.HandlerInterface, dh deposits.HandlerInterface) {
@@ -39,8 +38,8 @@ func TrashRoute(e *echo.Echo, th trashes.HandlerInterface, dh deposits.HandlerIn
 	d := e.Group("/deposit")
 	d.Use(JWTConfig())
 	d.POST("", dh.DepositTrash())
+	d.PUT("", dh.UpdateWasteDepositStatus())
 	d.GET("", dh.GetUserDeposit())
-
 }
 
 func LocRoute(e *echo.Echo, l locations.HandlerInterface) {

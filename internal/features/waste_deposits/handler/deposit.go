@@ -44,6 +44,25 @@ func (h *depositHandler) DepositTrash() echo.HandlerFunc {
 		return helpers.EasyHelper(c, http.StatusCreated, "succes", "waste deposit was successfully created", nil)
 	}
 }
+
+func (h *depositHandler) UpdateWasteDepositStatus() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var input UpdateWasteDepositStatusRequest
+		if err := c.Bind(&input); err != nil {
+			log.Println("error from Bind", err)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "bad request", "invalid input", nil)
+		}
+
+		err := h.srv.UpdateWasteDepositStatus(input.WasteID, input.Status)
+		if err != nil {
+			log.Println("error updating waste deposit status", err)
+			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something went wrong with the server", nil)
+		}
+
+		return helpers.EasyHelper(c, http.StatusOK, "success", "waste deposit status updated successfully", nil)
+	}
+}
+
 func (h *depositHandler) GetUserDeposit() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		userID := h.mdl.DecodToken(c.Get("user").(*jwt.Token))

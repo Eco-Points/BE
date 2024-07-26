@@ -23,15 +23,18 @@ type ListWasteDepositInterface []struct {
 type QueryInterface interface {
 	SetDbSchema(schema string)
 	DepositTrash(data WasteDepositInterface) error
+	UpdateWasteDepositStatus(waste_id uint, status string) error
 	GetUserDeposit(id uint, limit uint, offset uint) (ListWasteDepositInterface, error)
 }
 
 type ServiceInterface interface {
 	DepositTrash(data WasteDepositInterface) error
+	UpdateWasteDepositStatus(waste_id uint, status string) error
 	GetUserDeposit(id uint, limit uint, offset uint) (ListWasteDepositInterface, error)
 }
 
 type HandlerInterface interface {
 	DepositTrash() echo.HandlerFunc
+	UpdateWasteDepositStatus() echo.HandlerFunc
 	GetUserDeposit() echo.HandlerFunc
 }

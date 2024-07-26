@@ -40,6 +40,15 @@ func (q *depositQuery) DepositTrash(data deposits.WasteDepositInterface) error {
 	return nil
 }
 
+func (d *depositQuery) UpdateWasteDepositStatus(waste_id uint, status string) error {
+	err := d.db.Debug().Model(&WasteDeposit{}).Where("id = ?", waste_id).Update("status", status).Error
+	if err != nil {
+		log.Println("error insert to tabel", err)
+		return err
+	}
+	return nil
+}
+
 func (q *depositQuery) GetUserDeposit(id uint, limit uint, offset uint) (deposits.ListWasteDepositInterface, error) {
 	result := ListWasteDeposit{}
 	query := fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.quantity, wd.updated_at from "%s".waste_deposits wd 
