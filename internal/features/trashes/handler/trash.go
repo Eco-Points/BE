@@ -103,7 +103,17 @@ func (h *trashHandler) DeleteTrash() echo.HandlerFunc {
 func (h *trashHandler) UpdateTrash() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var input Trash
-		userID := h.mdl.DecodToken(c.Get("user").(*jwt.Token))
+		userID, err := h.mdl.DecodTokenV2(c)
+
+		if err != nil {
+			log.Println("error from jwt", err)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
+		}
+
+		if userID < 1 {
+			log.Println("user ID = ", userID)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
+		}
 		trashId := c.Param("id")
 
 		trash_id, err := strconv.Atoi(trashId)
