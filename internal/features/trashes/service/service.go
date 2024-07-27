@@ -66,7 +66,18 @@ func (s *trashService) GetTrash(ttype string) (trashes.ListTrashEntity, error) {
 func (s *trashService) DeleteTrash(id uint) error {
 	err := s.qry.DeleteTrash(id)
 	if err != nil {
-		log.Println("Error Get All ", err)
+		log.Println("Error Delete Trash ", err)
+		return err
+	}
+
+	return nil
+}
+
+func (s *trashService) UpdateTrash(id uint, data trashes.TrashEntity) error {
+
+	err := s.qry.UpdateTrash(id, data)
+	if err != nil {
+		log.Println("Error Update Trash ", err)
 		return err
 	}
 

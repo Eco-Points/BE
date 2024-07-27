@@ -109,6 +109,24 @@ func (_m *QueryTrashInterface) GetTrashbyType(ttype string) (trashes.ListTrashEn
 	return r0, r1
 }
 
+// UpdateTrash provides a mock function with given fields: id, data
+func (_m *QueryTrashInterface) UpdateTrash(id uint, data trashes.TrashEntity) error {
+	ret := _m.Called(id, data)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateTrash")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uint, trashes.TrashEntity) error); ok {
+		r0 = rf(id, data)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewQueryTrashInterface creates a new instance of QueryTrashInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewQueryTrashInterface(t interface {

@@ -72,6 +72,26 @@ func (_m *HandlerTrashInterface) GetTrash() echo.HandlerFunc {
 	return r0
 }
 
+// UpdateTrash provides a mock function with given fields:
+func (_m *HandlerTrashInterface) UpdateTrash() echo.HandlerFunc {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateTrash")
+	}
+
+	var r0 echo.HandlerFunc
+	if rf, ok := ret.Get(0).(func() echo.HandlerFunc); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(echo.HandlerFunc)
+		}
+	}
+
+	return r0
+}
+
 // NewHandlerTrashInterface creates a new instance of HandlerTrashInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewHandlerTrashInterface(t interface {

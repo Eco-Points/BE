@@ -1,6 +1,8 @@
 package handler
 
-import "eco_points/internal/features/trashes"
+import (
+	"eco_points/internal/features/trashes"
+)
 
 type ListTrash []struct {
 	TrashType string `json:"type"`

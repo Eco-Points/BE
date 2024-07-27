@@ -36,6 +36,7 @@ func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.Hand
 	t.POST("", th.AddTrash())
 	t.GET("", th.GetTrash())
 	t.DELETE("/:id", th.DeleteTrash())
+	t.PUT("/:id", th.UpdateTrash())
 
 	d := e.Group("/deposit")
 	d.Use(JWTConfig())
