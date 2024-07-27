@@ -9,7 +9,17 @@ import (
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 )
 
-func UploadToCloudinary(file io.Reader, filename string) (string, error) {
+type CloudinaryUtilityInterface interface {
+	UploadToCloudinary(file io.Reader, filename string) (string, error)
+}
+
+type CloudinaryUtility struct{}
+
+func NewCloudinaryUtility() CloudinaryUtilityInterface {
+	return &CloudinaryUtility{}
+}
+
+func (c *CloudinaryUtility) UploadToCloudinary(file io.Reader, filename string) (string, error) {
 	cld, err := cloudinary.NewFromURL(config.ImportSetting().CldKey)
 
 	if err != nil {
