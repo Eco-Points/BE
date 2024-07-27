@@ -4,6 +4,7 @@ import (
 	"eco_points/internal/features/trashes"
 	"eco_points/internal/helpers"
 	"eco_points/internal/utils"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -12,11 +13,11 @@ import (
 )
 
 type trashHandler struct {
-	srv trashes.ServiceInterface
+	srv trashes.ServiceTrashInterface
 	mdl utils.JwtUtilityInterface
 }
 
-func NewTrashHandler(s trashes.ServiceInterface, m utils.JwtUtilityInterface) trashes.HandlerInterface {
+func NewTrashHandler(s trashes.ServiceTrashInterface, m utils.JwtUtilityInterface) trashes.HandlerTrashInterface {
 	return &trashHandler{
 		srv: s,
 		mdl: m,
@@ -42,14 +43,28 @@ func (h *trashHandler) AddTrash() echo.HandlerFunc {
 		}
 
 		err = h.srv.AddTrash(toTrashEntity(input, uint(userID)), file)
-		log.Println("error from bind", err)
 		if err != nil {
 			log.Println("error insert data", err)
-			// return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error database insert data", nil))
 			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
 		}
 
 		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "success", "trash was successfully created", nil))
 
+	}
+}
+
+func (h *trashHandler) GetTrash() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ttype := c.QueryParam("type")
+		point := c.QueryParam("point")
+		fmt.Println(ttype)
+		fmt.Println(point)
+
+		result, err := h.srv.GetTrash(ttype)
+		if err != nil {
+			log.Println("error get data", err)
+			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
+		}
+		return helpers.EasyHelper(c, http.StatusOK, "success", "successfully get the trash", toListTrashResponse(result))
 	}
 }

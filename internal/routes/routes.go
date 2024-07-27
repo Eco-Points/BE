@@ -12,7 +12,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerInterface, dh deposits.HandlerInterface, l locations.HandlerInterface) {
+func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -30,10 +30,11 @@ func UsersRoute(e *echo.Echo, uh users.Handler) {
 	u.DELETE("", uh.DeleteUser())
 }
 
-func TrashRoute(e *echo.Echo, th trashes.HandlerInterface, dh deposits.HandlerInterface) {
+func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface) {
 	t := e.Group("/trash")
 	t.Use(JWTConfig())
 	t.POST("", th.AddTrash())
+	t.GET("", th.GetTrash())
 
 	d := e.Group("/deposit")
 	d.Use(JWTConfig())

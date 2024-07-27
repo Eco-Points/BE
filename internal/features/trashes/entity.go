@@ -15,14 +15,28 @@ type TrashEntity struct {
 	UserID    uint
 }
 
-type QueryInterface interface {
+type ListTrashEntity []struct {
+	TrashType string
+	Name      string
+	Point     uint
+	Descrip   string
+	Image     string
+	UserID    uint
+	ID        uint
+}
+
+type QueryTrashInterface interface {
 	AddTrash(tData TrashEntity) error
+	GetTrashbyType(ttype string) (ListTrashEntity, error)
+	GetTrashLimit() (ListTrashEntity, error)
 }
 
-type ServiceInterface interface {
+type ServiceTrashInterface interface {
 	AddTrash(tData TrashEntity, file *multipart.FileHeader) error
+	GetTrash(ttype string) (ListTrashEntity, error)
 }
 
-type HandlerInterface interface {
+type HandlerTrashInterface interface {
 	AddTrash() echo.HandlerFunc
+	GetTrash() echo.HandlerFunc
 }
