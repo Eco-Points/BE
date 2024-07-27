@@ -16,6 +16,20 @@ type WasteDeposit struct {
 	Quantity   uint
 	Point      uint
 	Status     string
+	User       User `gorm:"foreignKey:UserID"`
+}
+
+type User struct {
+	gorm.Model
+	Fullname string
+	Email    string
+	Password string
+	Phone    string
+	Address  string
+	IsAdmin  bool
+	Point    uint
+	ImgURL   string
+	Deposits []WasteDeposit `gorm:"foreignKey:UserID"`
 }
 
 type ListWasteDeposit []struct {
