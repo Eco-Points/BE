@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
 
@@ -27,9 +26,17 @@ func NewTrashHandler(s trashes.ServiceTrashInterface, m utils.JwtUtilityInterfac
 func (h *trashHandler) AddTrash() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var input Trash
-		userID := h.mdl.DecodToken(c.Get("user").(*jwt.Token))
-		log.Println("user ID = ", userID)
-		err := c.Bind(&input)
+		userID, err := h.mdl.DecodTokenV2(c)
+		if err != nil {
+			log.Println("error from jwt", err)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
+		}
+
+		if userID < 1 {
+			log.Println("user ID = ", userID)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
+		}
+		err = c.Bind(&input)
 		if err != nil {
 			log.Println("error from bind", err)
 			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
@@ -66,8 +73,17 @@ func (h *trashHandler) GetTrash() echo.HandlerFunc {
 
 func (h *trashHandler) DeleteTrash() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userID := h.mdl.DecodToken(c.Get("user").(*jwt.Token))
-		log.Println("user ID = ", userID)
+		userID, err := h.mdl.DecodTokenV2(c)
+
+		if err != nil {
+			log.Println("error from jwt", err)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
+		}
+
+		if userID < 1 {
+			log.Println("user ID = ", userID)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
+		}
 		trash_id := c.Param("id")
 		id, err := strconv.Atoi(trash_id)
 		if err != nil {
