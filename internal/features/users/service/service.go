@@ -12,16 +12,18 @@ import (
 )
 
 type UserServices struct {
-	qry users.Query
-	pwd utils.PassUtilInterface
-	jwt utils.JwtUtilityInterface
+	qry   users.Query
+	pwd   utils.PassUtilInterface
+	jwt   utils.JwtUtilityInterface
+	cloud utils.CloudinaryUtilityInterface
 }
 
-func NewUserService(q users.Query, p utils.PassUtilInterface, j utils.JwtUtilityInterface) users.Service {
+func NewUserService(q users.Query, p utils.PassUtilInterface, j utils.JwtUtilityInterface, c utils.CloudinaryUtilityInterface) users.Service {
 	return &UserServices{
-		qry: q,
-		pwd: p,
-		jwt: j,
+		qry:   q,
+		pwd:   p,
+		jwt:   j,
+		cloud: c,
 	}
 }
 
@@ -101,7 +103,7 @@ func (us *UserServices) UpdateUser(ID uint, updateUser users.User, file *multipa
 		}
 		defer src.Close()
 
-		urlImage, err := utils.UploadToCloudinary(src, file.Filename)
+		urlImage, err := us.cloud.UploadToCloudinary(src, file.Filename)
 		if err != nil {
 			return errors.New("interval server error")
 		}
