@@ -6,6 +6,7 @@ import (
 	u_rep "eco_points/internal/features/users/repository"
 	d_rep "eco_points/internal/features/waste_deposits/repository"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -32,7 +33,7 @@ func ImportSetting() setting {
 	err := godotenv.Load(".env")
 
 	if err != nil {
-		return setting{}
+		log.Println("error can't find environment file ", err)
 	}
 
 	result.User = os.Getenv("DB_USER")
