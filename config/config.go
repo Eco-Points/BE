@@ -29,12 +29,6 @@ type setting struct {
 func ImportSetting() setting {
 	var result setting
 
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		return setting{}
-	}
-
 	result.User = os.Getenv("DB_USER")
 	result.Host = os.Getenv("DB_HOST")
 	result.Port = os.Getenv("DB_PORT")
