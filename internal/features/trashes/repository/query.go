@@ -24,8 +24,6 @@ func NewTrashQuery(dbQuery *gorm.DB) trashes.QueryTrashInterface {
 func ConvertDateTime(data string) string {
 	find := strings.SplitAfter(data, ".")[1]
 	depotime := strings.Replace(data, find, "", 1)
-	fmt.Println("time", depotime)
-
 	find = strings.SplitAfter(depotime, ".")[1]
 	depotime = strings.Replace(depotime, find, "", 1)
 	return strings.Replace(depotime, ".", "", 1)
