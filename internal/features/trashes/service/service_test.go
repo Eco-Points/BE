@@ -134,3 +134,32 @@ func TestDeleteTrash(t *testing.T) {
 	})
 
 }
+
+func TestUpdateTrash(t *testing.T) {
+	qry := mocks.NewQueryTrashInterface(t)
+	cloud := mocks.NewCloudinaryUtilityInterface(t)
+	srv := service.NewTrashService(qry, cloud)
+
+	inputTrashQry := trashes.TrashEntity{
+		TrashType: "plastik",
+		Name:      "plastik biasa",
+		Point:     "20",
+		Descrip:   "hanya plastik biasa",
+		Image:     "http://",
+		UserID:    1,
+	}
+	t.Run("success update trash", func(t *testing.T) {
+
+		qry.On("UpdateTrash", uint(1), inputTrashQry).Return(nil).Once()
+		err := srv.UpdateTrash(uint(1), inputTrashQry)
+		assert.Nil(t, err)
+	})
+
+	t.Run("failed update trash", func(t *testing.T) {
+		expectedError := errors.New("error on query / parameter")
+
+		qry.On("UpdateTrash", uint(1), inputTrashQry).Return(expectedError).Once()
+		err := srv.UpdateTrash(uint(1), inputTrashQry)
+		assert.NotNil(t, err)
+	})
+}

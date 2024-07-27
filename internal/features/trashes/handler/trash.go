@@ -4,7 +4,6 @@ import (
 	"eco_points/internal/features/trashes"
 	"eco_points/internal/helpers"
 	"eco_points/internal/utils"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -56,10 +55,6 @@ func (h *trashHandler) AddTrash() echo.HandlerFunc {
 func (h *trashHandler) GetTrash() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ttype := c.QueryParam("type")
-		point := c.QueryParam("point")
-		fmt.Println(ttype)
-		fmt.Println(point)
-
 		result, err := h.srv.GetTrash(ttype)
 		if err != nil {
 			log.Println("error get data", err)
@@ -86,5 +81,31 @@ func (h *trashHandler) DeleteTrash() echo.HandlerFunc {
 			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
 		}
 		return helpers.EasyHelper(c, http.StatusOK, "success", "successfully deleted the trash", nil)
+	}
+}
+
+func (h *trashHandler) UpdateTrash() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var input Trash
+		userID := h.mdl.DecodToken(c.Get("user").(*jwt.Token))
+		trashId := c.Param("id")
+
+		trash_id, err := strconv.Atoi(trashId)
+		if err != nil {
+			log.Println("error Param", err)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "faileds", "bad request/invalid jwt", nil)
+		}
+		err = c.Bind(&input)
+		if err != nil {
+			log.Println("error from bind", err)
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
+		}
+		err = h.srv.UpdateTrash(uint(trash_id), toTrashEntity(input, uint(userID)))
+		if err != nil {
+			log.Println("error get data", err)
+			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
+		}
+		return helpers.EasyHelper(c, http.StatusOK, "success", "successfully deleted the trash", nil)
+
 	}
 }

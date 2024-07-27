@@ -30,16 +30,19 @@ type QueryTrashInterface interface {
 	GetTrashbyType(ttype string) (ListTrashEntity, error)
 	GetTrashLimit() (ListTrashEntity, error)
 	DeleteTrash(id uint) error
+	UpdateTrash(id uint, data TrashEntity) error
 }
 
 type ServiceTrashInterface interface {
 	AddTrash(tData TrashEntity, file *multipart.FileHeader) error
 	GetTrash(ttype string) (ListTrashEntity, error)
 	DeleteTrash(id uint) error
+	UpdateTrash(id uint, data TrashEntity) error
 }
 
 type HandlerTrashInterface interface {
 	AddTrash() echo.HandlerFunc
 	GetTrash() echo.HandlerFunc
 	DeleteTrash() echo.HandlerFunc
+	UpdateTrash() echo.HandlerFunc
 }
