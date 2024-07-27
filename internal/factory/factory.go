@@ -31,13 +31,14 @@ func InitFactory(e *echo.Echo) {
 
 	pu := utils.NewPassUtil()
 	jwt := utils.NewJwtUtility()
+	cloud := utils.NewCloudinaryUtility()
 
 	uq := u_rep.NewUserQuery(db)
-	us := u_srv.NewUserService(uq, pu, jwt)
+	us := u_srv.NewUserService(uq, pu, jwt, cloud)
 	uh := u_hnd.NewUserHandler(us, jwt)
 
 	tq := t_rep.NewTrashQuery(db)
-	tu := t_srv.NewTrashService(tq)
+	tu := t_srv.NewTrashService(tq, cloud)
 	th := t_hnd.NewTrashHandler(tu, jwt)
 
 	dq := d_rep.NewDepoQuery(db)
