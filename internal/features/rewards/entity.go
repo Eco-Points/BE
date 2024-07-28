@@ -13,12 +13,15 @@ type Reward struct {
 
 type RHandler interface {
 	AddReward() echo.HandlerFunc
+	UpdateReward() echo.HandlerFunc
 }
 
 type RServices interface {
 	AddReward(newReward Reward) error
+	UpdateReward(rewardID uint, updatedReward Reward) error
 }
 
 type RQuery interface {
 	AddReward(newReward Reward) error
+	UpdateReward(rewardID uint, updatedReward Reward) error
 }
