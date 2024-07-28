@@ -6,6 +6,8 @@ import (
 	u_rep "eco_points/internal/features/users/repository"
 	d_rep "eco_points/internal/features/waste_deposits/repository"
 	"fmt"
+
+	// "log"
 	"os"
 
 	// "github.com/joho/godotenv"
@@ -28,7 +30,10 @@ type setting struct {
 
 func ImportSetting() setting {
 	var result setting
-
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 	result.User = os.Getenv("DB_USER")
 	result.Host = os.Getenv("DB_HOST")
 	result.Port = os.Getenv("DB_PORT")
