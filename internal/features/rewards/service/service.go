@@ -22,3 +22,11 @@ func (rs *RewardServices) AddReward(newReward rewards.Reward) error {
 	}
 	return nil
 }
+
+func (rs *RewardServices) UpdateReward(rewardID uint, updatedReward rewards.Reward) error {
+	err := rs.qry.UpdateReward(rewardID, updatedReward)
+	if err != nil {
+		return errors.New("terjadi kesalahan pada server saat memperbarui reward")
+	}
+	return nil
+}

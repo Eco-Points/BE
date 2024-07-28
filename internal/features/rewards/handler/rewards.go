@@ -6,6 +6,7 @@ import (
 	"eco_points/internal/utils"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -75,5 +76,61 @@ func (rh *RewardHandler) AddReward() echo.HandlerFunc {
 
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "Reward was successfully created", nil))
 
+	}
+}
+
+func (rh *RewardHandler) UpdateReward() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID := rh.tu.DecodToken(c.Get("user").(*jwt.Token))
+		if userID == 0 {
+			log.Println("error from jwt")
+			return c.JSON(http.StatusUnauthorized, helpers.ResponseFormat(http.StatusUnauthorized, "error", "Unauthorized", nil))
+		}
+
+		// Get reward ID from URL parameter
+		rewardIDStr := c.Param("id")
+		rewardID, err := strconv.ParseUint(rewardIDStr, 10, 32)
+		if err != nil {
+			log.Println("invalid reward ID")
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "Invalid reward ID", nil))
+		}
+
+		// Get image from form data (optional)
+		var imageURL string
+		image, err := c.FormFile("image")
+		if err == nil {
+			src, err := image.Open()
+			if err != nil {
+				log.Println("error open the image file")
+				return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "failed", "Failed to open image file", nil))
+			}
+			defer src.Close()
+
+			imageURL, err = rh.cu.UploadToCloudinary(src, image.Filename)
+			if err != nil {
+				log.Println("error upload image to cloudinary")
+				return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "failed", "Failed to upload image", nil))
+			}
+		}
+
+		// Bind the request
+		var req CreateOrUpdateRewardRequest
+		err = c.Bind(&req)
+		if err != nil {
+			log.Println("invalid request body")
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "Invalid request body", nil))
+		}
+
+		// Convert request to reward model
+		updatedReward := ToRewardModel(req, imageURL)
+
+		// Update reward in database
+		err = rh.srv.UpdateReward(uint(rewardID), updatedReward)
+		if err != nil {
+			log.Println("failed to update reward in database")
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "failed", "Failed to update reward", nil))
+		}
+
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "Reward was successfully updated", nil))
 	}
 }

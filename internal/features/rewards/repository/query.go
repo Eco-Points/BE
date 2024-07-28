@@ -19,3 +19,12 @@ func NewRewardModel(connection *gorm.DB) rewards.RQuery {
 func (rm *RewardModel) AddReward(newReward rewards.Reward) error {
 	return rm.db.Create(&newReward).Error
 }
+
+func (rm *RewardModel) UpdateReward(rewardID uint, updateReward rewards.Reward) error {
+	var reward rewards.Reward
+	err := rm.db.First(&reward, rewardID).Error
+	if err != nil {
+		return err
+	}
+	return rm.db.Model(&reward).Updates(updateReward).Error
+}
