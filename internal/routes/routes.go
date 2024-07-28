@@ -3,6 +3,7 @@ package routes
 import (
 	"eco_points/config"
 	"eco_points/internal/features/locations"
+	"eco_points/internal/features/rewards"
 	"eco_points/internal/features/trashes"
 	users "eco_points/internal/features/users"
 	deposits "eco_points/internal/features/waste_deposits"
@@ -12,7 +13,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface) {
+func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface, rh rewards.RHandler) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -20,6 +21,7 @@ func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface,
 	UsersRoute(e, uh)
 	TrashRoute(e, th, dh)
 	LocRoute(e, l)
+	RewardRoute(e, rh)
 }
 
 func UsersRoute(e *echo.Echo, uh users.Handler) {
@@ -51,6 +53,13 @@ func LocRoute(e *echo.Echo, l locations.HandlerInterface) {
 	t.POST("", l.AddLocation())
 
 }
+
+func RewardRoute(e *echo.Echo, rh rewards.RHandler) {
+	t := e.Group("/reward")
+	t.Use(JWTConfig())
+	t.POST("", rh.AddReward())
+}
+
 func JWTConfig() echo.MiddlewareFunc {
 	return echojwt.WithConfig(
 		echojwt.Config{
