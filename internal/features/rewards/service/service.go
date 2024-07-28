@@ -46,3 +46,11 @@ func (rs *RewardServices) GetRewardByID(rewardID uint) (rewards.Reward, error) {
 	}
 	return reward, nil
 }
+
+func (rs *RewardServices) GetAllRewards(limit int, offset int) ([]rewards.Reward, int, error) {
+	rewards, totalItems, err := rs.qry.GetAllRewards(limit, offset)
+	if err != nil {
+		return nil, 0, errors.New("terjadi kesalahan pada server saat mengambil semua reward")
+	}
+	return rewards, totalItems, nil
+}

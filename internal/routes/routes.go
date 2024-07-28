@@ -62,6 +62,7 @@ func RewardRoute(e *echo.Echo, rh rewards.RHandler) {
 	t.DELETE("/:id", rh.DeleteReward())
 
 	e.GET("/reward/:id", rh.GetRewardByID())
+	e.GET("/reward", rh.GetAllRewards())
 }
 
 func JWTConfig() echo.MiddlewareFunc {

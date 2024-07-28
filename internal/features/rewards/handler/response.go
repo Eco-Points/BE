@@ -21,3 +21,11 @@ func ToRewardResponse(r rewards.Reward) RewardResponse {
 		Image:         r.Image,
 	}
 }
+
+func ToRewardsResponse(rewards []rewards.Reward) []RewardResponse {
+	responses := make([]RewardResponse, len(rewards))
+	for i, reward := range rewards {
+		responses[i] = ToRewardResponse(reward)
+	}
+	return responses
+}

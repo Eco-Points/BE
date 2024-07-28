@@ -18,6 +18,7 @@ type RHandler interface {
 	UpdateReward() echo.HandlerFunc
 	DeleteReward() echo.HandlerFunc
 	GetRewardByID() echo.HandlerFunc
+	GetAllRewards() echo.HandlerFunc
 }
 
 type RServices interface {
@@ -25,6 +26,7 @@ type RServices interface {
 	UpdateReward(rewardID uint, updatedReward Reward) error
 	DeleteReward(rewardID uint) error
 	GetRewardByID(rewardID uint) (Reward, error)
+	GetAllRewards(limit int, offset int) ([]Reward, int, error)
 }
 
 type RQuery interface {
@@ -32,4 +34,5 @@ type RQuery interface {
 	UpdateReward(rewardID uint, updatedReward Reward) error
 	DeleteReward(rewardID uint) error
 	GetRewardByID(rewardID uint) (Reward, error)
+	GetAllRewards(limit int, offset int) ([]Reward, int, error)
 }
