@@ -38,3 +38,11 @@ func (rs *RewardServices) DeleteReward(rewardID uint) error {
 	}
 	return nil
 }
+
+func (rs *RewardServices) GetRewardByID(rewardID uint) (rewards.Reward, error) {
+	reward, err := rs.qry.GetRewardByID(rewardID)
+	if err != nil {
+		return rewards.Reward{}, errors.New("terjadi kesalahan pada server saat mengambil data reward")
+	}
+	return reward, nil
+}

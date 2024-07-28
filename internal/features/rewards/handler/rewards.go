@@ -161,3 +161,26 @@ func (rh *RewardHandler) DeleteReward() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "Reward was successfully deleted", nil))
 	}
 }
+
+func (rh *RewardHandler) GetRewardByID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		// Get reward ID from URL parameter
+		rewardIDStr := c.Param("id")
+		rewardID, err := strconv.ParseUint(rewardIDStr, 10, 32)
+		if err != nil {
+			log.Println("invalid reward ID")
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "Invalid reward ID", nil))
+		}
+
+		// Get reward from database
+		reward, err := rh.srv.GetRewardByID(uint(rewardID))
+		if err != nil {
+			log.Println("failed to get reward from database")
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "failed", "Failed to get reward", nil))
+		}
+
+		rewardResponse := ToRewardResponse(reward)
+
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "Reward was successfully retrieved", rewardResponse))
+	}
+}
