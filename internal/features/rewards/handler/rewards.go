@@ -184,3 +184,32 @@ func (rh *RewardHandler) GetRewardByID() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "Reward was successfully retrieved", rewardResponse))
 	}
 }
+
+func (rh *RewardHandler) GetAllRewards() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		limit, err := strconv.Atoi(c.QueryParam("limit"))
+		if err != nil || limit <= 0 {
+			limit = 10 // default limit
+		}
+
+		offset, err := strconv.Atoi(c.QueryParam("offset"))
+		if err != nil || offset < 0 {
+			offset = 0 // default offset
+		}
+
+		rewards, totalItems, err := rh.srv.GetAllRewards(limit, offset)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "Failed to get rewards", nil))
+		}
+
+		responseData := ToRewardsResponse(rewards)
+		meta := helpers.Meta{
+			TotalItems:   totalItems,
+			ItemsPerPage: limit,
+			CurrentPage:  offset/limit + 1,
+			TotalPages:   (totalItems + limit - 1) / limit,
+		}
+
+		return c.JSON(http.StatusOK, helpers.ResponseWithMetaFormat(http.StatusOK, "success", "Successfully get all rewards", responseData, meta))
+	}
+}
