@@ -28,3 +28,7 @@ func (rm *RewardModel) UpdateReward(rewardID uint, updateReward rewards.Reward) 
 	}
 	return rm.db.Model(&reward).Updates(updateReward).Error
 }
+
+func (rm *RewardModel) DeleteReward(rewardID uint) error {
+	return rm.db.Delete(&rewards.Reward{}, rewardID).Error
+}

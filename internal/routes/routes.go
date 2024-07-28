@@ -59,6 +59,7 @@ func RewardRoute(e *echo.Echo, rh rewards.RHandler) {
 	t.Use(JWTConfig())
 	t.POST("", rh.AddReward())
 	t.PUT("/:id", rh.UpdateReward())
+	t.DELETE("/:id", rh.DeleteReward())
 }
 
 func JWTConfig() echo.MiddlewareFunc {
