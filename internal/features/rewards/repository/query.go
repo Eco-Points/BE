@@ -32,3 +32,12 @@ func (rm *RewardModel) UpdateReward(rewardID uint, updateReward rewards.Reward) 
 func (rm *RewardModel) DeleteReward(rewardID uint) error {
 	return rm.db.Delete(&rewards.Reward{}, rewardID).Error
 }
+
+func (rm *RewardModel) GetRewardByID(rewardID uint) (rewards.Reward, error) {
+	var reward rewards.Reward
+	err := rm.db.First(&reward, rewardID).Error
+	if err != nil {
+		return rewards.Reward{}, err
+	}
+	return reward, nil
+}
