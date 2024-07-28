@@ -19,6 +19,10 @@ import (
 	l_rep "eco_points/internal/features/locations/repository"
 	l_srv "eco_points/internal/features/locations/service"
 
+	r_hnd "eco_points/internal/features/rewards/handler"
+	r_rep "eco_points/internal/features/rewards/repository"
+	r_srv "eco_points/internal/features/rewards/service"
+
 	"eco_points/internal/routes"
 	"eco_points/internal/utils"
 
@@ -51,9 +55,13 @@ func InitFactory(e *echo.Echo) {
 	lu := l_srv.NewLocService(lq)
 	lh := l_hnd.NewLocHandler(lu, jwt)
 
+	rq := r_rep.NewRewardModel(db)
+	rs := r_srv.NewRewardService(rq)
+	rh := r_hnd.NewRewardHandler(rs, jwt, cloud)
+
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORS())
 
-	routes.InitRoute(e, uh, th, dh, lh)
+	routes.InitRoute(e, uh, th, dh, lh, rh)
 }
