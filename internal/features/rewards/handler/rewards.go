@@ -134,3 +134,30 @@ func (rh *RewardHandler) UpdateReward() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "Reward was successfully updated", nil))
 	}
 }
+
+func (rh *RewardHandler) DeleteReward() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID := rh.tu.DecodToken(c.Get("user").(*jwt.Token))
+		if userID == 0 {
+			log.Println("error from jwt")
+			return c.JSON(http.StatusUnauthorized, helpers.ResponseFormat(http.StatusUnauthorized, "error", "Unauthorized", nil))
+		}
+
+		// Get reward ID from URL parameter
+		rewardIDStr := c.Param("id")
+		rewardID, err := strconv.ParseUint(rewardIDStr, 10, 32)
+		if err != nil {
+			log.Println("invalid reward ID")
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "Invalid reward ID", nil))
+		}
+
+		// Delete reward from database
+		err = rh.srv.DeleteReward(uint(rewardID))
+		if err != nil {
+			log.Println("failed to delete reward from database")
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "failed", "Failed to delete reward", nil))
+		}
+
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "Reward was successfully deleted", nil))
+	}
+}

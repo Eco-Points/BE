@@ -30,3 +30,11 @@ func (rs *RewardServices) UpdateReward(rewardID uint, updatedReward rewards.Rewa
 	}
 	return nil
 }
+
+func (rs *RewardServices) DeleteReward(rewardID uint) error {
+	err := rs.qry.DeleteReward(rewardID)
+	if err != nil {
+		return errors.New("terjadi kesalahan pada server saat menghapus reward")
+	}
+	return nil
+}

@@ -13,6 +13,7 @@ type Reward struct {
 	PointRequired uint32
 	Stock         uint32
 	Image         string
+	DeletedAt     gorm.DeletedAt `gorm:"index"`
 }
 
 func (r *Reward) ToRewardEntity() rewards.Reward {
