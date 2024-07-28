@@ -1,6 +1,7 @@
 package repository
 
 import (
+	exQuery "eco_points/internal/features/exchanges/repository"
 	"eco_points/internal/features/rewards"
 
 	"gorm.io/gorm"
@@ -13,7 +14,8 @@ type Reward struct {
 	PointRequired uint32
 	Stock         uint32
 	Image         string
-	DeletedAt     gorm.DeletedAt `gorm:"index"`
+	DeletedAt     gorm.DeletedAt     `gorm:"index"`
+	Exchange      []exQuery.Exchange `gorm:"foreignKey:RewardID"`
 }
 
 func (r *Reward) ToRewardEntity() rewards.Reward {
