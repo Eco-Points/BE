@@ -6,9 +6,10 @@ import (
 	u_rep "eco_points/internal/features/users/repository"
 	d_rep "eco_points/internal/features/waste_deposits/repository"
 	"fmt"
+	"log"
 	"os"
 
-	// "github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -29,6 +30,14 @@ type setting struct {
 func ImportSetting() setting {
 	var result setting
 
+	if _, err := os.Stat(".env"); !os.IsNotExist(err) {
+		err := godotenv.Load(".env")
+		if err != nil {
+			return setting{}
+		}
+	} else {
+		log.Println("file not exist")
+	}
 	result.User = os.Getenv("DB_USER")
 	result.Host = os.Getenv("DB_HOST")
 	result.Port = os.Getenv("DB_PORT")
