@@ -15,10 +15,11 @@ type User struct {
 	Address  string
 	IsAdmin  bool
 	Point    uint
+	Status   string
 	ImgURL   string
 }
 
-type Handler interface {
+type UHandler interface {
 	Register() echo.HandlerFunc
 	Login() echo.HandlerFunc
 	GetUser() echo.HandlerFunc
@@ -26,7 +27,7 @@ type Handler interface {
 	DeleteUser() echo.HandlerFunc
 }
 
-type Query interface {
+type UQuery interface {
 	Register(newUsers User) error
 	Login(email string) (User, error)
 	GetUser(ID uint) (User, error)
@@ -34,7 +35,7 @@ type Query interface {
 	DeleteUser(ID uint) error
 }
 
-type Service interface {
+type UService interface {
 	Register(newUser User) error
 	Login(email string, password string) (User, string, error)
 	GetUser(ID uint) (User, error)

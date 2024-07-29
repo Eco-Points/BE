@@ -16,10 +16,9 @@ type LoginRequest struct {
 type UpdateRequest struct {
 	Fullname string `json:"fullname" form:"fullname"`
 	Email    string `json:"email" form:"email"`
-	//	Password string `json:"password" form:"password"`
-	Phone   string `json:"phone" form:"phone"`
-	Address string `json:"address" form:"address"`
-	ImgURL  string
+	Phone    string `json:"phone" form:"phone"`
+	Address  string `json:"address" form:"address"`
+	ImgURL   string
 }
 
 func RegisterToUser(ur RegisterRequest) users.User {

@@ -14,7 +14,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerLocInterface, rh rewards.RHandler, exh exchanges.ExHandler) {
+func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerLocInterface, rh rewards.RHandler, exh exchanges.ExHandler) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -26,7 +26,7 @@ func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface,
 	ExchangeRoute(e, exh)
 }
 
-func UsersRoute(e *echo.Echo, uh users.Handler) {
+func UsersRoute(e *echo.Echo, uh users.UHandler) {
 	u := e.Group("/users")
 	u.Use(JWTConfig())
 	u.GET("", uh.GetUser())
