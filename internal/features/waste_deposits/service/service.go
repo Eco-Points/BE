@@ -42,3 +42,12 @@ func (s *depositService) GetUserDeposit(id uint, limit uint, offset uint) (depos
 	}
 	return result, nil
 }
+
+func (s *depositService) GetDepositbyId(deposit_id uint) (deposits.WasteDepositInterface, error) {
+	result, err := s.qry.GetDepositbyId(deposit_id)
+	if err != nil {
+		log.Println("error insert data", err)
+		return deposits.WasteDepositInterface{}, err
+	}
+	return result, nil
+}
