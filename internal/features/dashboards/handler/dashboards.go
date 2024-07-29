@@ -12,11 +12,11 @@ import (
 )
 
 type DashboardHandler struct {
-	srv dashboards.Service
+	srv dashboards.DshService
 	tu  utils.JwtUtilityInterface
 }
 
-func NewDashboardHandler(s dashboards.Service, t utils.JwtUtilityInterface) dashboards.Handler {
+func NewDashboardHandler(s dashboards.DshService, t utils.JwtUtilityInterface) dashboards.DshHandler {
 	return &DashboardHandler{
 		srv: s,
 		tu:  t,

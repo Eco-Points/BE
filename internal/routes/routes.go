@@ -13,7 +13,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface, dsh dashboards.Handler) {
+func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface, dsh dashboards.DshHandler) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -54,7 +54,7 @@ func LocRoute(e *echo.Echo, l locations.HandlerInterface) {
 
 }
 
-func DashboardRoute(e *echo.Echo, dsh dashboards.Handler) {
+func DashboardRoute(e *echo.Echo, dsh dashboards.DshHandler) {
 	ds := e.Group("/dashboard")
 	ds.Use(JWTConfig())
 	ds.GET("/users", dsh.GetAllUsers())

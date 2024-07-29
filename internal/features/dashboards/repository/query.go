@@ -10,7 +10,7 @@ type DashboardQuery struct {
 	db *gorm.DB
 }
 
-func NewDashboardQuery(connect *gorm.DB) dashboards.Query {
+func NewDashboardQuery(connect *gorm.DB) dashboards.DshQuery {
 	return &DashboardQuery{
 		db: connect,
 	}

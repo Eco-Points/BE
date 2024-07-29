@@ -21,17 +21,17 @@ type User struct {
 	ImgURL   string
 }
 
-type Handler interface {
+type DshHandler interface {
 	GetDashboard() echo.HandlerFunc
 	GetAllUsers() echo.HandlerFunc
 }
 
-type Service interface {
+type DshService interface {
 	GetDashboard(userID uint) (Dashboard, error)
 	GetAllUsers(userID uint, nameParams string) ([]User, error)
 }
 
-type Query interface {
+type DshQuery interface {
 	GetUserCount() (int, error)
 	GetExchangeCount() (int, error)
 	GetDepositCount() (int, error)

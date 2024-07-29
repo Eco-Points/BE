@@ -8,10 +8,10 @@ import (
 )
 
 type DashboardServices struct {
-	qry dashboards.Query
+	qry dashboards.DshQuery
 }
 
-func NewDashboardService(q dashboards.Query) dashboards.Service {
+func NewDashboardService(q dashboards.DshQuery) dashboards.DshService {
 	return &DashboardServices{
 		qry: q,
 	}
