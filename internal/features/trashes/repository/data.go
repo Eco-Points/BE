@@ -34,3 +34,29 @@ func totrashQuery(data trashes.TrashEntity) Trash {
 		UserID:    data.UserID,
 	}
 }
+
+func toListTrashQuery(data []Trash) trashes.ListTrashEntity {
+	var result trashes.ListTrashEntity
+	for _, v := range data {
+		dataList := struct {
+			TrashType string
+			Name      string
+			Point     uint
+			Descrip   string
+			Image     string
+			UserID    uint
+			ID        uint
+		}{
+			TrashType: v.TrashType,
+			Name:      v.Name,
+			Point:     v.Point,
+			Descrip:   v.Descrip,
+			Image:     v.Image,
+			UserID:    v.UserID,
+			ID:        v.ID,
+		}
+
+		result = append(result, dataList)
+	}
+	return result
+}
