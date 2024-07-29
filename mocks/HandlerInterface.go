@@ -4,7 +4,6 @@ package mocks
 
 import (
 	echo "github.com/labstack/echo/v4"
-
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -13,12 +12,12 @@ type HandlerInterface struct {
 	mock.Mock
 }
 
-// AddLocation provides a mock function with given fields:
-func (_m *HandlerInterface) AddLocation() echo.HandlerFunc {
+// AddTrash provides a mock function with given fields:
+func (_m *HandlerInterface) AddTrash() echo.HandlerFunc {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for AddLocation")
+		panic("no return value specified for AddTrash")
 	}
 
 	var r0 echo.HandlerFunc

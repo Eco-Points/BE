@@ -1,15 +1,17 @@
 package config
 
 import (
+	ex_rep "eco_points/internal/features/exchanges/repository"
 	l_rep "eco_points/internal/features/locations/repository"
 	r_rep "eco_points/internal/features/rewards/repository"
 	t_rep "eco_points/internal/features/trashes/repository"
 	u_rep "eco_points/internal/features/users/repository"
 	d_rep "eco_points/internal/features/waste_deposits/repository"
 	"fmt"
+	"log"
 	"os"
 
-	// "github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -30,6 +32,14 @@ type setting struct {
 func ImportSetting() setting {
 	var result setting
 
+	if _, err := os.Stat(".env"); !os.IsNotExist(err) {
+		err := godotenv.Load(".env")
+		if err != nil {
+			return setting{}
+		}
+	} else {
+		log.Println("file not exist")
+	}
 	result.User = os.Getenv("DB_USER")
 	result.Host = os.Getenv("DB_HOST")
 	result.Port = os.Getenv("DB_PORT")
@@ -55,7 +65,7 @@ func ConnectDB() (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = db.AutoMigrate(&u_rep.User{}, &t_rep.Trash{}, &d_rep.WasteDeposit{}, &l_rep.Location{}, &r_rep.Reward{})
+	err = db.AutoMigrate(&u_rep.User{}, &t_rep.Trash{}, &d_rep.WasteDeposit{}, &l_rep.Location{}, &r_rep.Reward{}, &ex_rep.Exchange{})
 	if err != nil {
 		return nil, err
 	}
