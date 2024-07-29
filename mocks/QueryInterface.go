@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	locations "eco_points/internal/features/locations"
+	deposits "eco_points/internal/features/waste_deposits"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -13,17 +13,70 @@ type QueryInterface struct {
 	mock.Mock
 }
 
-// AddLocation provides a mock function with given fields: data
-func (_m *QueryInterface) AddLocation(data locations.LocationInterface) error {
+// DepositTrash provides a mock function with given fields: data
+func (_m *QueryInterface) DepositTrash(data deposits.WasteDepositInterface) error {
 	ret := _m.Called(data)
 
 	if len(ret) == 0 {
-		panic("no return value specified for AddLocation")
+		panic("no return value specified for DepositTrash")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(locations.LocationInterface) error); ok {
+	if rf, ok := ret.Get(0).(func(deposits.WasteDepositInterface) error); ok {
 		r0 = rf(data)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// GetUserDeposit provides a mock function with given fields: id, limit, offset
+func (_m *QueryInterface) GetUserDeposit(id uint, limit uint, offset uint) (deposits.ListWasteDepositInterface, error) {
+	ret := _m.Called(id, limit, offset)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserDeposit")
+	}
+
+	var r0 deposits.ListWasteDepositInterface
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint, uint, uint) (deposits.ListWasteDepositInterface, error)); ok {
+		return rf(id, limit, offset)
+	}
+	if rf, ok := ret.Get(0).(func(uint, uint, uint) deposits.ListWasteDepositInterface); ok {
+		r0 = rf(id, limit, offset)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(deposits.ListWasteDepositInterface)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uint, uint, uint) error); ok {
+		r1 = rf(id, limit, offset)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SetDbSchema provides a mock function with given fields: schema
+func (_m *QueryInterface) SetDbSchema(schema string) {
+	_m.Called(schema)
+}
+
+// UpdateWasteDepositStatus provides a mock function with given fields: waste_id, status
+func (_m *QueryInterface) UpdateWasteDepositStatus(waste_id uint, status string) error {
+	ret := _m.Called(waste_id, status)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateWasteDepositStatus")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uint, string) error); ok {
+		r0 = rf(waste_id, status)
 	} else {
 		r0 = ret.Error(0)
 	}
