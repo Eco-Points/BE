@@ -1,6 +1,8 @@
 package rewards
 
 import (
+	"mime/multipart"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -22,8 +24,8 @@ type RHandler interface {
 }
 
 type RServices interface {
-	AddReward(newReward Reward) error
-	UpdateReward(rewardID uint, updatedReward Reward) error
+	AddReward(newReward Reward, src multipart.File, filename string) error
+	UpdateReward(rewardID uint, updatedReward Reward, src multipart.File, filename string) error
 	DeleteReward(rewardID uint) error
 	GetRewardByID(rewardID uint) (Reward, error)
 	GetAllRewards(limit int, offset int) ([]Reward, int, error)
