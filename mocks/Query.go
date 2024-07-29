@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	users "eco_points/internal/features/users"
+	dashboards "eco_points/internal/features/dashboards"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -13,45 +13,27 @@ type Query struct {
 	mock.Mock
 }
 
-// DeleteUser provides a mock function with given fields: ID
-func (_m *Query) DeleteUser(ID uint) error {
-	ret := _m.Called(ID)
+// CheckIsAdmin provides a mock function with given fields: userID
+func (_m *Query) CheckIsAdmin(userID uint) (bool, error) {
+	ret := _m.Called(userID)
 
 	if len(ret) == 0 {
-		panic("no return value specified for DeleteUser")
+		panic("no return value specified for CheckIsAdmin")
 	}
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(uint) error); ok {
-		r0 = rf(ID)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
-// GetUser provides a mock function with given fields: ID
-func (_m *Query) GetUser(ID uint) (users.User, error) {
-	ret := _m.Called(ID)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetUser")
-	}
-
-	var r0 users.User
+	var r0 bool
 	var r1 error
-	if rf, ok := ret.Get(0).(func(uint) (users.User, error)); ok {
-		return rf(ID)
+	if rf, ok := ret.Get(0).(func(uint) (bool, error)); ok {
+		return rf(userID)
 	}
-	if rf, ok := ret.Get(0).(func(uint) users.User); ok {
-		r0 = rf(ID)
+	if rf, ok := ret.Get(0).(func(uint) bool); ok {
+		r0 = rf(userID)
 	} else {
-		r0 = ret.Get(0).(users.User)
+		r0 = ret.Get(0).(bool)
 	}
 
 	if rf, ok := ret.Get(1).(func(uint) error); ok {
-		r1 = rf(ID)
+		r1 = rf(userID)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -59,27 +41,29 @@ func (_m *Query) GetUser(ID uint) (users.User, error) {
 	return r0, r1
 }
 
-// Login provides a mock function with given fields: email
-func (_m *Query) Login(email string) (users.User, error) {
-	ret := _m.Called(email)
+// GetAllUsers provides a mock function with given fields: nameParams
+func (_m *Query) GetAllUsers(nameParams string) ([]dashboards.User, error) {
+	ret := _m.Called(nameParams)
 
 	if len(ret) == 0 {
-		panic("no return value specified for Login")
+		panic("no return value specified for GetAllUsers")
 	}
 
-	var r0 users.User
+	var r0 []dashboards.User
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string) (users.User, error)); ok {
-		return rf(email)
+	if rf, ok := ret.Get(0).(func(string) ([]dashboards.User, error)); ok {
+		return rf(nameParams)
 	}
-	if rf, ok := ret.Get(0).(func(string) users.User); ok {
-		r0 = rf(email)
+	if rf, ok := ret.Get(0).(func(string) []dashboards.User); ok {
+		r0 = rf(nameParams)
 	} else {
-		r0 = ret.Get(0).(users.User)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dashboards.User)
+		}
 	}
 
 	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(email)
+		r1 = rf(nameParams)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -87,40 +71,88 @@ func (_m *Query) Login(email string) (users.User, error) {
 	return r0, r1
 }
 
-// Register provides a mock function with given fields: newUsers
-func (_m *Query) Register(newUsers users.User) error {
-	ret := _m.Called(newUsers)
+// GetDepositCount provides a mock function with given fields:
+func (_m *Query) GetDepositCount() (int, error) {
+	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for Register")
+		panic("no return value specified for GetDepositCount")
 	}
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(users.User) error); ok {
-		r0 = rf(newUsers)
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (int, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() int); ok {
+		r0 = rf()
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(int)
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
-// UpdateUser provides a mock function with given fields: ID, updateUser
-func (_m *Query) UpdateUser(ID uint, updateUser users.User) error {
-	ret := _m.Called(ID, updateUser)
+// GetExchangeCount provides a mock function with given fields:
+func (_m *Query) GetExchangeCount() (int, error) {
+	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for UpdateUser")
+		panic("no return value specified for GetExchangeCount")
 	}
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(uint, users.User) error); ok {
-		r0 = rf(ID, updateUser)
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (int, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() int); ok {
+		r0 = rf()
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(int)
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetUserCount provides a mock function with given fields:
+func (_m *Query) GetUserCount() (int, error) {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserCount")
+	}
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (int, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() int); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // NewQuery creates a new instance of Query. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.

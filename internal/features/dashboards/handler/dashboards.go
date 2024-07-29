@@ -23,7 +23,7 @@ func NewDashboardHandler(s dashboards.Service, t utils.JwtUtilityInterface) dash
 	}
 }
 
-func (uc *DashboardHandler) GetUser() echo.HandlerFunc {
+func (uc *DashboardHandler) GetDashboard() echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
@@ -36,5 +36,26 @@ func (uc *DashboardHandler) GetUser() echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully get the deposit history", result))
+	}
+}
+
+func (uc *DashboardHandler) GetAllUsers() echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
+		nameParams := c.QueryParam("name")
+
+		result, err := uc.srv.GetAllUsers(uint(userID), nameParams)
+		if err != nil {
+			if strings.ContainsAny(err.Error(), "not found") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "not found", nil))
+			}
+			if strings.ContainsAny(err.Error(), "not allowed") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "not allowed", nil))
+			}
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
+		}
+
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully get all users datas", result))
 	}
 }

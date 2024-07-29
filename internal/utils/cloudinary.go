@@ -4,12 +4,14 @@ import (
 	"context"
 	"eco_points/config"
 	"io"
+	"mime/multipart"
 
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 )
 
 type CloudinaryUtilityInterface interface {
+	FileCheck(file *multipart.FileHeader) (multipart.File, error)
 	UploadToCloudinary(file io.Reader, filename string) (string, error)
 }
 
@@ -39,4 +41,13 @@ func (c *CloudinaryUtility) UploadToCloudinary(file io.Reader, filename string) 
 
 	publicURL := uploadResult.URL
 	return publicURL, nil
+}
+
+func (c *CloudinaryUtility) FileCheck(file *multipart.FileHeader) (multipart.File, error) {
+	src, err := file.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer src.Close()
+	return src, nil
 }

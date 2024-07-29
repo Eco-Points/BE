@@ -18,6 +18,7 @@ type User struct {
 	Address  string
 	IsAdmin  bool
 	Point    uint
+	Status   string
 	ImgURL   string
 	Trash    []trashQuery.Trash       `gorm:"foreignKey:UserID"`
 	Location []lochQuery.Location     `gorm:"foreignKey:UserID"`
@@ -34,6 +35,7 @@ func (u *User) ToUserEntity() users.User {
 		Phone:    u.Phone,
 		Address:  u.Address,
 		IsAdmin:  u.IsAdmin,
+		Status:   u.Status,
 		Point:    u.Point,
 		ImgURL:   u.ImgURL,
 	}
@@ -48,6 +50,7 @@ func ToUserQuery(input users.User) User {
 		Phone:    input.Phone,
 		Address:  input.Address,
 		IsAdmin:  input.IsAdmin,
+		Status:   input.Status,
 		Point:    input.Point,
 		ImgURL:   input.ImgURL,
 	}
