@@ -12,13 +12,13 @@ import (
 )
 
 type UserServices struct {
-	qry   users.Query
+	qry   users.UQuery
 	pwd   utils.PassUtilInterface
 	jwt   utils.JwtUtilityInterface
 	cloud utils.CloudinaryUtilityInterface
 }
 
-func NewUserService(q users.Query, p utils.PassUtilInterface, j utils.JwtUtilityInterface, c utils.CloudinaryUtilityInterface) users.Service {
+func NewUserService(q users.UQuery, p utils.PassUtilInterface, j utils.JwtUtilityInterface, c utils.CloudinaryUtilityInterface) users.UService {
 	return &UserServices{
 		qry:   q,
 		pwd:   p,
@@ -32,11 +32,12 @@ func (us *UserServices) Register(newUser users.User) error {
 	// hashing password
 	hashPw, err := us.pwd.GeneratePassword(newUser.Password)
 	if err != nil {
-		log.Println("register generete password error", err.Error())
+		log.Println("register generate password error", err.Error())
 		return err
 	}
 	newUser.IsAdmin = false
 	newUser.Password = string(hashPw)
+	newUser.Status = "active"
 
 	// register
 	err = us.qry.Register(newUser)
@@ -75,12 +76,12 @@ func (us *UserServices) Login(email string, password string) (users.User, string
 
 func (us *UserServices) GetUser(ID uint) (users.User, error) {
 	result, err := us.qry.GetUser(ID)
-	msg := "terjadi kesalahan pada server"
+
 	if err != nil {
 		if err.Error() == gorm.ErrRecordNotFound.Error() {
-			msg = "data tidak ditemukan"
+			return users.User{}, err
 		}
-		return users.User{}, errors.New(msg)
+		return users.User{}, errors.New("error in query")
 	}
 
 	return result, nil
@@ -99,13 +100,13 @@ func (us *UserServices) UpdateUser(ID uint, updateUser users.User, file *multipa
 	if file != nil {
 		src, err := file.Open()
 		if err != nil {
-			return errors.New("interval server error")
+			return errors.New("file Error")
 		}
 		defer src.Close()
 
 		urlImage, err := us.cloud.UploadToCloudinary(src, file.Filename)
 		if err != nil {
-			return errors.New("interval server error")
+			return errors.New("upload error")
 		}
 		updateUser.ImgURL = urlImage
 	}
@@ -114,7 +115,7 @@ func (us *UserServices) UpdateUser(ID uint, updateUser users.User, file *multipa
 
 	if err != nil {
 		log.Print("update user query error", err.Error())
-		return errors.New("interval server error")
+		return errors.New("query error")
 	}
 
 	return nil
@@ -125,7 +126,7 @@ func (us *UserServices) DeleteUser(ID uint) error {
 
 	if err != nil {
 		log.Print("delte user query error", err.Error())
-		return errors.New("interval server error")
+		return errors.New("query error")
 	}
 
 	return nil
