@@ -48,6 +48,17 @@ func toWasteDeposit(data deposits.WasteDepositInterface) WasteDeposit {
 	}
 }
 
+func toWasteDepositInterface(data WasteDeposit) deposits.WasteDepositInterface {
+	return deposits.WasteDepositInterface{
+		TrashID:    data.TrashID,
+		UserID:     data.UserID,
+		LocationID: data.LocationID,
+		Quantity:   data.Quantity,
+		Point:      (data.Point * data.Quantity),
+		Status:     data.Status,
+	}
+}
+
 func toWasteDepositListInterface(data ListWasteDeposit) deposits.ListWasteDepositInterface {
 	var result deposits.ListWasteDepositInterface
 	for _, v := range data {
@@ -57,6 +68,7 @@ func toWasteDepositListInterface(data ListWasteDeposit) deposits.ListWasteDeposi
 			DepoTime string
 			Quantity uint
 			ID       uint
+			Status   string
 		}{
 			Type:     v.Type,
 			Point:    v.Point,

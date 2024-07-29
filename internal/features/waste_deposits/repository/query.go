@@ -63,3 +63,14 @@ func (q *depositQuery) GetUserDeposit(id uint, limit uint, offset uint) (deposit
 	rV := toWasteDepositListInterface(result)
 	return rV, nil
 }
+
+func (d *depositQuery) GetDepositbyId(deposit_id uint) (deposits.WasteDepositInterface, error) {
+	fmt.Println("run query")
+	result := WasteDeposit{}
+	err := d.db.First(&result, deposit_id)
+	if err.Error != nil {
+		log.Println("error select to table", err)
+		return deposits.WasteDepositInterface{}, err.Error
+	}
+	return toWasteDepositInterface(result), err.Error
+}

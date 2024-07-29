@@ -10,6 +10,8 @@ type WasteDepositInterface struct {
 	Quantity   uint
 	Point      uint
 	Status     string
+	Type       string
+	DepoTime   string
 }
 
 type ListWasteDepositInterface []struct {
@@ -18,6 +20,7 @@ type ListWasteDepositInterface []struct {
 	DepoTime string
 	Quantity uint
 	ID       uint
+	Status   string
 }
 
 type QueryInterface interface {
@@ -25,16 +28,19 @@ type QueryInterface interface {
 	DepositTrash(data WasteDepositInterface) error
 	UpdateWasteDepositStatus(waste_id uint, status string) error
 	GetUserDeposit(id uint, limit uint, offset uint) (ListWasteDepositInterface, error)
+	GetDepositbyId(deposit_id uint) (WasteDepositInterface, error)
 }
 
 type ServiceInterface interface {
 	DepositTrash(data WasteDepositInterface) error
 	UpdateWasteDepositStatus(waste_id uint, status string) error
 	GetUserDeposit(id uint, limit uint, offset uint) (ListWasteDepositInterface, error)
+	GetDepositbyId(deposit_id uint) (WasteDepositInterface, error)
 }
 
 type HandlerInterface interface {
 	DepositTrash() echo.HandlerFunc
 	UpdateWasteDepositStatus() echo.HandlerFunc
 	GetUserDeposit() echo.HandlerFunc
+	GetDepositbyId() echo.HandlerFunc
 }
