@@ -12,7 +12,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface) {
+func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerLocInterface) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -45,10 +45,12 @@ func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.Hand
 	d.GET("", dh.GetUserDeposit())
 }
 
-func LocRoute(e *echo.Echo, l locations.HandlerInterface) {
+func LocRoute(e *echo.Echo, l locations.HandlerLocInterface) {
 	t := e.Group("/location")
 	t.Use(JWTConfig())
 	t.POST("", l.AddLocation())
+	t.GET("/:id", l.GetLocation())
+	t.GET("", l.GetLocation())
 
 }
 func JWTConfig() echo.MiddlewareFunc {

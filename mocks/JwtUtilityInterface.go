@@ -4,6 +4,8 @@ package mocks
 
 import (
 	jwt "github.com/golang-jwt/jwt/v5"
+	echo "github.com/labstack/echo/v4"
+
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -28,6 +30,34 @@ func (_m *JwtUtilityInterface) DecodToken(token *jwt.Token) float64 {
 	}
 
 	return r0
+}
+
+// DecodTokenV2 provides a mock function with given fields: c
+func (_m *JwtUtilityInterface) DecodTokenV2(c echo.Context) (uint, error) {
+	ret := _m.Called(c)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DecodTokenV2")
+	}
+
+	var r0 uint
+	var r1 error
+	if rf, ok := ret.Get(0).(func(echo.Context) (uint, error)); ok {
+		return rf(c)
+	}
+	if rf, ok := ret.Get(0).(func(echo.Context) uint); ok {
+		r0 = rf(c)
+	} else {
+		r0 = ret.Get(0).(uint)
+	}
+
+	if rf, ok := ret.Get(1).(func(echo.Context) error); ok {
+		r1 = rf(c)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // GenereteJwt provides a mock function with given fields: id

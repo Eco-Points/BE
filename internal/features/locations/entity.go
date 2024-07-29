@@ -13,14 +13,18 @@ type LocationInterface struct {
 	UserID     uint
 }
 
-type QueryInterface interface {
+type QueryLocInterface interface {
 	AddLocation(data LocationInterface) error
+	GetLocation(id uint) ([]LocationInterface, error)
+	GetAllLocation() ([]LocationInterface, error)
 }
 
-type ServiceInterface interface {
+type ServiceLocInterface interface {
 	AddLocation(data LocationInterface) error
+	GetLocation(id uint) ([]LocationInterface, error)
 }
 
-type HandlerInterface interface {
+type HandlerLocInterface interface {
 	AddLocation() echo.HandlerFunc
+	GetLocation() echo.HandlerFunc
 }
