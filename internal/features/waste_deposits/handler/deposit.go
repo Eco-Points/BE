@@ -88,8 +88,7 @@ func (h *depositHandler) GetUserDeposit() echo.HandlerFunc {
 			log.Println("error get data", err)
 			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
 		}
-
-		return helpers.EasyHelper(c, http.StatusCreated, "succes", "waste deposit was successfully created", toListWasteDepositResponse(result))
+		return helpers.EasyHelper(c, http.StatusCreated, "succes", "get trash deposit was successfully", toListWasteDepositResponse(result))
 
 	}
 }
@@ -107,13 +106,14 @@ func (h *depositHandler) GetDepositbyId() echo.HandlerFunc {
 		if err != nil {
 			log.Println("wrong parameter")
 		}
+
 		result, err := h.srv.GetDepositbyId(uint(deposit_id))
 		if err != nil {
 			log.Println("error get data", err)
 			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
 		}
 
-		return helpers.EasyHelper(c, http.StatusCreated, "succes", "waste deposit was successfully created", toWasteDepositResponse(result))
+		return helpers.EasyHelper(c, http.StatusCreated, "succes", "get trash deposit was successfully", toWasteDepositResponse(result))
 
 	}
 }

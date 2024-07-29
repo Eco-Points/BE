@@ -12,6 +12,7 @@ type WasteDepositInterface struct {
 	Status     string
 	Type       string
 	DepoTime   string
+	Fullname   string
 }
 
 type ListWasteDepositInterface []struct {
@@ -21,6 +22,7 @@ type ListWasteDepositInterface []struct {
 	Quantity uint
 	ID       uint
 	Status   string
+	Fullname string
 }
 
 type QueryInterface interface {

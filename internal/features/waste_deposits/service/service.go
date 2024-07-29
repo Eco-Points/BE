@@ -2,7 +2,6 @@ package service
 
 import (
 	deposits "eco_points/internal/features/waste_deposits"
-	"fmt"
 	"log"
 )
 
@@ -45,7 +44,6 @@ func (s *depositService) GetUserDeposit(id uint, limit uint, offset uint) (depos
 }
 
 func (s *depositService) GetDepositbyId(deposit_id uint) (deposits.WasteDepositInterface, error) {
-	fmt.Println("run service")
 	result, err := s.qry.GetDepositbyId(deposit_id)
 	if err != nil {
 		log.Println("error insert data", err)

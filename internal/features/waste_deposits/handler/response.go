@@ -12,6 +12,7 @@ type ListWasteDeposit []struct {
 	Quantity uint   `json:"quantity"`
 	ID       uint   `json:"id"`
 	Status   string `json:"status"`
+	Fullname string `json:"fullname"`
 }
 
 type RespWasteDeposit struct {
@@ -21,6 +22,7 @@ type RespWasteDeposit struct {
 	Quantity uint   `json:"quantity"`
 	ID       uint   `json:"id"`
 	Status   string `json:"status"`
+	Fullname string `json:"fullname"`
 }
 
 func ConvertDateTime(data string) string {
@@ -41,6 +43,7 @@ func toListWasteDepositResponse(data deposits.ListWasteDepositInterface) ListWas
 			Quantity uint
 			ID       uint
 			Status   string
+			Fullname string
 		}{
 			Type:     v.Type,
 			Point:    v.Point,
@@ -48,6 +51,7 @@ func toListWasteDepositResponse(data deposits.ListWasteDepositInterface) ListWas
 			Quantity: v.Quantity,
 			ID:       v.ID,
 			Status:   v.Status,
+			Fullname: v.Fullname,
 		}
 		result = append(result, struct {
 			Type     string "json:\"type\""
@@ -56,9 +60,9 @@ func toListWasteDepositResponse(data deposits.ListWasteDepositInterface) ListWas
 			Quantity uint   "json:\"quantity\""
 			ID       uint   "json:\"id\""
 			Status   string "json:\"status\""
+			Fullname string "json:\"fullname\""
 		}(dataList))
 	}
-
 	return result
 }
 
@@ -70,6 +74,7 @@ func toWasteDepositResponse(data deposits.WasteDepositInterface) RespWasteDeposi
 		Quantity: data.Quantity,
 		ID:       data.ID,
 		Status:   data.Status,
+		Fullname: data.Fullname,
 	}
 
 }
