@@ -24,21 +24,14 @@ func (s *locService) AddLocation(data locations.LocationInterface) error {
 	return nil
 }
 
-func (s *locService) GetLocation(id uint) ([]locations.LocationInterface, error) {
+func (s *locService) GetLocation(limit uint) ([]locations.LocationInterface, error) {
 	var result []locations.LocationInterface
 	var err error
-	if id != 0 {
-		result, err = s.qry.GetLocation(id)
-		if err != nil {
-			log.Println("error get data", err)
-			return []locations.LocationInterface{}, err
-		}
-	} else {
-		result, err = s.qry.GetAllLocation()
-		if err != nil {
-			log.Println("error get data", err)
-			return []locations.LocationInterface{}, err
-		}
+	result, err = s.qry.GetLocation(limit)
+	if err != nil {
+		log.Println("error get data", err)
+		return []locations.LocationInterface{}, err
 	}
+
 	return result, err
 }

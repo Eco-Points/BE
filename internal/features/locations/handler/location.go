@@ -4,6 +4,7 @@ import (
 	"eco_points/internal/features/locations"
 	"eco_points/internal/helpers"
 	"eco_points/internal/utils"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -59,12 +60,14 @@ func (h *locHandler) GetLocation() echo.HandlerFunc {
 			log.Println("user ID = ", jwtUserID)
 			return helpers.EasyHelper(c, http.StatusBadRequest, "unautoriezd", "bad request/invalid jwt", nil)
 		}
-		paramUserID := c.Param("id")
-		userID, err := strconv.Atoi(paramUserID)
-		if err != nil {
-			userID = 0
+		limitPage, err := strconv.Atoi(c.QueryParam("limit"))
+
+		if err != nil || limitPage == 0 {
+			fmt.Println("Limit page null")
+			limitPage = 10
 		}
-		result, err := h.srv.GetLocation(uint(userID))
+
+		result, err := h.srv.GetLocation(uint(limitPage))
 		if err != nil {
 			log.Println("error insert data", err)
 			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)

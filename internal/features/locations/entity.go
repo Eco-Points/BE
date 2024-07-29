@@ -15,13 +15,12 @@ type LocationInterface struct {
 
 type QueryLocInterface interface {
 	AddLocation(data LocationInterface) error
-	GetLocation(id uint) ([]LocationInterface, error)
-	GetAllLocation() ([]LocationInterface, error)
+	GetLocation(limit uint) ([]LocationInterface, error)
 }
 
 type ServiceLocInterface interface {
 	AddLocation(data LocationInterface) error
-	GetLocation(id uint) ([]LocationInterface, error)
+	GetLocation(limit uint) ([]LocationInterface, error)
 }
 
 type HandlerLocInterface interface {

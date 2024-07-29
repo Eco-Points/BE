@@ -49,9 +49,7 @@ func LocRoute(e *echo.Echo, l locations.HandlerLocInterface) {
 	t := e.Group("/location")
 	t.Use(JWTConfig())
 	t.POST("", l.AddLocation())
-	t.GET("/:id", l.GetLocation())
 	t.GET("", l.GetLocation())
-
 }
 func JWTConfig() echo.MiddlewareFunc {
 	return echojwt.WithConfig(
