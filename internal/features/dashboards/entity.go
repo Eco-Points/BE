@@ -24,11 +24,13 @@ type User struct {
 type DshHandler interface {
 	GetDashboard() echo.HandlerFunc
 	GetAllUsers() echo.HandlerFunc
+	GetUser() echo.HandlerFunc
 }
 
 type DshService interface {
 	GetDashboard(userID uint) (Dashboard, error)
 	GetAllUsers(userID uint, nameParams string) ([]User, error)
+	GetUser(userID uint, targetID uint) (User, error)
 }
 
 type DshQuery interface {
@@ -37,4 +39,5 @@ type DshQuery interface {
 	GetDepositCount() (int, error)
 	CheckIsAdmin(userID uint) (bool, error)
 	GetAllUsers(nameParams string) ([]User, error)
+	GetUser(userID uint) (User, error)
 }

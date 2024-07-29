@@ -83,3 +83,26 @@ func (ds *DashboardServices) GetAllUsers(userID uint, nameParams string) ([]dash
 
 	return result, nil
 }
+
+func (ds *DashboardServices) GetUser(userID uint, targetID uint) (dashboards.User, error) {
+
+	isAdmin, err := ds.qry.CheckIsAdmin(userID)
+	if err != nil {
+		if err.Error() == gorm.ErrRecordNotFound.Error() || !isAdmin {
+			return dashboards.User{}, errors.New("not allowed")
+		}
+		return dashboards.User{}, errors.New("check admin query error")
+
+	}
+
+	result, err := ds.qry.GetUser(targetID)
+	if err != nil {
+		if err.Error() == gorm.ErrRecordNotFound.Error() {
+			return dashboards.User{}, errors.New("not found")
+		}
+		return dashboards.User{}, errors.New("get user query error")
+
+	}
+
+	return result, nil
+}
