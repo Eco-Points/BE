@@ -40,20 +40,40 @@ func (q *depositQuery) DepositTrash(data deposits.WasteDepositInterface) error {
 	return nil
 }
 
-func (d *depositQuery) UpdateWasteDepositStatus(waste_id uint, status string) error {
-	err := d.db.Debug().Model(&WasteDeposit{}).Where("id = ?", waste_id).Update("status", status).Error
-	if err != nil {
-		log.Println("error insert to tabel", err)
-		return err
-	}
-	return nil
+func (d *depositQuery) UpdateWasteDepositStatus(wasteID uint, status string) error {
+	return d.db.Transaction(func(tx *gorm.DB) error {
+		// Update the status of the waste deposit
+		err := tx.Debug().Model(&WasteDeposit{}).Where("id = ?", wasteID).Update("status", status).Error
+		if err != nil {
+			log.Println("error updating waste deposit status", err)
+			return err
+		}
+
+		// Get the points and user_id from the waste deposit
+		var deposit WasteDeposit
+		err = tx.Debug().Preload("User").Where("id = ?", wasteID).First(&deposit).Error
+		if err != nil {
+			log.Println("error fetching waste deposit", err)
+			return err
+		}
+
+		// Update the user's points directly using GORM
+		err = tx.Debug().Model(&User{}).Where("id = ?", deposit.UserID).Update("point", gorm.Expr("point + ?", deposit.Point)).Error
+		if err != nil {
+			log.Println("error updating user points", err)
+			return err
+		}
+
+		return nil
+	})
 }
 
 func (q *depositQuery) GetUserDeposit(id uint, limit uint, offset uint) (deposits.ListWasteDepositInterface, error) {
-	result := ListWasteDeposit{}
-	query := fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.quantity, wd.updated_at from "%s".waste_deposits wd 
+	result := []ListWasteDeposit{}
+	query := fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.status, wd.quantity, u.fullname, wd.created_at from "%s".waste_deposits wd 
 	join "%s".trashes t on t.id = wd.trash_id 
-	where wd.user_id = %d and wd."deleted_at" IS NULL limit %d offset %d;`, DbSchema, DbSchema, id, limit, offset)
+	join "%s".users u on u.id = wd.user_id 
+	where wd.user_id = %d and wd."deleted_at" IS NULL limit %d offset %d;`, DbSchema, DbSchema, DbSchema, id, limit, offset)
 
 	err := q.db.Debug().Raw(query).Scan(&result).Error
 	if err != nil {
@@ -62,4 +82,32 @@ func (q *depositQuery) GetUserDeposit(id uint, limit uint, offset uint) (deposit
 	}
 	rV := toWasteDepositListInterface(result)
 	return rV, nil
+}
+
+func (d *depositQuery) GetDepositbyId(deposit_id uint) (deposits.WasteDepositInterface, error) {
+	result := WasteDeposit{}
+	err := d.db.First(&result, deposit_id)
+
+	if err.Error != nil {
+		log.Println("error select to table", err)
+		return deposits.WasteDepositInterface{}, err.Error
+	}
+
+	trashData := Trash{}
+	err = d.db.First(&trashData, result.TrashID)
+
+	if err.Error != nil {
+		log.Println("error select to table", err)
+		return deposits.WasteDepositInterface{}, err.Error
+	}
+
+	userData := User{}
+	err = d.db.First(&userData, result.UserID)
+
+	if err.Error != nil {
+		log.Println("error select to table", err)
+		return deposits.WasteDepositInterface{}, err.Error
+	}
+
+	return toWasteDepositInterface(result, trashData, userData), err.Error
 }

@@ -3,7 +3,9 @@ package routes
 import (
 	"eco_points/config"
 	"eco_points/internal/features/dashboards"
+	"eco_points/internal/features/exchanges"
 	"eco_points/internal/features/locations"
+	"eco_points/internal/features/rewards"
 	"eco_points/internal/features/trashes"
 	users "eco_points/internal/features/users"
 	deposits "eco_points/internal/features/waste_deposits"
@@ -13,7 +15,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface, dsh dashboards.DshHandler) {
+func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface, rh rewards.RHandler, exh exchanges.ExHandler, dsh dashboards.DshHandler) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -22,6 +24,8 @@ func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface
 	TrashRoute(e, th, dh)
 	LocRoute(e, l)
 	DashboardRoute(e, dsh)
+	RewardRoute(e, rh)
+	ExchangeRoute(e, exh)
 }
 
 func UsersRoute(e *echo.Echo, uh users.UHandler) {
@@ -45,6 +49,8 @@ func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.Hand
 	d.POST("", dh.DepositTrash())
 	d.PUT("", dh.UpdateWasteDepositStatus())
 	d.GET("", dh.GetUserDeposit())
+	d.GET("/:id", dh.GetDepositbyId())
+
 }
 
 func LocRoute(e *echo.Echo, l locations.HandlerInterface) {
@@ -60,6 +66,24 @@ func DashboardRoute(e *echo.Echo, dsh dashboards.DshHandler) {
 	ds.GET("/users", dsh.GetAllUsers())
 
 }
+
+func RewardRoute(e *echo.Echo, rh rewards.RHandler) {
+	t := e.Group("/reward")
+	t.Use(JWTConfig())
+	t.POST("", rh.AddReward())
+	t.PUT("/:id", rh.UpdateReward())
+	t.DELETE("/:id", rh.DeleteReward())
+
+	e.GET("/reward/:id", rh.GetRewardByID())
+	e.GET("/reward", rh.GetAllRewards())
+}
+
+func ExchangeRoute(e *echo.Echo, exh exchanges.ExHandler) {
+	t := e.Group("/exchange")
+	t.Use(JWTConfig())
+	t.POST("", exh.AddExchange())
+}
+
 func JWTConfig() echo.MiddlewareFunc {
 	return echojwt.WithConfig(
 		echojwt.Config{
