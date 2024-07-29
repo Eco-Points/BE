@@ -8,17 +8,33 @@ type Dashboard struct {
 	ExchangeCount int `json:"exchange_count"`
 }
 
-type Handler interface {
+type User struct {
+	ID       uint
+	Fullname string
+	Email    string
+	Password string
+	Phone    string
+	Address  string
+	IsAdmin  bool
+	Status   string
+	Point    uint
+	ImgURL   string
+}
+
+type DshHandler interface {
 	GetDashboard() echo.HandlerFunc
+	GetAllUsers() echo.HandlerFunc
 }
 
-type Service interface {
+type DshService interface {
 	GetDashboard(userID uint) (Dashboard, error)
+	GetAllUsers(userID uint, nameParams string) ([]User, error)
 }
 
-type Query interface {
+type DshQuery interface {
 	GetUserCount() (int, error)
 	GetExchangeCount() (int, error)
 	GetDepositCount() (int, error)
 	CheckIsAdmin(userID uint) (bool, error)
+	GetAllUsers(nameParams string) ([]User, error)
 }

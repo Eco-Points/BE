@@ -12,12 +12,12 @@ type Handler struct {
 	mock.Mock
 }
 
-// DeleteUser provides a mock function with given fields:
-func (_m *Handler) DeleteUser() echo.HandlerFunc {
+// GetAllUsers provides a mock function with given fields:
+func (_m *Handler) GetAllUsers() echo.HandlerFunc {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for DeleteUser")
+		panic("no return value specified for GetAllUsers")
 	}
 
 	var r0 echo.HandlerFunc
@@ -32,72 +32,12 @@ func (_m *Handler) DeleteUser() echo.HandlerFunc {
 	return r0
 }
 
-// GetUser provides a mock function with given fields:
-func (_m *Handler) GetUser() echo.HandlerFunc {
+// GetDashboard provides a mock function with given fields:
+func (_m *Handler) GetDashboard() echo.HandlerFunc {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetUser")
-	}
-
-	var r0 echo.HandlerFunc
-	if rf, ok := ret.Get(0).(func() echo.HandlerFunc); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(echo.HandlerFunc)
-		}
-	}
-
-	return r0
-}
-
-// Login provides a mock function with given fields:
-func (_m *Handler) Login() echo.HandlerFunc {
-	ret := _m.Called()
-
-	if len(ret) == 0 {
-		panic("no return value specified for Login")
-	}
-
-	var r0 echo.HandlerFunc
-	if rf, ok := ret.Get(0).(func() echo.HandlerFunc); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(echo.HandlerFunc)
-		}
-	}
-
-	return r0
-}
-
-// Register provides a mock function with given fields:
-func (_m *Handler) Register() echo.HandlerFunc {
-	ret := _m.Called()
-
-	if len(ret) == 0 {
-		panic("no return value specified for Register")
-	}
-
-	var r0 echo.HandlerFunc
-	if rf, ok := ret.Get(0).(func() echo.HandlerFunc); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(echo.HandlerFunc)
-		}
-	}
-
-	return r0
-}
-
-// UpdateUser provides a mock function with given fields:
-func (_m *Handler) UpdateUser() echo.HandlerFunc {
-	ret := _m.Called()
-
-	if len(ret) == 0 {
-		panic("no return value specified for UpdateUser")
+		panic("no return value specified for GetDashboard")
 	}
 
 	var r0 echo.HandlerFunc

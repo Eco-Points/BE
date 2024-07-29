@@ -7,10 +7,10 @@ import (
 	d_rep "eco_points/internal/features/waste_deposits/repository"
 	"fmt"
 
-	// "log"
+	"log"
 	"os"
 
-	// "github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -30,10 +30,10 @@ type setting struct {
 
 func ImportSetting() setting {
 	var result setting
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	result.User = os.Getenv("DB_USER")
 	result.Host = os.Getenv("DB_HOST")
 	result.Port = os.Getenv("DB_PORT")

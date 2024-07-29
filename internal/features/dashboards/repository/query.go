@@ -10,7 +10,7 @@ type DashboardQuery struct {
 	db *gorm.DB
 }
 
-func NewDashboardQuery(connect *gorm.DB) dashboards.Query {
+func NewDashboardQuery(connect *gorm.DB) dashboards.DshQuery {
 	return &DashboardQuery{
 		db: connect,
 	}
@@ -58,4 +58,19 @@ func (um *DashboardQuery) CheckIsAdmin(userID uint) (bool, error) {
 	}
 
 	return result.IsAdmin, nil
+}
+
+func (um *DashboardQuery) GetAllUsers(nameParams string) ([]dashboards.User, error) {
+	var result []User
+	var result2 []dashboards.User
+	err := um.db.Where("lower(fullname) LIKE lower(?) AND is_admin = ?", nameParams, "false").Find(&result).Error
+
+	if err != nil {
+		return []dashboards.User{}, err
+	}
+
+	for _, v := range result {
+		result2 = append(result2, v.ToUserEntity())
+	}
+	return result2, nil
 }

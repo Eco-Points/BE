@@ -2,6 +2,7 @@ package routes
 
 import (
 	"eco_points/config"
+	"eco_points/internal/features/dashboards"
 	"eco_points/internal/features/locations"
 	"eco_points/internal/features/trashes"
 	users "eco_points/internal/features/users"
@@ -12,7 +13,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface) {
+func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface, dsh dashboards.DshHandler) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -20,9 +21,10 @@ func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface,
 	UsersRoute(e, uh)
 	TrashRoute(e, th, dh)
 	LocRoute(e, l)
+	DashboardRoute(e, dsh)
 }
 
-func UsersRoute(e *echo.Echo, uh users.Handler) {
+func UsersRoute(e *echo.Echo, uh users.UHandler) {
 	u := e.Group("/users")
 	u.Use(JWTConfig())
 	u.GET("", uh.GetUser())
@@ -49,6 +51,13 @@ func LocRoute(e *echo.Echo, l locations.HandlerInterface) {
 	t := e.Group("/location")
 	t.Use(JWTConfig())
 	t.POST("", l.AddLocation())
+
+}
+
+func DashboardRoute(e *echo.Echo, dsh dashboards.DshHandler) {
+	ds := e.Group("/dashboard")
+	ds.Use(JWTConfig())
+	ds.GET("/users", dsh.GetAllUsers())
 
 }
 func JWTConfig() echo.MiddlewareFunc {

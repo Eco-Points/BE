@@ -19,6 +19,10 @@ import (
 	l_rep "eco_points/internal/features/locations/repository"
 	l_srv "eco_points/internal/features/locations/service"
 
+	db_hnd "eco_points/internal/features/dashboards/handler"
+	db_rep "eco_points/internal/features/dashboards/repository"
+	db_srv "eco_points/internal/features/dashboards/service"
+
 	"eco_points/internal/routes"
 	"eco_points/internal/utils"
 
@@ -51,9 +55,13 @@ func InitFactory(e *echo.Echo) {
 	lu := l_srv.NewLocService(lq)
 	lh := l_hnd.NewLocHandler(lu, jwt)
 
+	dbq := db_rep.NewDashboardQuery(db)
+	dbs := db_srv.NewDashboardService(dbq)
+	dbh := db_hnd.NewDashboardHandler(dbs, jwt)
+
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORS())
 
-	routes.InitRoute(e, uh, th, dh, lh)
+	routes.InitRoute(e, uh, th, dh, lh, dbh)
 }
