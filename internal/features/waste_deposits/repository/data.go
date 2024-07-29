@@ -2,43 +2,35 @@ package repository
 
 import (
 	deposits "eco_points/internal/features/waste_deposits"
-	"fmt"
 	"time"
 
 	"gorm.io/gorm"
 )
 
-type WasteDeposit struct {
-	gorm.Model
-	TrashID    uint
-	UserID     uint
-	LocationID uint
-	Quantity   uint
-	Point      uint
-	Status     string
-	User       User `gorm:"foreignKey:UserID"`
-}
-
 type User struct {
 	gorm.Model
 	Fullname string
-	Email    string
-	Password string
-	Phone    string
-	Address  string
-	IsAdmin  bool
-	Point    uint
-	ImgURL   string
-	Deposits []WasteDeposit `gorm:"foreignKey:UserID"`
+}
+type WasteDeposit struct {
+	gorm.Model
+	TrashID    uint   `gorm:"column:trash_id"`
+	UserID     uint   `gorm:"column:user_id"`
+	LocationID uint   `gorm:"column:location_id"`
+	Quantity   uint   `gorm:"column:quantity"`
+	Point      uint   `gorm:"column:point"`
+	Status     string `gorm:"column:status"`
 }
 
-type ListWasteDeposit []struct {
+type ListWasteDeposit struct {
 	gorm.Model
 	ID       uint      `gorm:"column:id"`
 	Type     string    `gorm:"column:trash_type"`
 	Point    uint      `gorm:"column:point"`
 	DepoTime time.Time `gorm:"column:updated_at"`
 	Quantity uint      `gorm:"column:quantity"`
+	Fullname string    `gorm:"column:fullname"`
+	Status   string    `gorm:"column:status"`
+	TrashID  uint      `gorm:"column:trash_id"`
 }
 
 type Trash struct {
@@ -62,7 +54,19 @@ func toWasteDeposit(data deposits.WasteDepositInterface) WasteDeposit {
 	}
 }
 
-func toWasteDepositListInterface(data ListWasteDeposit) deposits.ListWasteDepositInterface {
+func toWasteDepositInterface(dataDepo WasteDeposit, dataTrash Trash, dataUser User) deposits.WasteDepositInterface {
+	return deposits.WasteDepositInterface{
+		Type:     dataTrash.TrashType,
+		Point:    dataDepo.Point,
+		Quantity: dataDepo.Quantity,
+		DepoTime: dataDepo.CreatedAt.String(),
+		ID:       dataDepo.ID,
+		Status:   dataDepo.Status,
+		Fullname: dataUser.Fullname,
+	}
+}
+
+func toWasteDepositListInterface(data []ListWasteDeposit) deposits.ListWasteDepositInterface {
 	var result deposits.ListWasteDepositInterface
 	for _, v := range data {
 		dataList := struct {
@@ -71,12 +75,16 @@ func toWasteDepositListInterface(data ListWasteDeposit) deposits.ListWasteDeposi
 			DepoTime string
 			Quantity uint
 			ID       uint
+			Status   string
+			Fullname string
 		}{
 			Type:     v.Type,
 			Point:    v.Point,
 			Quantity: v.Quantity,
-			DepoTime: fmt.Sprintf("%v", v.DepoTime),
+			DepoTime: v.CreatedAt.String(),
 			ID:       v.ID,
+			Status:   v.Status,
+			Fullname: v.Fullname,
 		}
 		result = append(result, dataList)
 	}

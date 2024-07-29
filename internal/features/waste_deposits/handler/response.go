@@ -11,6 +11,18 @@ type ListWasteDeposit []struct {
 	DepoTime string `json:"depotime"`
 	Quantity uint   `json:"quantity"`
 	ID       uint   `json:"id"`
+	Status   string `json:"status"`
+	Fullname string `json:"fullname"`
+}
+
+type RespWasteDeposit struct {
+	Type     string `json:"type"`
+	Point    uint   `json:"point"`
+	DepoTime string `json:"depotime"`
+	Quantity uint   `json:"quantity"`
+	ID       uint   `json:"id"`
+	Status   string `json:"status"`
+	Fullname string `json:"fullname"`
 }
 
 func ConvertDateTime(data string) string {
@@ -30,12 +42,16 @@ func toListWasteDepositResponse(data deposits.ListWasteDepositInterface) ListWas
 			DepoTime string
 			Quantity uint
 			ID       uint
+			Status   string
+			Fullname string
 		}{
 			Type:     v.Type,
 			Point:    v.Point,
 			DepoTime: ConvertDateTime(v.DepoTime),
 			Quantity: v.Quantity,
 			ID:       v.ID,
+			Status:   v.Status,
+			Fullname: v.Fullname,
 		}
 		result = append(result, struct {
 			Type     string "json:\"type\""
@@ -43,8 +59,22 @@ func toListWasteDepositResponse(data deposits.ListWasteDepositInterface) ListWas
 			DepoTime string "json:\"depotime\""
 			Quantity uint   "json:\"quantity\""
 			ID       uint   "json:\"id\""
+			Status   string "json:\"status\""
+			Fullname string "json:\"fullname\""
 		}(dataList))
 	}
-
 	return result
+}
+
+func toWasteDepositResponse(data deposits.WasteDepositInterface) RespWasteDeposit {
+	return RespWasteDeposit{
+		Type:     data.Type,
+		Point:    data.Point,
+		DepoTime: ConvertDateTime(data.DepoTime),
+		Quantity: data.Quantity,
+		ID:       data.ID,
+		Status:   data.Status,
+		Fullname: data.Fullname,
+	}
+
 }

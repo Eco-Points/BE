@@ -47,6 +47,8 @@ func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.Hand
 	d.POST("", dh.DepositTrash())
 	d.PUT("", dh.UpdateWasteDepositStatus())
 	d.GET("", dh.GetUserDeposit())
+	d.GET("/:id", dh.GetDepositbyId())
+
 }
 
 func LocRoute(e *echo.Echo, l locations.HandlerInterface) {
