@@ -2,7 +2,6 @@ package factory
 
 import (
 	"eco_points/config"
-
 	u_hnd "eco_points/internal/features/users/handler"
 	u_rep "eco_points/internal/features/users/repository"
 	u_srv "eco_points/internal/features/users/service"
@@ -56,8 +55,8 @@ func InitFactory(e *echo.Echo) {
 	lh := l_hnd.NewLocHandler(lu, jwt)
 
 	rq := r_rep.NewRewardModel(db)
-	rs := r_srv.NewRewardService(rq)
-	rh := r_hnd.NewRewardHandler(rs, jwt, cloud)
+	rs := r_srv.NewRewardService(rq, cloud)
+	rh := r_hnd.NewRewardHandler(rs, jwt)
 
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
