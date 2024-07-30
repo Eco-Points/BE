@@ -77,7 +77,7 @@ func (um *DashboardQuery) GetAllUsers(nameParams string) ([]dashboards.User, err
 
 func (um *DashboardQuery) GetUser(target_id uint) (dashboards.User, error) {
 	var result User
-	err := um.db.Find(&result, target_id).Error
+	err := um.db.First(&result, target_id).Error
 
 	if err != nil {
 		return dashboards.User{}, err
