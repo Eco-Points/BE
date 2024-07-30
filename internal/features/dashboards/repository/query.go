@@ -40,7 +40,7 @@ func (um *DashboardQuery) GetDepositCount() (int, error) {
 
 func (um *DashboardQuery) GetExchangeCount() (int, error) {
 	var result int64
-	err := um.db.Table("user_reward_exchanges").Count(&result).Error
+	err := um.db.Table("exchanges").Count(&result).Error
 
 	if err != nil {
 		return 0, err
