@@ -31,39 +31,9 @@ func (_m *QueryLocInterface) AddLocation(data locations.LocationInterface) error
 	return r0
 }
 
-// GetAllLocation provides a mock function with given fields:
-func (_m *QueryLocInterface) GetAllLocation() ([]locations.LocationInterface, error) {
-	ret := _m.Called()
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetAllLocation")
-	}
-
-	var r0 []locations.LocationInterface
-	var r1 error
-	if rf, ok := ret.Get(0).(func() ([]locations.LocationInterface, error)); ok {
-		return rf()
-	}
-	if rf, ok := ret.Get(0).(func() []locations.LocationInterface); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]locations.LocationInterface)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// GetLocation provides a mock function with given fields: id
-func (_m *QueryLocInterface) GetLocation(id uint) ([]locations.LocationInterface, error) {
-	ret := _m.Called(id)
+// GetLocation provides a mock function with given fields: limit
+func (_m *QueryLocInterface) GetLocation(limit uint) ([]locations.LocationInterface, error) {
+	ret := _m.Called(limit)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetLocation")
@@ -72,10 +42,10 @@ func (_m *QueryLocInterface) GetLocation(id uint) ([]locations.LocationInterface
 	var r0 []locations.LocationInterface
 	var r1 error
 	if rf, ok := ret.Get(0).(func(uint) ([]locations.LocationInterface, error)); ok {
-		return rf(id)
+		return rf(limit)
 	}
 	if rf, ok := ret.Get(0).(func(uint) []locations.LocationInterface); ok {
-		r0 = rf(id)
+		r0 = rf(limit)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]locations.LocationInterface)
@@ -83,7 +53,7 @@ func (_m *QueryLocInterface) GetLocation(id uint) ([]locations.LocationInterface
 	}
 
 	if rf, ok := ret.Get(1).(func(uint) error); ok {
-		r1 = rf(id)
+		r1 = rf(limit)
 	} else {
 		r1 = ret.Error(1)
 	}
