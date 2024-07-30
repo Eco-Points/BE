@@ -6,10 +6,10 @@ import (
 )
 
 type depositService struct {
-	qry deposits.QueryInterface
+	qry deposits.QueryDepoInterface
 }
 
-func NewDepositsService(q deposits.QueryInterface) deposits.ServiceInterface {
+func NewDepositsService(q deposits.QueryDepoInterface) deposits.ServiceDepoInterface {
 	return &depositService{
 		qry: q,
 	}

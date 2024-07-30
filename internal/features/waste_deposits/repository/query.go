@@ -12,7 +12,7 @@ type depositQuery struct {
 	db *gorm.DB
 }
 
-func NewDepoQuery(d *gorm.DB) deposits.QueryInterface {
+func NewDepoQuery(d *gorm.DB) deposits.QueryDepoInterface {
 	return &depositQuery{
 		db: d,
 	}

@@ -13,11 +13,11 @@ import (
 )
 
 type depositHandler struct {
-	srv deposits.ServiceInterface
+	srv deposits.ServiceDepoInterface
 	mdl utils.JwtUtilityInterface
 }
 
-func NewDepositHandler(h deposits.ServiceInterface, m utils.JwtUtilityInterface) deposits.HandlerInterface {
+func NewDepositHandler(h deposits.ServiceDepoInterface, m utils.JwtUtilityInterface) deposits.HandlerDepoInterface {
 	return &depositHandler{
 		srv: h,
 		mdl: m,
