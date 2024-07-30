@@ -75,13 +75,28 @@ func (um *DashboardQuery) GetAllUsers(nameParams string) ([]dashboards.User, err
 	return result2, nil
 }
 
-func (um *DashboardQuery) GetUser(target_id uint) (dashboards.User, error) {
+func (um *DashboardQuery) GetUser(targetID uint) (dashboards.User, error) {
 	var result User
-	err := um.db.First(&result, target_id).Error
+	err := um.db.First(&result, targetID).Error
 
 	if err != nil {
 		return dashboards.User{}, err
 	}
 
 	return result.ToUserEntity(), nil
+}
+
+func (um *DashboardQuery) UpdateUserStatus(targetID uint, status string) error {
+
+	qry := um.db.Model(&User{}).Where("id = ?", targetID).Update("status", status)
+
+	if qry.Error != nil {
+		return qry.Error
+	}
+
+	if qry.RowsAffected < 1 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
 }
