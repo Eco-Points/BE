@@ -68,13 +68,20 @@ func (d *depositQuery) UpdateWasteDepositStatus(wasteID uint, status string) err
 	})
 }
 
-func (q *depositQuery) GetUserDeposit(id uint, limit uint, offset uint) (deposits.ListWasteDepositInterface, error) {
+func (q *depositQuery) GetUserDeposit(id uint, limit uint, offset uint, is_admin bool) (deposits.ListWasteDepositInterface, error) {
 	result := []ListWasteDeposit{}
-	query := fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.status, wd.quantity, u.fullname, wd.created_at from "%s".waste_deposits wd 
+	var query string
+	if is_admin {
+		query = fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.status, wd.quantity, u.fullname, wd.created_at from "%s".waste_deposits wd 
+	join "%s".trashes t on t.id = wd.trash_id 
+	join "%s".users u on u.id = wd.user_id 
+	where wd."deleted_at" IS NULL limit %d offset %d;`, DbSchema, DbSchema, DbSchema, limit, offset)
+	} else {
+		query = fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.status, wd.quantity, u.fullname, wd.created_at from "%s".waste_deposits wd 
 	join "%s".trashes t on t.id = wd.trash_id 
 	join "%s".users u on u.id = wd.user_id 
 	where wd.user_id = %d and wd."deleted_at" IS NULL limit %d offset %d;`, DbSchema, DbSchema, DbSchema, id, limit, offset)
-
+	}
 	err := q.db.Debug().Raw(query).Scan(&result).Error
 	if err != nil {
 		log.Println("error select to table", err)
