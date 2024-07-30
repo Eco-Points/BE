@@ -57,8 +57,11 @@ func (uc *DashboardHandler) GetAllUsers() echo.HandlerFunc {
 			}
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
 		}
-
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully get all users datas", result))
+		var respondData []UserDashboardResponse
+		for _, v := range result {
+			respondData = append(respondData, ToUserDashboardResponse(v))
+		}
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully get all users datas", respondData))
 	}
 }
 
