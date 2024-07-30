@@ -13,11 +13,11 @@ import (
 )
 
 type depositHandler struct {
-	srv deposits.ServiceInterface
+	srv deposits.ServiceDepoInterface
 	mdl utils.JwtUtilityInterface
 }
 
-func NewDepositHandler(h deposits.ServiceInterface, m utils.JwtUtilityInterface) deposits.HandlerInterface {
+func NewDepositHandler(h deposits.ServiceDepoInterface, m utils.JwtUtilityInterface) deposits.HandlerDepoInterface {
 	return &depositHandler{
 		srv: h,
 		mdl: m,
@@ -83,7 +83,12 @@ func (h *depositHandler) GetUserDeposit() echo.HandlerFunc {
 			offsetData = 0
 		}
 
-		result, err := h.srv.GetUserDeposit(uint(userID), uint(limitPage), uint(offsetData))
+		is_admin, err := strconv.ParseBool(c.QueryParam("is_admin"))
+
+		if err != nil {
+			is_admin = false
+		}
+		result, err := h.srv.GetUserDeposit(uint(userID), uint(limitPage), uint(offsetData), is_admin)
 		if err != nil {
 			log.Println("error get data", err)
 			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)

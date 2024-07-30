@@ -10,6 +10,14 @@ import (
 type User struct {
 	gorm.Model
 	Fullname string
+	Email    string
+	Password string
+	Phone    string
+	Address  string
+	IsAdmin  bool
+	Point    uint
+	Status   string
+	ImgURL   string
 }
 type WasteDeposit struct {
 	gorm.Model

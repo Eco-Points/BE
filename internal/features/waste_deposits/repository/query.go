@@ -12,7 +12,7 @@ type depositQuery struct {
 	db *gorm.DB
 }
 
-func NewDepoQuery(d *gorm.DB) deposits.QueryInterface {
+func NewDepoQuery(d *gorm.DB) deposits.QueryDepoInterface {
 	return &depositQuery{
 		db: d,
 	}
@@ -42,39 +42,36 @@ func (q *depositQuery) DepositTrash(data deposits.WasteDepositInterface) error {
 
 func (d *depositQuery) UpdateWasteDepositStatus(wasteID uint, status string) error {
 	return d.db.Transaction(func(tx *gorm.DB) error {
-		// Update the status of the waste deposit
-		err := tx.Debug().Model(&WasteDeposit{}).Where("id = ?", wasteID).Update("status", status).Error
+		var deposit WasteDeposit
+		err := tx.Debug().Model(&WasteDeposit{}).Where("id = ?", wasteID).Updates(WasteDeposit{Status: status}).First(&deposit, wasteID).Error
 		if err != nil {
 			log.Println("error updating waste deposit status", err)
 			return err
+		} else {
+			err = tx.Debug().Model(&User{}).Where("id = ?", deposit.UserID).Update("point", gorm.Expr(" point + ?", deposit.Point)).Error
+			if err != nil {
+				log.Println("error updating user points", err)
+				return err
+			}
 		}
-
-		// Get the points and user_id from the waste deposit
-		var deposit WasteDeposit
-		err = tx.Debug().Preload("User").Where("id = ?", wasteID).First(&deposit).Error
-		if err != nil {
-			log.Println("error fetching waste deposit", err)
-			return err
-		}
-
-		// Update the user's points directly using GORM
-		err = tx.Debug().Model(&User{}).Where("id = ?", deposit.UserID).Update("point", gorm.Expr("point + ?", deposit.Point)).Error
-		if err != nil {
-			log.Println("error updating user points", err)
-			return err
-		}
-
 		return nil
 	})
 }
 
-func (q *depositQuery) GetUserDeposit(id uint, limit uint, offset uint) (deposits.ListWasteDepositInterface, error) {
+func (q *depositQuery) GetUserDeposit(id uint, limit uint, offset uint, is_admin bool) (deposits.ListWasteDepositInterface, error) {
 	result := []ListWasteDeposit{}
-	query := fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.status, wd.quantity, u.fullname, wd.created_at from "%s".waste_deposits wd 
+	var query string
+	if is_admin {
+		query = fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.status, wd.quantity, u.fullname, wd.created_at from "%s".waste_deposits wd 
+	join "%s".trashes t on t.id = wd.trash_id 
+	join "%s".users u on u.id = wd.user_id 
+	where wd."deleted_at" IS NULL limit %d offset %d;`, DbSchema, DbSchema, DbSchema, limit, offset)
+	} else {
+		query = fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.status, wd.quantity, u.fullname, wd.created_at from "%s".waste_deposits wd 
 	join "%s".trashes t on t.id = wd.trash_id 
 	join "%s".users u on u.id = wd.user_id 
 	where wd.user_id = %d and wd."deleted_at" IS NULL limit %d offset %d;`, DbSchema, DbSchema, DbSchema, id, limit, offset)
-
+	}
 	err := q.db.Debug().Raw(query).Scan(&result).Error
 	if err != nil {
 		log.Println("error select to table", err)

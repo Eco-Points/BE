@@ -32,3 +32,47 @@ func toLocQuery(data locations.LocationInterface) Location {
 		UserID:  data.UserID,
 	}
 }
+
+func toLocEntity(dataQry []Location) []locations.LocationInterface {
+	result := []locations.LocationInterface{}
+	for _, v := range dataQry {
+		result = append(result, locations.LocationInterface{
+			Address:    v.Address,
+			Long:       v.Long,
+			Lat:        v.Lat,
+			Status:     v.Status,
+			Start_time: v.Start,
+			End_time:   v.End,
+			Phone:      v.Phone,
+			UserID:     v.UserID,
+		})
+	}
+	return result
+}
+
+// func toLocEntity(dataQry []Location) []locations.LocationInterface {
+// 	returnVal := []locations.LocationInterface{}
+// 	for _, v := range dataQry {
+// 		dataList := struct {
+// 			Address    string
+// 			Long       string
+// 			Lat        string
+// 			Status     string
+// 			Start_time string
+// 			End_time   string
+// 			Phone      string
+// 			UserID     uint
+// 		}{
+// 			Address:    v.Address,
+// 			Long:       v.Long,
+// 			Lat:        v.Lat,
+// 			Status:     v.Status,
+// 			Start_time: v.Start,
+// 			End_time:   v.End,
+// 			Phone:      v.Phone,
+// 			UserID:     v.UserID,
+// 		}
+// 		returnVal = append(returnVal, dataList)
+// 	}
+// 	return returnVal
+// }

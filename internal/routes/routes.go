@@ -15,7 +15,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface, rh rewards.RHandler, exh exchanges.ExHandler, dsh dashboards.DshHandler) {
+func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerDepoInterface, l locations.HandlerLocInterface, rh rewards.RHandler, exh exchanges.ExHandler, dsh dashboards.DshHandler) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -36,7 +36,7 @@ func UsersRoute(e *echo.Echo, uh users.UHandler) {
 	u.DELETE("", uh.DeleteUser())
 }
 
-func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface) {
+func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.HandlerDepoInterface) {
 	t := e.Group("/trash")
 	t.Use(JWTConfig())
 	t.POST("", th.AddTrash())
@@ -53,11 +53,11 @@ func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.Hand
 
 }
 
-func LocRoute(e *echo.Echo, l locations.HandlerInterface) {
+func LocRoute(e *echo.Echo, l locations.HandlerLocInterface) {
 	t := e.Group("/location")
 	t.Use(JWTConfig())
 	t.POST("", l.AddLocation())
-
+	t.GET("", l.GetLocation())
 }
 
 func DashboardRoute(e *echo.Echo, dsh dashboards.DshHandler) {
