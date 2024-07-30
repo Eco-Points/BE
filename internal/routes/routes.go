@@ -64,6 +64,7 @@ func DashboardRoute(e *echo.Echo, dsh dashboards.DshHandler) {
 	ds := e.Group("/dashboard")
 	ds.Use(JWTConfig())
 	ds.GET("/users", dsh.GetAllUsers())
+	ds.GET("/users/:target_id", dsh.GetUser())
 
 }
 

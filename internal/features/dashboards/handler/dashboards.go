@@ -5,6 +5,7 @@ import (
 	"eco_points/internal/helpers"
 	"eco_points/internal/utils"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -57,5 +58,28 @@ func (uc *DashboardHandler) GetAllUsers() echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully get all users datas", result))
+	}
+}
+
+func (uc *DashboardHandler) GetUser() echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
+		targetID, err := strconv.Atoi(c.Param("target_id"))
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "bad parameter", nil))
+		}
+		result, err := uc.srv.GetUser(uint(userID), uint(targetID))
+		if err != nil {
+			if strings.ContainsAny(err.Error(), "not found") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "not found", nil))
+			}
+			if strings.ContainsAny(err.Error(), "not allowed") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "not allowed", nil))
+			}
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
+		}
+
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully get all user datas", result))
 	}
 }

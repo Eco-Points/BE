@@ -74,3 +74,14 @@ func (um *DashboardQuery) GetAllUsers(nameParams string) ([]dashboards.User, err
 	}
 	return result2, nil
 }
+
+func (um *DashboardQuery) GetUser(target_id uint) (dashboards.User, error) {
+	var result User
+	err := um.db.First(&result, target_id).Error
+
+	if err != nil {
+		return dashboards.User{}, err
+	}
+
+	return result.ToUserEntity(), nil
+}
