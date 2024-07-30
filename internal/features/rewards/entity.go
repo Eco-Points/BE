@@ -24,11 +24,11 @@ type RHandler interface {
 }
 
 type RServices interface {
-	AddReward(newReward Reward, src multipart.File, filename string) error
-	UpdateReward(rewardID uint, updatedReward Reward, src multipart.File, filename string) error
-	DeleteReward(rewardID uint) error
+	AddReward(userID uint, newReward Reward, src multipart.File, filename string) error
+	UpdateReward(userID uint, rewardID uint, updatedReward Reward, src multipart.File, filename string) error
+	DeleteReward(userID uint, rewardID uint) error
 	GetRewardByID(rewardID uint) (Reward, error)
-	GetAllRewards(limit int, offset int) ([]Reward, int, error)
+	GetAllRewards(limit int, offset int, search string) ([]Reward, int, error)
 }
 
 type RQuery interface {
@@ -36,5 +36,6 @@ type RQuery interface {
 	UpdateReward(rewardID uint, updatedReward Reward) error
 	DeleteReward(rewardID uint) error
 	GetRewardByID(rewardID uint) (Reward, error)
-	GetAllRewards(limit int, offset int) ([]Reward, int, error)
+	GetAllRewards(limit int, offset int, search string) ([]Reward, int, error)
+	IsAdmin(userID uint) (bool, error)
 }

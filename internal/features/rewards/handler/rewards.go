@@ -60,7 +60,7 @@ func (rh *RewardHandler) AddReward() echo.HandlerFunc {
 		newReward := ToRewardModel(req, "")
 
 		// Add reward to database
-		err = rh.srv.AddReward(newReward, src, image.Filename)
+		err = rh.srv.AddReward(uint(userID), newReward, src, image.Filename)
 		if err != nil {
 			log.Println("failed add reward to database")
 			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "Failed to add reward", nil))
@@ -112,7 +112,7 @@ func (rh *RewardHandler) UpdateReward() echo.HandlerFunc {
 		updatedReward := ToRewardModel(req, "")
 
 		// Update reward in database
-		err = rh.srv.UpdateReward(uint(rewardID), updatedReward, src, filename)
+		err = rh.srv.UpdateReward(uint(userID), uint(rewardID), updatedReward, src, filename)
 		if err != nil {
 			log.Println("failed to update reward in database")
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "failed", "Failed to update reward", nil))
@@ -139,7 +139,7 @@ func (rh *RewardHandler) DeleteReward() echo.HandlerFunc {
 		}
 
 		// Delete reward from database
-		err = rh.srv.DeleteReward(uint(rewardID))
+		err = rh.srv.DeleteReward(uint(userID), uint(rewardID))
 		if err != nil {
 			log.Println("failed to delete reward from database")
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "failed", "Failed to delete reward", nil))
@@ -184,7 +184,12 @@ func (rh *RewardHandler) GetAllRewards() echo.HandlerFunc {
 			offset = 0 // default offset
 		}
 
-		rewards, totalItems, err := rh.srv.GetAllRewards(limit, offset)
+		search := c.QueryParam("search")
+		if search == "" {
+			search = "" // default search string
+		}
+
+		rewards, totalItems, err := rh.srv.GetAllRewards(limit, offset, search)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "Failed to get rewards", nil))
 		}
