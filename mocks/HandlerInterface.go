@@ -12,12 +12,52 @@ type HandlerInterface struct {
 	mock.Mock
 }
 
-// AddTrash provides a mock function with given fields:
-func (_m *HandlerInterface) AddTrash() echo.HandlerFunc {
+// DepositTrash provides a mock function with given fields:
+func (_m *HandlerInterface) DepositTrash() echo.HandlerFunc {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for AddTrash")
+		panic("no return value specified for DepositTrash")
+	}
+
+	var r0 echo.HandlerFunc
+	if rf, ok := ret.Get(0).(func() echo.HandlerFunc); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(echo.HandlerFunc)
+		}
+	}
+
+	return r0
+}
+
+// GetUserDeposit provides a mock function with given fields:
+func (_m *HandlerInterface) GetUserDeposit() echo.HandlerFunc {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserDeposit")
+	}
+
+	var r0 echo.HandlerFunc
+	if rf, ok := ret.Get(0).(func() echo.HandlerFunc); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(echo.HandlerFunc)
+		}
+	}
+
+	return r0
+}
+
+// UpdateWasteDepositStatus provides a mock function with given fields:
+func (_m *HandlerInterface) UpdateWasteDepositStatus() echo.HandlerFunc {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateWasteDepositStatus")
 	}
 
 	var r0 echo.HandlerFunc

@@ -98,11 +98,10 @@ func (us *UserServices) UpdateUser(ID uint, updateUser users.User, file *multipa
 		updateUser.Password = string(hashPw)
 	}
 	if file != nil {
-		src, err := file.Open()
+		src, err := us.cloud.FileCheck(file)
 		if err != nil {
 			return errors.New("file Error")
 		}
-		defer src.Close()
 
 		urlImage, err := us.cloud.UploadToCloudinary(src, file.Filename)
 		if err != nil {

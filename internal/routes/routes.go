@@ -2,6 +2,7 @@ package routes
 
 import (
 	"eco_points/config"
+	"eco_points/internal/features/dashboards"
 	"eco_points/internal/features/exchanges"
 	"eco_points/internal/features/locations"
 	"eco_points/internal/features/rewards"
@@ -14,7 +15,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerDepoInterface, l locations.HandlerLocInterface, rh rewards.RHandler, exh exchanges.ExHandler) {
+func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerDepoInterface, l locations.HandlerLocInterface, rh rewards.RHandler, exh exchanges.ExHandler, dsh dashboards.DshHandler) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -22,6 +23,7 @@ func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface
 	UsersRoute(e, uh)
 	TrashRoute(e, th, dh)
 	LocRoute(e, l)
+	DashboardRoute(e, dsh)
 	RewardRoute(e, rh)
 	ExchangeRoute(e, exh)
 }
@@ -56,6 +58,16 @@ func LocRoute(e *echo.Echo, l locations.HandlerLocInterface) {
 	t.Use(JWTConfig())
 	t.POST("", l.AddLocation())
 	t.GET("", l.GetLocation())
+}
+
+func DashboardRoute(e *echo.Echo, dsh dashboards.DshHandler) {
+	ds := e.Group("/dashboard")
+	ds.Use(JWTConfig())
+	ds.GET("", dsh.GetDashboard())
+	ds.GET("/users", dsh.GetAllUsers())
+	ds.GET("/users/:target_id", dsh.GetUser())
+	ds.PUT("/users/:target_id", dsh.UpdateUserStatus())
+
 }
 
 func RewardRoute(e *echo.Echo, rh rewards.RHandler) {
