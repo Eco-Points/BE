@@ -29,14 +29,14 @@ type QueryInterface interface {
 	SetDbSchema(schema string)
 	DepositTrash(data WasteDepositInterface) error
 	UpdateWasteDepositStatus(waste_id uint, status string) error
-	GetUserDeposit(id uint, limit uint, offset uint) (ListWasteDepositInterface, error)
+	GetUserDeposit(id uint, limit uint, offset uint, is_admin bool) (ListWasteDepositInterface, error)
 	GetDepositbyId(deposit_id uint) (WasteDepositInterface, error)
 }
 
 type ServiceInterface interface {
 	DepositTrash(data WasteDepositInterface) error
 	UpdateWasteDepositStatus(waste_id uint, status string) error
-	GetUserDeposit(id uint, limit uint, offset uint) (ListWasteDepositInterface, error)
+	GetUserDeposit(id uint, limit uint, offset uint, is_admin bool) (ListWasteDepositInterface, error)
 	GetDepositbyId(deposit_id uint) (WasteDepositInterface, error)
 }
 
