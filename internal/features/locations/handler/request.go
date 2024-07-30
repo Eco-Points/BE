@@ -10,6 +10,7 @@ type Location struct {
 	Start_time string `json:"start"`
 	End_time   string `json:"end"`
 	Phone      string `json:"phone"`
+	UserID     uint   `json:"user_id"`
 }
 
 func toLocInterface(data Location, id uint) locations.LocationInterface {

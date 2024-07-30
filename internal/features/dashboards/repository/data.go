@@ -1,10 +1,9 @@
 package repository
 
 import (
-	exQuery "eco_points/internal/features/exchanges/repository"
+	"eco_points/internal/features/dashboards"
 	lochQuery "eco_points/internal/features/locations/repository"
 	trashQuery "eco_points/internal/features/trashes/repository"
-	"eco_points/internal/features/users"
 	depoQuery "eco_points/internal/features/waste_deposits/repository"
 
 	"gorm.io/gorm"
@@ -19,17 +18,16 @@ type User struct {
 	Address  string
 	IsAdmin  bool
 	Point    uint
-	Status   string
 	ImgURL   string
+	Status   string
 	Trash    []trashQuery.Trash       `gorm:"foreignKey:UserID"`
 	Location []lochQuery.Location     `gorm:"foreignKey:UserID"`
 	Deposit  []depoQuery.WasteDeposit `gorm:"foreignKey:UserID"`
-	Exchange []exQuery.Exchange       `gorm:"foreignKey:UserID"`
 }
 
 // dari database di pindah ke entity
-func (u *User) ToUserEntity() users.User {
-	return users.User{
+func (u *User) ToUserEntity() dashboards.User {
+	return dashboards.User{
 		ID:       u.ID,
 		Fullname: u.Fullname,
 		Email:    u.Email,
@@ -44,7 +42,7 @@ func (u *User) ToUserEntity() users.User {
 }
 
 // dari entity pindah ke database
-func ToUserQuery(input users.User) User {
+func ToUserQuery(input dashboards.User) User {
 	return User{
 		Fullname: input.Fullname,
 		Email:    input.Email,

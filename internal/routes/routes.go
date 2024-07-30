@@ -2,6 +2,7 @@ package routes
 
 import (
 	"eco_points/config"
+	"eco_points/internal/features/dashboards"
 	"eco_points/internal/features/exchanges"
 	"eco_points/internal/features/locations"
 	"eco_points/internal/features/rewards"
@@ -14,7 +15,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface, l locations.HandlerInterface, rh rewards.RHandler, exh exchanges.ExHandler) {
+func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerDepoInterface, l locations.HandlerLocInterface, rh rewards.RHandler, exh exchanges.ExHandler, dsh dashboards.DshHandler) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -22,11 +23,12 @@ func InitRoute(e *echo.Echo, uh users.Handler, th trashes.HandlerTrashInterface,
 	UsersRoute(e, uh)
 	TrashRoute(e, th, dh)
 	LocRoute(e, l)
+	DashboardRoute(e, dsh)
 	RewardRoute(e, rh)
 	ExchangeRoute(e, exh)
 }
 
-func UsersRoute(e *echo.Echo, uh users.Handler) {
+func UsersRoute(e *echo.Echo, uh users.UHandler) {
 	u := e.Group("/users")
 	u.Use(JWTConfig())
 	u.GET("", uh.GetUser())
@@ -34,7 +36,7 @@ func UsersRoute(e *echo.Echo, uh users.Handler) {
 	u.DELETE("", uh.DeleteUser())
 }
 
-func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.HandlerInterface) {
+func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.HandlerDepoInterface) {
 	t := e.Group("/trash")
 	t.Use(JWTConfig())
 	t.POST("", th.AddTrash())
@@ -51,10 +53,20 @@ func TrashRoute(e *echo.Echo, th trashes.HandlerTrashInterface, dh deposits.Hand
 
 }
 
-func LocRoute(e *echo.Echo, l locations.HandlerInterface) {
+func LocRoute(e *echo.Echo, l locations.HandlerLocInterface) {
 	t := e.Group("/location")
 	t.Use(JWTConfig())
 	t.POST("", l.AddLocation())
+	t.GET("", l.GetLocation())
+}
+
+func DashboardRoute(e *echo.Echo, dsh dashboards.DshHandler) {
+	ds := e.Group("/dashboard")
+	ds.Use(JWTConfig())
+	ds.GET("", dsh.GetDashboard())
+	ds.GET("/users", dsh.GetAllUsers())
+	ds.GET("/users/:target_id", dsh.GetUser())
+	ds.PUT("/users/:target_id", dsh.UpdateUserStatus())
 
 }
 

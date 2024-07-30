@@ -6,10 +6,10 @@ import (
 )
 
 type depositService struct {
-	qry deposits.QueryInterface
+	qry deposits.QueryDepoInterface
 }
 
-func NewDepositsService(q deposits.QueryInterface) deposits.ServiceInterface {
+func NewDepositsService(q deposits.QueryDepoInterface) deposits.ServiceDepoInterface {
 	return &depositService{
 		qry: q,
 	}
@@ -34,8 +34,8 @@ func (q *depositService) UpdateWasteDepositStatus(wasteID uint, status string) e
 	return nil
 }
 
-func (s *depositService) GetUserDeposit(id uint, limit uint, offset uint) (deposits.ListWasteDepositInterface, error) {
-	result, err := s.qry.GetUserDeposit(id, limit, offset)
+func (s *depositService) GetUserDeposit(id uint, limit uint, offset uint, is_admin bool) (deposits.ListWasteDepositInterface, error) {
+	result, err := s.qry.GetUserDeposit(id, limit, offset, is_admin)
 	if err != nil {
 		log.Println("error insert data", err)
 		return deposits.ListWasteDepositInterface{}, err

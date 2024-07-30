@@ -13,11 +13,11 @@ import (
 )
 
 type UserHandler struct {
-	srv users.Service
+	srv users.UService
 	tu  utils.JwtUtilityInterface
 }
 
-func NewUserHandler(s users.Service, t utils.JwtUtilityInterface) users.Handler {
+func NewUserHandler(s users.UService, t utils.JwtUtilityInterface) users.UHandler {
 	return &UserHandler{
 		srv: s,
 		tu:  t,
