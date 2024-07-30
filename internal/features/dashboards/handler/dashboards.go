@@ -37,7 +37,7 @@ func (uc *DashboardHandler) GetDashboard() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
 		}
 
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully get the deposit history", result))
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully dashboard data", result))
 	}
 }
 

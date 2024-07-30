@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"eco_points/config"
 	"eco_points/internal/features/dashboards"
 
 	"gorm.io/gorm"
@@ -18,7 +19,9 @@ func NewDashboardQuery(connect *gorm.DB) dashboards.DshQuery {
 
 func (um *DashboardQuery) GetUserCount() (int, error) {
 	var result int64
-	err := um.db.Table("users").Where("is_admin = ?", "false").Count(&result).Error
+	var table string = config.ImportSetting().Schema
+	table = table + ".users"
+	err := um.db.Table(table).Where("is_admin = ?", "false").Count(&result).Error
 
 	if err != nil {
 		return 0, err
@@ -29,7 +32,9 @@ func (um *DashboardQuery) GetUserCount() (int, error) {
 
 func (um *DashboardQuery) GetDepositCount() (int, error) {
 	var result int64
-	err := um.db.Table("waste_deposits").Where("status = ?", "verified").Count(&result).Error
+	var table string = config.ImportSetting().Schema
+	table = table + ".waste_deposits"
+	err := um.db.Table(table).Where("status = ?", "verified").Count(&result).Error
 
 	if err != nil {
 		return 0, err
@@ -40,7 +45,9 @@ func (um *DashboardQuery) GetDepositCount() (int, error) {
 
 func (um *DashboardQuery) GetExchangeCount() (int, error) {
 	var result int64
-	err := um.db.Table("exchanges").Count(&result).Error
+	var table string = config.ImportSetting().Schema
+	table = table + ".exchanges"
+	err := um.db.Table(table).Count(&result).Error
 
 	if err != nil {
 		return 0, err
