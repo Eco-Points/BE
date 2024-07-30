@@ -25,12 +25,14 @@ type DshHandler interface {
 	GetDashboard() echo.HandlerFunc
 	GetAllUsers() echo.HandlerFunc
 	GetUser() echo.HandlerFunc
+	UpdateUserStatus() echo.HandlerFunc
 }
 
 type DshService interface {
 	GetDashboard(userID uint) (Dashboard, error)
 	GetAllUsers(userID uint, nameParams string) ([]User, error)
 	GetUser(userID uint, targetID uint) (User, error)
+	UpdateUserStatus(userID uint, targetID uint, status string) error
 }
 
 type DshQuery interface {
@@ -40,4 +42,5 @@ type DshQuery interface {
 	CheckIsAdmin(userID uint) (bool, error)
 	GetAllUsers(nameParams string) ([]User, error)
 	GetUser(userID uint) (User, error)
+	UpdateUserStatus(target_id uint, status string) error
 }
