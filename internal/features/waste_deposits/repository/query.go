@@ -42,28 +42,18 @@ func (q *depositQuery) DepositTrash(data deposits.WasteDepositInterface) error {
 
 func (d *depositQuery) UpdateWasteDepositStatus(wasteID uint, status string) error {
 	return d.db.Transaction(func(tx *gorm.DB) error {
-		// Update the status of the waste deposit
-		err := tx.Debug().Model(&WasteDeposit{}).Where("id = ?", wasteID).Update("status", status).Error
+		var deposit WasteDeposit
+		err := tx.Debug().Model(&WasteDeposit{}).Where("id = ?", wasteID).Updates(WasteDeposit{Status: status}).First(&deposit, wasteID).Error
 		if err != nil {
 			log.Println("error updating waste deposit status", err)
 			return err
+		} else {
+			err = tx.Debug().Model(&User{}).Where("id = ?", deposit.UserID).Update("point", gorm.Expr(" point + ?", deposit.Point)).Error
+			if err != nil {
+				log.Println("error updating user points", err)
+				return err
+			}
 		}
-
-		// Get the points and user_id from the waste deposit
-		var deposit WasteDeposit
-		err = tx.Debug().Preload("User").Where("id = ?", wasteID).First(&deposit).Error
-		if err != nil {
-			log.Println("error fetching waste deposit", err)
-			return err
-		}
-
-		// Update the user's points directly using GORM
-		err = tx.Debug().Model(&User{}).Where("id = ?", deposit.UserID).Update("point", gorm.Expr("point + ?", deposit.Point)).Error
-		if err != nil {
-			log.Println("error updating user points", err)
-			return err
-		}
-
 		return nil
 	})
 }
