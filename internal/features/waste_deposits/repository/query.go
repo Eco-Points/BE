@@ -4,6 +4,7 @@ import (
 	deposits "eco_points/internal/features/waste_deposits"
 	"fmt"
 	"log"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -48,10 +49,12 @@ func (d *depositQuery) UpdateWasteDepositStatus(wasteID uint, status string) err
 			log.Println("error updating waste deposit status", err)
 			return err
 		} else {
-			err = tx.Debug().Model(&User{}).Where("id = ?", deposit.UserID).Update("point", gorm.Expr(" point + ?", deposit.Point)).Error
-			if err != nil {
-				log.Println("error updating user points", err)
-				return err
+			if strings.Contains(status, "verif") || strings.Contains(status, "Verif") {
+				err = tx.Debug().Model(&User{}).Where("id = ?", deposit.UserID).Update("point", gorm.Expr(" point + ?", deposit.Point)).Error
+				if err != nil {
+					log.Println("error updating user points", err)
+					return err
+				}
 			}
 		}
 		return nil

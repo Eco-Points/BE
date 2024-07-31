@@ -15,17 +15,17 @@ type RServices struct {
 	mock.Mock
 }
 
-// AddReward provides a mock function with given fields: newReward, src, filename
-func (_m *RServices) AddReward(newReward rewards.Reward, src multipart.File, filename string) error {
-	ret := _m.Called(newReward, src, filename)
+// AddReward provides a mock function with given fields: userID, newReward, src, filename
+func (_m *RServices) AddReward(userID uint, newReward rewards.Reward, src multipart.File, filename string) error {
+	ret := _m.Called(userID, newReward, src, filename)
 
 	if len(ret) == 0 {
 		panic("no return value specified for AddReward")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(rewards.Reward, multipart.File, string) error); ok {
-		r0 = rf(newReward, src, filename)
+	if rf, ok := ret.Get(0).(func(uint, rewards.Reward, multipart.File, string) error); ok {
+		r0 = rf(userID, newReward, src, filename)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -33,17 +33,17 @@ func (_m *RServices) AddReward(newReward rewards.Reward, src multipart.File, fil
 	return r0
 }
 
-// DeleteReward provides a mock function with given fields: rewardID
-func (_m *RServices) DeleteReward(rewardID uint) error {
-	ret := _m.Called(rewardID)
+// DeleteReward provides a mock function with given fields: userID, rewardID
+func (_m *RServices) DeleteReward(userID uint, rewardID uint) error {
+	ret := _m.Called(userID, rewardID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for DeleteReward")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(uint) error); ok {
-		r0 = rf(rewardID)
+	if rf, ok := ret.Get(0).(func(uint, uint) error); ok {
+		r0 = rf(userID, rewardID)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -51,9 +51,9 @@ func (_m *RServices) DeleteReward(rewardID uint) error {
 	return r0
 }
 
-// GetAllRewards provides a mock function with given fields: limit, offset
-func (_m *RServices) GetAllRewards(limit int, offset int) ([]rewards.Reward, int, error) {
-	ret := _m.Called(limit, offset)
+// GetAllRewards provides a mock function with given fields: limit, offset, search
+func (_m *RServices) GetAllRewards(limit int, offset int, search string) ([]rewards.Reward, int, error) {
+	ret := _m.Called(limit, offset, search)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetAllRewards")
@@ -62,25 +62,25 @@ func (_m *RServices) GetAllRewards(limit int, offset int) ([]rewards.Reward, int
 	var r0 []rewards.Reward
 	var r1 int
 	var r2 error
-	if rf, ok := ret.Get(0).(func(int, int) ([]rewards.Reward, int, error)); ok {
-		return rf(limit, offset)
+	if rf, ok := ret.Get(0).(func(int, int, string) ([]rewards.Reward, int, error)); ok {
+		return rf(limit, offset, search)
 	}
-	if rf, ok := ret.Get(0).(func(int, int) []rewards.Reward); ok {
-		r0 = rf(limit, offset)
+	if rf, ok := ret.Get(0).(func(int, int, string) []rewards.Reward); ok {
+		r0 = rf(limit, offset, search)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]rewards.Reward)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(int, int) int); ok {
-		r1 = rf(limit, offset)
+	if rf, ok := ret.Get(1).(func(int, int, string) int); ok {
+		r1 = rf(limit, offset, search)
 	} else {
 		r1 = ret.Get(1).(int)
 	}
 
-	if rf, ok := ret.Get(2).(func(int, int) error); ok {
-		r2 = rf(limit, offset)
+	if rf, ok := ret.Get(2).(func(int, int, string) error); ok {
+		r2 = rf(limit, offset, search)
 	} else {
 		r2 = ret.Error(2)
 	}
@@ -116,17 +116,17 @@ func (_m *RServices) GetRewardByID(rewardID uint) (rewards.Reward, error) {
 	return r0, r1
 }
 
-// UpdateReward provides a mock function with given fields: rewardID, updatedReward, src, filename
-func (_m *RServices) UpdateReward(rewardID uint, updatedReward rewards.Reward, src multipart.File, filename string) error {
-	ret := _m.Called(rewardID, updatedReward, src, filename)
+// UpdateReward provides a mock function with given fields: userID, rewardID, updatedReward, src, filename
+func (_m *RServices) UpdateReward(userID uint, rewardID uint, updatedReward rewards.Reward, src multipart.File, filename string) error {
+	ret := _m.Called(userID, rewardID, updatedReward, src, filename)
 
 	if len(ret) == 0 {
 		panic("no return value specified for UpdateReward")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(uint, rewards.Reward, multipart.File, string) error); ok {
-		r0 = rf(rewardID, updatedReward, src, filename)
+	if rf, ok := ret.Get(0).(func(uint, uint, rewards.Reward, multipart.File, string) error); ok {
+		r0 = rf(userID, rewardID, updatedReward, src, filename)
 	} else {
 		r0 = ret.Error(0)
 	}

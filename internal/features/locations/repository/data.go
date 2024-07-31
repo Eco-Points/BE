@@ -17,6 +17,7 @@ type Location struct {
 	End        string
 	Phone      string
 	UserID     uint
+	Name       string
 	LocationID []depoQuery.WasteDeposit `gorm:"foreignKey:LocationID"`
 }
 
@@ -30,6 +31,7 @@ func toLocQuery(data locations.LocationInterface) Location {
 		End:     data.End_time,
 		Phone:   data.Phone,
 		UserID:  data.UserID,
+		Name:    data.Name,
 	}
 }
 
@@ -45,6 +47,8 @@ func toLocEntity(dataQry []Location) []locations.LocationInterface {
 			End_time:   v.End,
 			Phone:      v.Phone,
 			UserID:     v.UserID,
+			Name:       v.Name,
+			ID:         v.ID,
 		})
 	}
 	return result

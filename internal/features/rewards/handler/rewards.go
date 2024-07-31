@@ -66,7 +66,7 @@ func (rh *RewardHandler) AddReward() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "Failed to add reward", nil))
 		}
 
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "Reward was successfully created", nil))
+		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "success", "Reward was successfully created", nil))
 	}
 }
 

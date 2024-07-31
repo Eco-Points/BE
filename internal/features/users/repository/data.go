@@ -52,7 +52,7 @@ func ToUserQuery(input users.User) User {
 		Phone:    input.Phone,
 		Address:  input.Address,
 		IsAdmin:  input.IsAdmin,
-		Status:   input.Status,
+		Status:   "active",
 		Point:    input.Point,
 		ImgURL:   input.ImgURL,
 	}

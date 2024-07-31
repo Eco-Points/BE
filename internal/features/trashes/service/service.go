@@ -7,19 +7,19 @@ import (
 	"mime/multipart"
 )
 
-type trashService struct {
+type TrashService struct {
 	qry   trashes.QueryTrashInterface
 	cloud utils.CloudinaryUtilityInterface
 }
 
 func NewTrashService(q trashes.QueryTrashInterface, c utils.CloudinaryUtilityInterface) trashes.ServiceTrashInterface {
-	return &trashService{
+	return &TrashService{
 		qry:   q,
 		cloud: c,
 	}
 }
 
-func (t *trashService) AddTrash(tData trashes.TrashEntity, file *multipart.FileHeader) error {
+func (t *TrashService) AddTrash(tData trashes.TrashEntity, file *multipart.FileHeader) error {
 
 	src, err := file.Open()
 	if err != nil {
@@ -43,7 +43,7 @@ func (t *trashService) AddTrash(tData trashes.TrashEntity, file *multipart.FileH
 	return nil
 }
 
-func (s *trashService) GetTrash(ttype string) (trashes.ListTrashEntity, error) {
+func (s *TrashService) GetTrash(ttype string) (trashes.ListTrashEntity, error) {
 	var result trashes.ListTrashEntity
 	var err error
 	if ttype != "" {
@@ -63,7 +63,7 @@ func (s *trashService) GetTrash(ttype string) (trashes.ListTrashEntity, error) {
 	return result, err
 }
 
-func (s *trashService) DeleteTrash(id uint) error {
+func (s *TrashService) DeleteTrash(id uint) error {
 	err := s.qry.DeleteTrash(id)
 	if err != nil {
 		log.Println("Error Delete Trash ", err)
@@ -73,7 +73,7 @@ func (s *trashService) DeleteTrash(id uint) error {
 	return nil
 }
 
-func (s *trashService) UpdateTrash(id uint, data trashes.TrashEntity) error {
+func (s *TrashService) UpdateTrash(id uint, data trashes.TrashEntity) error {
 
 	err := s.qry.UpdateTrash(id, data)
 	if err != nil {

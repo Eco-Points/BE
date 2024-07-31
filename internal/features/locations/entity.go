@@ -11,6 +11,8 @@ type LocationInterface struct {
 	End_time   string
 	Phone      string
 	UserID     uint
+	Name       string
+	ID         uint
 }
 
 type QueryLocInterface interface {
