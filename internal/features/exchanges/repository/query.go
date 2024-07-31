@@ -44,8 +44,10 @@ func (em *ExchangeModel) AddExchange(newExchange exchanges.Exchange) error {
 	// Set the points used for the exchange
 	newExchange.PointUsed = reward.PointRequired
 
+	cnvExchange := ToExchangeData(newExchange)
+
 	// Create exchange
-	if err := em.db.Create(&newExchange).Error; err != nil {
+	if err := em.db.Create(&cnvExchange).Error; err != nil {
 		return err
 	}
 
