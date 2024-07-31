@@ -30,14 +30,11 @@ func (u *User) ToUserEntity() dashboards.User {
 	return dashboards.User{
 		ID:       u.ID,
 		Fullname: u.Fullname,
+		CreateAt: u.CreatedAt.Format("02-01-2006"),
 		Email:    u.Email,
-		Password: u.Password,
 		Phone:    u.Phone,
 		Address:  u.Address,
-		IsAdmin:  u.IsAdmin,
 		Status:   u.Status,
-		Point:    u.Point,
-		ImgURL:   u.ImgURL,
 	}
 }
 
@@ -46,12 +43,8 @@ func ToUserQuery(input dashboards.User) User {
 	return User{
 		Fullname: input.Fullname,
 		Email:    input.Email,
-		Password: input.Password,
 		Phone:    input.Phone,
 		Address:  input.Address,
-		IsAdmin:  input.IsAdmin,
 		Status:   input.Status,
-		Point:    input.Point,
-		ImgURL:   input.ImgURL,
 	}
 }

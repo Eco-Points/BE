@@ -1,6 +1,8 @@
 package dashboards
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/labstack/echo/v4"
+)
 
 type Dashboard struct {
 	UserCount     int `json:"user_count"`
@@ -9,16 +11,13 @@ type Dashboard struct {
 }
 
 type User struct {
-	ID       uint
-	Fullname string
-	Email    string
-	Password string
-	Phone    string
-	Address  string
-	IsAdmin  bool
-	Status   string
-	Point    uint
-	ImgURL   string
+	ID       uint   `json:"id"`
+	Fullname string `json:"fullname"`
+	CreateAt string `json:"registered_date"`
+	Email    string `json:"email"`
+	Phone    string `json:"phone"`
+	Address  string `json:"address"`
+	Status   string `json:"status"`
 }
 
 type DshHandler interface {
