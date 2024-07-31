@@ -107,3 +107,60 @@ func (um *DashboardQuery) UpdateUserStatus(targetID uint, status string) error {
 
 	return nil
 }
+
+func (um *DashboardQuery) GetRewardStat() (int, error) {
+	var result int64
+	var table string = config.ImportSetting().Schema
+	table = table + ".exchanges"
+	err := um.db.Table(table).Count(&result).Error
+
+	if err != nil {
+		return 0, err
+	}
+
+	return int(result), nil
+}
+
+func (um *DashboardQuery) GetDepositStat(whereParam string) ([]dashboards.StatData, error) {
+	var result []StatData
+	var result2 []dashboards.StatData
+	var table string = config.ImportSetting().Schema + ".waste_deposits"
+
+	err := um.db.Table(table).Select("date(created_at) as date , count(*) as total").Group("date(created_at)").Where(whereParam).Find(&result).Error
+
+	if err != nil {
+		return []dashboards.StatData{}, err
+	}
+	for _, v := range result {
+		result2 = append(result2, v.ToStatDataEntity())
+	}
+	return result2, nil
+}
+
+func (um *DashboardQuery) GetRewardStatData(whereParam string) ([]dashboards.RewardStatData, error) {
+	var result []RewardStatData
+	var result2 []dashboards.RewardStatData
+	var table string = config.ImportSetting().Schema + ".exchanges"
+
+	err := um.db.Table(table).Select("reward_id , count(*) as total").Group("reward_id").Where(whereParam).Find(&result).Error
+
+	if err != nil {
+		return []dashboards.RewardStatData{}, err
+	}
+	for _, v := range result {
+		result2 = append(result2, v.ToRewardStatDataEntity())
+	}
+	return result2, nil
+}
+
+func (um *DashboardQuery) GetRewardNameByID(rewardID uint) (string, error) {
+	var result Reward
+	var table string = config.ImportSetting().Schema + ".rewards"
+	err := um.db.Table(table).First(&result, rewardID).Error
+
+	if err != nil {
+		return "", err
+	}
+
+	return result.Name, nil
+}

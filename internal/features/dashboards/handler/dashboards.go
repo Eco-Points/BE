@@ -118,3 +118,50 @@ func (uc *DashboardHandler) UpdateUserStatus() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully update user status", nil))
 	}
 }
+
+func (uc *DashboardHandler) GetDepositStat() echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
+		trashParam := c.QueryParam("trash_id")
+		locParam := c.QueryParam("location_id")
+		startDate := c.QueryParam("start_date")
+		endDate := c.QueryParam("end_date")
+
+		result, err := uc.srv.GetDepositStat(uint(userID), trashParam, locParam, startDate, endDate)
+		if err != nil {
+			if strings.ContainsAny(err.Error(), "not found") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "not found", nil))
+			}
+			if strings.ContainsAny(err.Error(), "not allowed") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "not allowed", nil))
+			}
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
+		}
+
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully get deposit stat data", result))
+	}
+}
+
+func (uc *DashboardHandler) GetRewardStatData() echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
+
+		startDate := c.QueryParam("start_date")
+		endDate := c.QueryParam("end_date")
+
+		result, err := uc.srv.GetRewardStatData(uint(userID), startDate, endDate)
+		if err != nil {
+			if strings.ContainsAny(err.Error(), "not found") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "not found", nil))
+			}
+			if strings.ContainsAny(err.Error(), "not allowed") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "not allowed", nil))
+			}
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
+		}
+
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully get reward stat data", result))
+	}
+}
