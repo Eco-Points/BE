@@ -15,6 +15,8 @@ func toResposne(data []locations.LocationInterface) []Location {
 			End_time:   v.End_time,
 			Phone:      v.Phone,
 			UserID:     v.UserID,
+			Name:       v.Name,
+			ID:         v.ID,
 		})
 	}
 	return result

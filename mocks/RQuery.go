@@ -49,9 +49,9 @@ func (_m *RQuery) DeleteReward(rewardID uint) error {
 	return r0
 }
 
-// GetAllRewards provides a mock function with given fields: limit, offset
-func (_m *RQuery) GetAllRewards(limit int, offset int) ([]rewards.Reward, int, error) {
-	ret := _m.Called(limit, offset)
+// GetAllRewards provides a mock function with given fields: limit, offset, search
+func (_m *RQuery) GetAllRewards(limit int, offset int, search string) ([]rewards.Reward, int, error) {
+	ret := _m.Called(limit, offset, search)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetAllRewards")
@@ -60,25 +60,25 @@ func (_m *RQuery) GetAllRewards(limit int, offset int) ([]rewards.Reward, int, e
 	var r0 []rewards.Reward
 	var r1 int
 	var r2 error
-	if rf, ok := ret.Get(0).(func(int, int) ([]rewards.Reward, int, error)); ok {
-		return rf(limit, offset)
+	if rf, ok := ret.Get(0).(func(int, int, string) ([]rewards.Reward, int, error)); ok {
+		return rf(limit, offset, search)
 	}
-	if rf, ok := ret.Get(0).(func(int, int) []rewards.Reward); ok {
-		r0 = rf(limit, offset)
+	if rf, ok := ret.Get(0).(func(int, int, string) []rewards.Reward); ok {
+		r0 = rf(limit, offset, search)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]rewards.Reward)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(int, int) int); ok {
-		r1 = rf(limit, offset)
+	if rf, ok := ret.Get(1).(func(int, int, string) int); ok {
+		r1 = rf(limit, offset, search)
 	} else {
 		r1 = ret.Get(1).(int)
 	}
 
-	if rf, ok := ret.Get(2).(func(int, int) error); ok {
-		r2 = rf(limit, offset)
+	if rf, ok := ret.Get(2).(func(int, int, string) error); ok {
+		r2 = rf(limit, offset, search)
 	} else {
 		r2 = ret.Error(2)
 	}
@@ -107,6 +107,34 @@ func (_m *RQuery) GetRewardByID(rewardID uint) (rewards.Reward, error) {
 
 	if rf, ok := ret.Get(1).(func(uint) error); ok {
 		r1 = rf(rewardID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// IsAdmin provides a mock function with given fields: userID
+func (_m *RQuery) IsAdmin(userID uint) (bool, error) {
+	ret := _m.Called(userID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for IsAdmin")
+	}
+
+	var r0 bool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint) (bool, error)); ok {
+		return rf(userID)
+	}
+	if rf, ok := ret.Get(0).(func(uint) bool); ok {
+		r0 = rf(userID)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+
+	if rf, ok := ret.Get(1).(func(uint) error); ok {
+		r1 = rf(userID)
 	} else {
 		r1 = ret.Error(1)
 	}
