@@ -165,3 +165,26 @@ func (uc *DashboardHandler) GetRewardStatData() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully get reward stat data", result))
 	}
 }
+
+func (uc *DashboardHandler) DeleteUserByAdmin() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
+		targetID, err := strconv.Atoi(c.Param("target_id"))
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "bad parameter", nil))
+		}
+
+		err = uc.srv.DeleteUserByAdmin(uint(userID), uint(targetID))
+		if err != nil {
+			if strings.ContainsAny(err.Error(), "not found") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "not found", nil))
+			}
+			if strings.ContainsAny(err.Error(), "not allowed") {
+				return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "failed", "not allowed", nil))
+			}
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "error", "an unexpected error occurred", nil))
+		}
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "successfully delete user", nil))
+	}
+}

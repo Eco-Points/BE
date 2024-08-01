@@ -233,3 +233,34 @@ func (ds *DashboardServices) GetRewardStatData(userID uint, startDate, endDate s
 
 	return result, nil
 }
+
+func (ds *DashboardServices) DeleteUserByAdmin(userID uint, targetID uint) error {
+
+	if userID == targetID {
+		return errors.New("not allowed")
+
+	}
+
+	isAdmin, err := ds.qry.CheckIsAdmin(userID)
+	if err != nil {
+		if err.Error() == gorm.ErrRecordNotFound.Error() {
+			return errors.New("not allowed")
+		}
+		return errors.New("check admin query error")
+
+	}
+	if !isAdmin {
+		return errors.New("not allowed")
+	}
+
+	err = ds.qry.DeleteUserByAdmin(targetID)
+	if err != nil {
+		if err.Error() == gorm.ErrRecordNotFound.Error() {
+			return errors.New("not found")
+		}
+		return errors.New("query error")
+
+	}
+
+	return nil
+}
