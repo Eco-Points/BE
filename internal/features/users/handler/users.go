@@ -93,7 +93,7 @@ func (uc *UserHandler) UpdateUser() echo.HandlerFunc {
 		}
 
 		// Bagian updaload Image
-		file, err := c.FormFile("image_picture")
+		file, err := c.FormFile("image_url")
 		if file != nil {
 			if err != nil {
 				log.Print("Error", err.Error())

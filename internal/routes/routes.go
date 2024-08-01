@@ -67,7 +67,8 @@ func DashboardRoute(e *echo.Echo, dsh dashboards.DshHandler) {
 	ds.GET("/users", dsh.GetAllUsers())
 	ds.GET("/users/:target_id", dsh.GetUser())
 	ds.PUT("/users/:target_id", dsh.UpdateUserStatus())
-
+	ds.GET("/depositstat", dsh.GetDepositStat())
+	ds.GET("/rewardstat", dsh.GetRewardStatData())
 }
 
 func RewardRoute(e *echo.Echo, rh rewards.RHandler) {
