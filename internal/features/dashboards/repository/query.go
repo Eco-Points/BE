@@ -142,7 +142,7 @@ func (um *DashboardQuery) GetRewardStatData(whereParam string) ([]dashboards.Rew
 	var result2 []dashboards.RewardStatData
 	var table string = config.ImportSetting().Schema + ".exchanges"
 
-	err := um.db.Table(table).Select("reward_id , count(*) as total").Group("reward_id").Where(whereParam).Find(&result).Error
+	err := um.db.Debug().Table(table).Select("reward_id , count(*) as total").Group("reward_id").Where(whereParam).Find(&result).Error
 
 	if err != nil {
 		return []dashboards.RewardStatData{}, err

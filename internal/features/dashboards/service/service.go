@@ -164,7 +164,7 @@ func (ds *DashboardServices) GetDepositStat(userID uint, trashParam, locParam, s
 		start, _ := time.Parse("02-01-2006", startDate)
 		end, _ := time.Parse("02-01-2006", endDate)
 
-		whereParam = whereParam + " created_at BETWEEN '" + start.Format("2006-01-02 15:04:05") + "' AND '" + end.Format("2006-01-02 15:04:05") + "' AND "
+		whereParam = whereParam + " created_at BETWEEN '" + start.Format("2006-01-02 15:04:05") + "' AND date '" + end.Format("2006-01-02 15:04:05") + "' + interval '1 day' AND "
 	}
 
 	if whereParam != "" {
@@ -202,7 +202,7 @@ func (ds *DashboardServices) GetRewardStatData(userID uint, startDate, endDate s
 		start, _ := time.Parse("02-01-2006", startDate)
 		end, _ := time.Parse("02-01-2006", endDate)
 
-		whereParam = whereParam + " created_at BETWEEN '" + start.Format("2006-01-02 15:04:05") + "' AND '" + end.Format("2006-01-02 15:04:05") + "' AND "
+		whereParam = whereParam + " created_at BETWEEN date '" + start.Format("2006-01-02 15:04:05") + "' - interval '1 day'AND date '" + end.Format("2006-01-02 15:04:05") + "' + INTERVAL '1 DAY' AND "
 	}
 
 	if whereParam != "" {
