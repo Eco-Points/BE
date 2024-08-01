@@ -21,7 +21,7 @@ func (um *DashboardQuery) GetUserCount() (int, error) {
 	var result int64
 	var table string = config.ImportSetting().Schema
 	table = table + ".users"
-	err := um.db.Table(table).Where("is_admin = ?", "false").Count(&result).Error
+	err := um.db.Debug().Table(table).Where("is_admin = ? AND deleted_at IS NULL", "false").Count(&result).Error
 
 	if err != nil {
 		return 0, err
