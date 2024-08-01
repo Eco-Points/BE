@@ -30,6 +30,10 @@ import (
 	ex_rep "eco_points/internal/features/exchanges/repository"
 	ex_srv "eco_points/internal/features/exchanges/service"
 
+	excl_hnd "eco_points/internal/features/excelize/handler"
+	excl_rep "eco_points/internal/features/excelize/repository"
+	excl_srv "eco_points/internal/features/excelize/service"
+
 	"eco_points/internal/routes"
 	"eco_points/internal/utils"
 
@@ -43,6 +47,7 @@ func InitFactory(e *echo.Echo) {
 	pu := utils.NewPassUtil()
 	jwt := utils.NewJwtUtility()
 	cloud := utils.NewCloudinaryUtility()
+	excel := utils.NewExcelMake()
 
 	uq := u_rep.NewUserQuery(db)
 	us := u_srv.NewUserService(uq, pu, jwt, cloud)
@@ -74,9 +79,14 @@ func InitFactory(e *echo.Echo) {
 	exs := ex_srv.NewExchangeService(exq)
 	exh := ex_hnd.NewExchangeHandler(exs, jwt)
 
+	exclq := excl_rep.NewExcelQuery(db, excel, cloud)
+	exclq.SetDbSchema(config.ImportSetting().Schema)
+	excls := excl_srv.NewExcelMake(exclq)
+	exclh := excl_hnd.NewExcelHandler(excls, jwt)
+
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORS())
 
-	routes.InitRoute(e, uh, th, dh, lh, rh, exh, dbh)
+	routes.InitRoute(e, uh, th, dh, lh, rh, exh, dbh, exclh)
 }

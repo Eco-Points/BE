@@ -3,10 +3,12 @@ package routes
 import (
 	"eco_points/config"
 	"eco_points/internal/features/dashboards"
+	"eco_points/internal/features/excelize"
 	"eco_points/internal/features/exchanges"
 	"eco_points/internal/features/locations"
 	"eco_points/internal/features/rewards"
 	"eco_points/internal/features/trashes"
+
 	users "eco_points/internal/features/users"
 	deposits "eco_points/internal/features/waste_deposits"
 
@@ -15,7 +17,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerDepoInterface, l locations.HandlerLocInterface, rh rewards.RHandler, exh exchanges.ExHandler, dsh dashboards.DshHandler) {
+func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerDepoInterface, l locations.HandlerLocInterface, rh rewards.RHandler, exh exchanges.ExHandler, dsh dashboards.DshHandler, excl excelize.HandlerMakeExcelInterface) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -26,6 +28,8 @@ func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface
 	DashboardRoute(e, dsh)
 	RewardRoute(e, rh)
 	ExchangeRoute(e, exh)
+	excelMakeRoute(e, excl)
+
 }
 
 func UsersRoute(e *echo.Echo, uh users.UHandler) {
@@ -87,6 +91,12 @@ func ExchangeRoute(e *echo.Echo, exh exchanges.ExHandler) {
 	t := e.Group("/exchange")
 	t.Use(JWTConfig())
 	t.POST("", exh.AddExchange())
+}
+
+func excelMakeRoute(e *echo.Echo, excl excelize.HandlerMakeExcelInterface) {
+	t := e.Group("/excel")
+	t.Use(JWTConfig())
+	t.GET("", excl.MakeExcel())
 }
 
 func JWTConfig() echo.MiddlewareFunc {
