@@ -37,6 +37,7 @@ type DshHandler interface {
 	UpdateUserStatus() echo.HandlerFunc
 	GetDepositStat() echo.HandlerFunc
 	GetRewardStatData() echo.HandlerFunc
+	DeleteUserByAdmin() echo.HandlerFunc
 }
 
 type DshService interface {
@@ -46,6 +47,7 @@ type DshService interface {
 	UpdateUserStatus(userID uint, targetID uint, status string) error
 	GetDepositStat(userID uint, trashParam, locParam, startDate, endDate string) ([]StatData, error)
 	GetRewardStatData(userID uint, startDate, endDate string) ([]RewardStatData, error)
+	DeleteUserByAdmin(userID uint, targetID uint) error
 }
 
 type DshQuery interface {
@@ -59,4 +61,5 @@ type DshQuery interface {
 	GetDepositStat(whereParam string) ([]StatData, error)
 	GetRewardStatData(whereParam string) ([]RewardStatData, error)
 	GetRewardNameByID(rewardID uint) (string, error)
+	DeleteUserByAdmin(targetID uint) error
 }

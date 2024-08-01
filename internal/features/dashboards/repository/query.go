@@ -164,3 +164,17 @@ func (um *DashboardQuery) GetRewardNameByID(rewardID uint) (string, error) {
 
 	return result.Name, nil
 }
+
+func (um *DashboardQuery) DeleteUserByAdmin(targetID uint) error {
+	qry := um.db.Debug().Where("id = ?", targetID).Delete(&User{})
+
+	if qry.Error != nil {
+		return qry.Error
+	}
+
+	if qry.RowsAffected < 1 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
+}

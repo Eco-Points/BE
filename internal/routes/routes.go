@@ -67,6 +67,7 @@ func DashboardRoute(e *echo.Echo, dsh dashboards.DshHandler) {
 	ds.GET("/users", dsh.GetAllUsers())
 	ds.GET("/users/:target_id", dsh.GetUser())
 	ds.PUT("/users/:target_id", dsh.UpdateUserStatus())
+	ds.DELETE("/users/:target_id", dsh.DeleteUserByAdmin())
 	ds.GET("/depositstat", dsh.GetDepositStat())
 	ds.GET("/rewardstat", dsh.GetRewardStatData())
 }
