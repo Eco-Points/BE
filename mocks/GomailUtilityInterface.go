@@ -9,17 +9,17 @@ type GomailUtilityInterface struct {
 	mock.Mock
 }
 
-// SendEmail provides a mock function with given fields: points, receiverEmail, receiverName
-func (_m *GomailUtilityInterface) SendEmail(points int, receiverEmail string, receiverName string) error {
-	ret := _m.Called(points, receiverEmail, receiverName)
+// SendEmail provides a mock function with given fields: points, message, receiverEmail, receiverName
+func (_m *GomailUtilityInterface) SendEmail(points int, message string, receiverEmail string, receiverName string) error {
+	ret := _m.Called(points, message, receiverEmail, receiverName)
 
 	if len(ret) == 0 {
 		panic("no return value specified for SendEmail")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(int, string, string) error); ok {
-		r0 = rf(points, receiverEmail, receiverName)
+	if rf, ok := ret.Get(0).(func(int, string, string, string) error); ok {
+		r0 = rf(points, message, receiverEmail, receiverName)
 	} else {
 		r0 = ret.Error(0)
 	}

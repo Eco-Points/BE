@@ -49,11 +49,11 @@ func ImportGomailSetting() mailSetting {
 	} else {
 		log.Println("file not exist")
 	}
-	result.Host = os.Getenv("host")
-	result.Port, _ = strconv.Atoi(os.Getenv("port"))
-	result.Name = os.Getenv("name")
-	result.Email = os.Getenv("email")
-	result.Password = os.Getenv("password")
+	result.Host = os.Getenv("GOMAIL_HOST")
+	result.Port, _ = strconv.Atoi(os.Getenv("GOMAIL_PORT"))
+	result.Name = os.Getenv("GOMAIL_NAME")
+	result.Email = os.Getenv("GOMAIL_EMAIL")
+	result.Password = os.Getenv("GOMAIL_PASSWORD")
 	return result
 
 }

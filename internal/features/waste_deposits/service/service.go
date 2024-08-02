@@ -4,6 +4,8 @@ import (
 	deposits "eco_points/internal/features/waste_deposits"
 	"eco_points/internal/utils"
 	"log"
+	"strconv"
+	"strings"
 )
 
 type depositService struct {
@@ -25,7 +27,6 @@ func (s *depositService) DepositTrash(data deposits.WasteDepositInterface) error
 		return err
 	}
 	return nil
-
 }
 
 func (q *depositService) UpdateWasteDepositStatus(wasteID uint, status string) error {
@@ -39,7 +40,13 @@ func (q *depositService) UpdateWasteDepositStatus(wasteID uint, status string) e
 		log.Println("error send email", err)
 		return err
 	}
-	err = q.email.SendEmail(points, userEmail, userName)
+	message := "Halo, <b>" + userName + "</b>"
+	if strings.Contains(strings.ToLower(status), "verif") {
+		message = message + "<br/> Pengajuan deposit sampahmu sudah diverifikasi oleh admin keren dari tim Eco Points. <br/>Selamat kamu mendapatkan <b>" + strconv.Itoa(points) + " poin</b> "
+	} else {
+		message = message + "<br/> Pengajuan deposit sampahmu belum memenuhi syarat untuk mendapatkan poin"
+	}
+	err = q.email.SendEmail(points, message, userEmail, userName)
 	if err != nil {
 		log.Println("error send email", err)
 		return err
