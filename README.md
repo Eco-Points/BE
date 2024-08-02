@@ -45,6 +45,12 @@ EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih me
 [OpenAPI](https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0)
 
 ## Library & Tools 🛠️
+- ![Docker](https://www.docker.com/sites/default/files/d8/2019-07/Moby-logo.png) Docker
+- ![Postman](https://www.postman.com/assets/logos/postman-logo-stacked.svg) Postman
+- ![Golang](https://golang.org/lib/godoc/images/go-logo-blue.svg) Golang
+- ![GORM](https://gorm.io/assets/logo.svg) GORM
+- ![Gin](https://gin-gonic.com/images/gin-logo.png) Gin
+- ![Cloudinary](https://res.cloudinary.com/cloudinary-marketing/images/f_auto,q_auto/v1588251568/cloudinary_logo_for_white_bg/cloudinary_logo_for_white_bg-png) Cloudinary
 
 ## Live Demo Eco Points
 Explore the live demo at: [EcoPoints](https://eco-point-ten.vercel.app/)
