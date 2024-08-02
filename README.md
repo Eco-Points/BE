@@ -47,7 +47,7 @@ Start to use API at : [API Deployment](https://two.ybtech.online)
 
 ### How To Get Started
 1. **Install Postman**:
-    [OpenAPI](https://www.postman.com/downloads/)
+    [Download Postman](https://www.postman.com/downloads/)
     
 2. **Input API address**:
     Follow the API documentation to see detail API usage
