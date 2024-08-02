@@ -1,9 +1,4 @@
-<div>
-  
-# ![EcoPoints Logo](https://i.imgur.com/CWiIsPB.png)  
-
-</div>
-# **EcoPoints**
+## EcoPoints 
 
 EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih menyenangkan dan bermanfaat. Setiap user yang melakukan penyetoran sampah melalui EcoPoints akan diberikan poin yang nantinya bisa ditukarkan dengan berbagai hadiah menarik seperti voucher diskon makan, pulsa, maupun merchandise. 🎁
 
