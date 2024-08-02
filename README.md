@@ -43,7 +43,18 @@ EcoPoints adalah aplikasi yang mendorong pengguna untuk berpartisipasi dalam pen
 ![ER Diagram](https://res.cloudinary.com/duuv3bqdc/image/upload/v1722391307/images/ptiltvwc9c2lpsnl7uv8.png)
 
 ## 🛠️ Library & Tools 
-- [Docker]
+![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white) 
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) 
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white) 
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) 
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) 
+![GitLab](https://img.shields.io/badge/gitlab-%23181717.svg?style=for-the-badge&logo=gitlab&logoColor=white) 
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white) 
+![VSCode](https://img.shields.io/badge/VSCode-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white)
+![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white) 
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) 
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+
 
 ## 🚀 Live Demo EcoPoints
 Explore EcoPoints Live Demo at : [EcoPoints](https://eco-point-ten.vercel.app/)
@@ -76,10 +87,10 @@ Start to use EcoPoints API : [EcoPoints API](https://two.ybtech.online)
 ## 🤝 Collaboration Team
 
 ### Backend
-- [Anggi Eko Pambudi](https://github.com/gemgum)
-- [Hafiz Darmawan](https://github.com/hfzdrmwn96)
-- [Farah Raihanunnisa](https://github.com/farahraihan)
-  
+[![GitHub](https://img.shields.io/badge/Anggi-Eko-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/gemgum)<br>
+[![GitHub](https://img.shields.io/badge/Farah-Raihanunnisa-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/farahraihan)<br>
+[![GitHub](https://img.shields.io/badge/Hafiz-Darmawan-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/hfzdrmwn96)<br>
+
 ### Frontend
-- [Henry Rivardo](https://github.com/HenryRivardo07)
-- [Ardi S](https://github.com/ardii2711)
+[![GitHub](https://img.shields.io/badge/Henry-Rivardo-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/HenryRivardo07)<br>
+[![GitHub](https://img.shields.io/badge/Ardi-S-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ardii2711)<br>
