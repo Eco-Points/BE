@@ -72,3 +72,14 @@ Start to use API at : [API Deployment](https://two.ybtech.online)
     ```
 5. **Get The Response**:
     At last you can get the response of this API base on your request
+
+## 🤝 Collaboration Team
+
+### Backend
+- [Anggi Eko Pambudi](https://github.com/gemgum)
+- [Hafiz Darmawan](https://github.com/hfzdrmwn96)
+- [Farah Raihanunnisa](https://github.com/farahraihan)
+  
+### Frontend
+- [Henry Rivardo](https://github.com/HenryRivardo07)
+- [Ardi S](https://github.com/ardii2711)
