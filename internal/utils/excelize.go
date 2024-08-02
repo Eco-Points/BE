@@ -76,8 +76,8 @@ func (e *ExcelMakeUtility) MakeExcel(name string, date string, data interface{})
 
 		for i := 0; i < len(saveData); i++ {
 			f.SetCellValue("Sheet1", fmt.Sprintf("A%d", i+3), i+1)
-			f.SetCellValue("Sheet1", fmt.Sprintf("B%d", i+3), saveData[i].Quantity)
-			f.SetCellValue("Sheet1", fmt.Sprintf("C%d", i+3), saveData[i].Point)
+			f.SetCellValue("Sheet1", fmt.Sprintf("B%d", i+3), saveData[i].Point)
+			f.SetCellValue("Sheet1", fmt.Sprintf("C%d", i+3), saveData[i].Quantity)
 			f.SetCellValue("Sheet1", fmt.Sprintf("D%d", i+3), saveData[i].Status)
 			f.SetCellValue("Sheet1", fmt.Sprintf("E%d", i+3), saveData[i].Type)
 			f.SetCellValue("Sheet1", fmt.Sprintf("F%d", i+3), saveData[i].Fullname)

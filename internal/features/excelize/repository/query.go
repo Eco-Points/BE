@@ -49,7 +49,7 @@ func (q *excelMakeQuery) MakeExcelFromDeposit(table string, date string, userid 
 			if !isVerif {
 				query = query + `and wd."status" <> 'verified' `
 			} else {
-				query = query + `and wd."status" <> 'rejected' `
+				query = query + `and wd."status" <> 'rejected' and wd."status" <> 'pending' `
 			}
 			if limit != 0 {
 				query = query + fmt.Sprintf("limit %d", limit)
@@ -74,7 +74,7 @@ func (q *excelMakeQuery) MakeExcelFromDeposit(table string, date string, userid 
 			if !isVerif {
 				query = query + ` and wd."status" <> 'verified' `
 			} else {
-				query = query + ` and wd."status" <> 'rejected' `
+				query = query + ` and wd."status" <> 'rejected' and wd."status" <> 'pending' `
 			}
 			if limit != 0 {
 				query = query + fmt.Sprintf("limit %d", limit)
