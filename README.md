@@ -35,11 +35,35 @@ EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih me
 ![ER Diagram](https://res.cloudinary.com/duuv3bqdc/image/upload/v1722391307/images/ptiltvwc9c2lpsnl7uv8.png)
 
 ## API Documentation (OpenAPI Swagger) 📄
-
-https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0
+[OpenAPI](https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0)
 
 ## Library & Tools 🛠️
 
+## Live Demo Eco Points
+Explore the live demo at: [EcoPoints](https://eco-point-ten.vercel.app/)
+
 ## API Deployment 🚀
+Start to use API at : [API Deployment](https://two.ybtech.online)
 
 ### How To Get Started
+1. **Install Postman**:
+    ```bash
+    git clone https://github.com/username/repository.git
+    ```
+2. **Input API address**:
+    ```bash
+    - Follow the API documentation to see detail API usage
+    - Example : POST:https://two.ybtech.online/login
+    ```
+3. **Send the Data from Request Body or Query**:
+    ```bash
+    - Example :
+    {
+      "email": "user@gmail.com"
+      "password": "passworduser"
+    }
+    ```
+5. **Get The Response**:
+    ```bash
+    At last you can get the response of this API base on your request
+    ```
