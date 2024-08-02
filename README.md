@@ -1,45 +1,45 @@
 # EcoPoints
 
-EcoPoints adalah aplikasi yang mendorong pengguna untuk berpartisipasi dalam pengelolaan sampah dengan memberikan poin sebagai imbalan atas setiap penyetoran sampah. Poin yang terkumpul dapat ditukarkan dengan hadiah atau diskon yang tersedia dalam aplikasi. Aplikasi ini bertujuan untuk mengurangi dampak lingkungan dengan meningkatkan kesadaran dan partisipasi masyarakat dalam daur ulang dan pengelolaan sampah.
+EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih menyenangkan dan bermanfaat. Setiap user yang melakukan penyetoran sampah melalui EcoPoints maka akan diberikan point yang nantinya bisa ditukarkan dengan berbagai hadiah yang tersedia seperti voucher diskon makan, pulsa, maupun merchandise.
 
-## Minimum Viable Product (MVP)
+## Features
 
-### Fitur Utama:
-- Registrasi dan Login Pengguna
-- Setor Sampah
-- Pemberian Poin
-- Riwayat Penyetoran Sampah
-- Lihat Saldo Poin
-- Tukar Poin
+### User Features
 
-### Alur Aplikasi
+- **User Registration and Login**: Daftar dan login untuk akses penuh ke aplikasi.
+- **Dashboard User**: Halaman utama pengguna yang menampilkan informasi penting.
+- **Edit Profile**: Pengguna dapat mengedit informasi profil mereka.
+- **Waste Deposit**: Setor sampah di lokasi yang tersedia dan dapatkan poin.
+- **Waste History**: Lihat riwayat penyetoran sampah.
+- **Waste Location**: Temukan lokasi penyetoran sampah terdekat.
+- **Point Redemption**: Tukarkan poin dengan hadiah atau diskon.
+- **Detail Waste Deposit**: Detail informasi mengenai penyetoran sampah.
+- **Detail Redeem Point**: Detail informasi mengenai penukaran poin.
+- **Contact Us**: Halaman untuk menghubungi tim dukungan.
+- **About Us**: Informasi mengenai tim dan tujuan aplikasi.
+- **Suspended Account**: Halaman untuk akun yang ditangguhkan.
 
-#### Registrasi Pengguna:
-1. Pengguna membuka aplikasi dan mengisi form registrasi dengan nama, email, dan password.
-2. Setelah registrasi, pengguna mendapatkan akun yang dapat digunakan untuk login.
+### Admin Features
 
-#### Login Pengguna:
-1. Pengguna memasukkan email dan password untuk login ke dalam aplikasi.
-2. Setelah login, pengguna diarahkan ke dashboard.
-
-#### Setor Sampah:
-1. Pengguna mengakses form setor sampah di dashboard.
-2. Pengguna memasukkan jumlah sampah yang akan disetor (dalam kg), ke titik point yang telah disediakan di daerah Jakarta.
-3. Data penyetoran sampah dikirim ke server dan dicatat.
-4. Poin diberikan berdasarkan jumlah sampah yang disetor dan ditambahkan ke saldo poin pengguna.
-
-#### Riwayat Penyetoran Sampah:
-1. Pengguna dapat melihat daftar penyetoran sampah yang telah dilakukan sebelumnya.
-2. Setiap penyetoran mencakup informasi jumlah sampah yang disetor dan poin yang diperoleh.
-
-#### Lihat Saldo Poin:
-1. Pengguna dapat melihat saldo poin yang telah terkumpul dari penyetoran sampah.
-
-#### Tukar Poin:
-1. Pengguna dapat menukarkan poin dengan hadiah atau diskon yang tersedia dalam aplikasi.
-
-
+- **Admin Dashboard**: Halaman utama admin dengan kontrol penuh.
+- **Manage Users**: Kelola informasi pengguna dan kontrol akses.
+- **Edit User**: Mengedit informasi pengguna.
+- **Manage Rewards**: Mengelola hadiah yang dapat ditukar dengan poin.
+- **Verify Waste Deposit**: Verifikasi penyetoran sampah yang dilakukan pengguna.
+- **Reports**: Melihat laporan dan statistik aplikasi.
+- **Add Reward**: Menambahkan hadiah baru ke dalam aplikasi.
+- **Add Location**: Menambahkan lokasi baru untuk penyetoran sampah.
 
 ## ER Diagram
 
 ![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://res.cloudinary.com/duuv3bqdc/image/upload/v1722391307/images/ptiltvwc9c2lpsnl7uv8.png)
+
+## API Documentation (OpenApi Swagger)
+https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0
+
+## Library & Tools
+
+
+## API Deployment
+
+### How To Get Started
