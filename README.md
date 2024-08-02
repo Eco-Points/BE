@@ -50,20 +50,18 @@ Start to use API at : [API Deployment](https://two.ybtech.online)
     ```bash
     git clone https://github.com/username/repository.git
     ```
+    
 2. **Input API address**:
-    ```bash
-    - Follow the API documentation to see detail API usage
-    - Example : POST:https://two.ybtech.online/login
-    ```
+    Follow the API documentation to see detail API usage
+    Example : POST:https://two.ybtech.online/login
+    
 3. **Send the Data from Request Body or Query**:
     ```bash
-    - Example :
+    Example :
     {
       "email": "user@gmail.com"
       "password": "passworduser"
     }
     ```
 5. **Get The Response**:
-    ```bash
     At last you can get the response of this API base on your request
-    ```
