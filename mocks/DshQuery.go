@@ -41,6 +41,24 @@ func (_m *DshQuery) CheckIsAdmin(userID uint) (bool, error) {
 	return r0, r1
 }
 
+// DeleteUserByAdmin provides a mock function with given fields: targetID
+func (_m *DshQuery) DeleteUserByAdmin(targetID uint) error {
+	ret := _m.Called(targetID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteUserByAdmin")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uint) error); ok {
+		r0 = rf(targetID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetAllUsers provides a mock function with given fields: nameParams
 func (_m *DshQuery) GetAllUsers(nameParams string) ([]dashboards.User, error) {
 	ret := _m.Called(nameParams)
@@ -99,6 +117,36 @@ func (_m *DshQuery) GetDepositCount() (int, error) {
 	return r0, r1
 }
 
+// GetDepositStat provides a mock function with given fields: whereParam
+func (_m *DshQuery) GetDepositStat(whereParam string) ([]dashboards.StatData, error) {
+	ret := _m.Called(whereParam)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetDepositStat")
+	}
+
+	var r0 []dashboards.StatData
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) ([]dashboards.StatData, error)); ok {
+		return rf(whereParam)
+	}
+	if rf, ok := ret.Get(0).(func(string) []dashboards.StatData); ok {
+		r0 = rf(whereParam)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dashboards.StatData)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(whereParam)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetExchangeCount provides a mock function with given fields:
 func (_m *DshQuery) GetExchangeCount() (int, error) {
 	ret := _m.Called()
@@ -120,6 +168,64 @@ func (_m *DshQuery) GetExchangeCount() (int, error) {
 
 	if rf, ok := ret.Get(1).(func() error); ok {
 		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetRewardNameByID provides a mock function with given fields: rewardID
+func (_m *DshQuery) GetRewardNameByID(rewardID uint) (string, error) {
+	ret := _m.Called(rewardID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetRewardNameByID")
+	}
+
+	var r0 string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint) (string, error)); ok {
+		return rf(rewardID)
+	}
+	if rf, ok := ret.Get(0).(func(uint) string); ok {
+		r0 = rf(rewardID)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	if rf, ok := ret.Get(1).(func(uint) error); ok {
+		r1 = rf(rewardID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetRewardStatData provides a mock function with given fields: whereParam
+func (_m *DshQuery) GetRewardStatData(whereParam string) ([]dashboards.RewardStatData, error) {
+	ret := _m.Called(whereParam)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetRewardStatData")
+	}
+
+	var r0 []dashboards.RewardStatData
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) ([]dashboards.RewardStatData, error)); ok {
+		return rf(whereParam)
+	}
+	if rf, ok := ret.Get(0).(func(string) []dashboards.RewardStatData); ok {
+		r0 = rf(whereParam)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dashboards.RewardStatData)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(whereParam)
 	} else {
 		r1 = ret.Error(1)
 	}

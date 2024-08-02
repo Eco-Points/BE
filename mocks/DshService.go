@@ -13,6 +13,24 @@ type DshService struct {
 	mock.Mock
 }
 
+// DeleteUserByAdmin provides a mock function with given fields: userID, targetID
+func (_m *DshService) DeleteUserByAdmin(userID uint, targetID uint) error {
+	ret := _m.Called(userID, targetID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteUserByAdmin")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uint, uint) error); ok {
+		r0 = rf(userID, targetID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetAllUsers provides a mock function with given fields: userID, nameParams
 func (_m *DshService) GetAllUsers(userID uint, nameParams string) ([]dashboards.User, error) {
 	ret := _m.Called(userID, nameParams)
@@ -64,6 +82,66 @@ func (_m *DshService) GetDashboard(userID uint) (dashboards.Dashboard, error) {
 
 	if rf, ok := ret.Get(1).(func(uint) error); ok {
 		r1 = rf(userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetDepositStat provides a mock function with given fields: userID, trashParam, locParam, startDate, endDate
+func (_m *DshService) GetDepositStat(userID uint, trashParam string, locParam string, startDate string, endDate string) ([]dashboards.StatData, error) {
+	ret := _m.Called(userID, trashParam, locParam, startDate, endDate)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetDepositStat")
+	}
+
+	var r0 []dashboards.StatData
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint, string, string, string, string) ([]dashboards.StatData, error)); ok {
+		return rf(userID, trashParam, locParam, startDate, endDate)
+	}
+	if rf, ok := ret.Get(0).(func(uint, string, string, string, string) []dashboards.StatData); ok {
+		r0 = rf(userID, trashParam, locParam, startDate, endDate)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dashboards.StatData)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uint, string, string, string, string) error); ok {
+		r1 = rf(userID, trashParam, locParam, startDate, endDate)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetRewardStatData provides a mock function with given fields: userID, startDate, endDate
+func (_m *DshService) GetRewardStatData(userID uint, startDate string, endDate string) ([]dashboards.RewardStatData, error) {
+	ret := _m.Called(userID, startDate, endDate)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetRewardStatData")
+	}
+
+	var r0 []dashboards.RewardStatData
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint, string, string) ([]dashboards.RewardStatData, error)); ok {
+		return rf(userID, startDate, endDate)
+	}
+	if rf, ok := ret.Get(0).(func(uint, string, string) []dashboards.RewardStatData); ok {
+		r0 = rf(userID, startDate, endDate)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dashboards.RewardStatData)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uint, string, string) error); ok {
+		r1 = rf(userID, startDate, endDate)
 	} else {
 		r1 = ret.Error(1)
 	}

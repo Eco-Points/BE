@@ -12,6 +12,26 @@ type DshHandler struct {
 	mock.Mock
 }
 
+// DeleteUserByAdmin provides a mock function with given fields:
+func (_m *DshHandler) DeleteUserByAdmin() echo.HandlerFunc {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteUserByAdmin")
+	}
+
+	var r0 echo.HandlerFunc
+	if rf, ok := ret.Get(0).(func() echo.HandlerFunc); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(echo.HandlerFunc)
+		}
+	}
+
+	return r0
+}
+
 // GetAllUsers provides a mock function with given fields:
 func (_m *DshHandler) GetAllUsers() echo.HandlerFunc {
 	ret := _m.Called()
@@ -38,6 +58,46 @@ func (_m *DshHandler) GetDashboard() echo.HandlerFunc {
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetDashboard")
+	}
+
+	var r0 echo.HandlerFunc
+	if rf, ok := ret.Get(0).(func() echo.HandlerFunc); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(echo.HandlerFunc)
+		}
+	}
+
+	return r0
+}
+
+// GetDepositStat provides a mock function with given fields:
+func (_m *DshHandler) GetDepositStat() echo.HandlerFunc {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetDepositStat")
+	}
+
+	var r0 echo.HandlerFunc
+	if rf, ok := ret.Get(0).(func() echo.HandlerFunc); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(echo.HandlerFunc)
+		}
+	}
+
+	return r0
+}
+
+// GetRewardStatData provides a mock function with given fields:
+func (_m *DshHandler) GetRewardStatData() echo.HandlerFunc {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetRewardStatData")
 	}
 
 	var r0 echo.HandlerFunc
