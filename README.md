@@ -1,17 +1,18 @@
 <div align="center">
 
-# **EcoPoints**
-# ![EcoPoints Logo](https://i.imgur.com/CWiIsPB.png)  
+# **EcoPoints ~ BE**
+# ![EcoPoints Logo](https://i.imgur.com/CWiIsPB.png)
+## Final Immersive Backend Project
 
 </div>
 
-## EcoPoints 🍀
+## 📚 About the Project
 
-EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih menyenangkan dan bermanfaat. Setiap user yang melakukan penyetoran sampah melalui EcoPoints akan diberikan poin yang nantinya bisa ditukarkan dengan berbagai hadiah menarik seperti voucher diskon makan, pulsa, maupun merchandise. 🎁
+EcoPoints adalah aplikasi yang mendorong pengguna untuk berpartisipasi dalam pengelolaan sampah dengan memberikan poin sebagai imbalan atas setiap penyetoran sampah. Poin yang terkumpul dapat ditukarkan dengan hadiah atau diskon yang tersedia dalam aplikasi. Aplikasi ini bertujuan untuk mengurangi dampak lingkungan dengan meningkatkan kesadaran dan partisipasi masyarakat dalam daur ulang dan pengelolaan sampah.
 
-## Features 🌟
+## 💥 Features 
 
-### User Features 👤
+### User Features 
 
 - **User Registration and Login**: Daftar dan login untuk akses penuh ke aplikasi.
 - **Dashboard User**: Halaman utama pengguna yang menampilkan informasi penting.
@@ -26,7 +27,7 @@ EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih me
 - **About Us**: Informasi mengenai tim dan tujuan aplikasi.
 - **Suspended Account**: Halaman untuk akun yang ditangguhkan.
 
-### Admin Features 👨‍💼
+### Admin Features 
 
 - **Admin Dashboard**: Halaman utama admin dengan kontrol penuh.
 - **Manage Users**: Kelola informasi pengguna dan kontrol akses.
@@ -37,25 +38,20 @@ EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih me
 - **Add Reward**: Menambahkan hadiah baru ke dalam aplikasi.
 - **Add Location**: Menambahkan lokasi baru untuk penyetoran sampah.
 
-## ER Diagram 🗺️
+## 🗺️ ER Diagram 
 
 ![ER Diagram](https://res.cloudinary.com/duuv3bqdc/image/upload/v1722391307/images/ptiltvwc9c2lpsnl7uv8.png)
 
-## API Documentation (OpenAPI Swagger) 📄
+## 📋 API Documentation (OpenAPI Swagger) 
 [OpenAPI](https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0)
 
-## Library & Tools 🛠️
-- ![Docker](https://www.docker.com/sites/default/files/d8/2019-07/Moby-logo.png) Docker
-- ![Postman](https://www.postman.com/assets/logos/postman-logo-stacked.svg) Postman
-- ![Golang](https://golang.org/lib/godoc/images/go-logo-blue.svg) Golang
-- ![GORM](https://gorm.io/assets/logo.svg) GORM
-- ![Gin](https://gin-gonic.com/images/gin-logo.png) Gin
-- ![Cloudinary](https://res.cloudinary.com/cloudinary-marketing/images/f_auto,q_auto/v1588251568/cloudinary_logo_for_white_bg/cloudinary_logo_for_white_bg-png) Cloudinary
+## 🛠️ Library & Tools 
+- [Docker]
 
-## Live Demo Eco Points
-Explore the live demo at: [EcoPoints](https://eco-point-ten.vercel.app/)
+## 🚀 Live Demo EcoPoints
+Explore EcoPoints Live Demo at : [EcoPoints](https://eco-point-ten.vercel.app/)
 
-## API Deployment 🚀
+## 🗳️ API Deployment 
 Start to use API at : [API Deployment](https://two.ybtech.online)
 
 ### How To Get Started
