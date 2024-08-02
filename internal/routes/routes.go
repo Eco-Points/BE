@@ -91,6 +91,7 @@ func ExchangeRoute(e *echo.Echo, exh exchanges.ExHandler) {
 	t := e.Group("/exchange")
 	t.Use(JWTConfig())
 	t.POST("", exh.AddExchange())
+	t.GET("", exh.GetExchangeHistory())
 }
 
 func excelMakeRoute(e *echo.Echo, excl excelize.HandlerMakeExcelInterface) {

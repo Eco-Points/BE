@@ -3,6 +3,8 @@ package repository
 import (
 	"eco_points/internal/features/exchanges"
 	"errors"
+	"fmt"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -15,6 +17,12 @@ func NewExchangeModel(connection *gorm.DB) exchanges.ExQuery {
 	return &ExchangeModel{
 		db: connection,
 	}
+}
+
+var DbSchema string
+
+func (q *ExchangeModel) SetDbSchema(schema string) {
+	DbSchema = schema
 }
 
 func (em *ExchangeModel) AddExchange(newExchange exchanges.Exchange) error {
@@ -60,4 +68,37 @@ func (em *ExchangeModel) AddExchange(newExchange exchanges.Exchange) error {
 	}
 
 	return nil
+}
+
+func (em *ExchangeModel) GetExchangeHistory(userid uint, isAdmin bool, limit uint) ([]exchanges.ListExchangeInterface, error) {
+	var exchange []ListExchange
+	if isAdmin {
+		query := fmt.Sprintf(`select e.id, e.point_used, r."name" as rewards, u.fullname as name, e.created_at from "%s".exchanges e 
+							join "%s".rewards r on r.id = e.reward_id	
+							join "%s".users u on u.id = e.user_id
+							where e."deleted_at" IS NULL `, DbSchema, DbSchema, DbSchema)
+		if limit != 0 {
+			query = query + fmt.Sprintf("limit %d", limit)
+		}
+		err := em.db.Debug().Raw(query).Scan(&exchange).Error
+		if err != nil {
+			log.Println("error get data", err)
+			return []exchanges.ListExchangeInterface{}, err
+		}
+		return toListExchangeInterface(exchange), nil
+	} else {
+		query := fmt.Sprintf(`select e.id, e.point_used, r."name" as rewards, u.fullname as name, e.created_at from "%s".exchanges e 
+							join "%s".rewards r on r.id = e.reward_id	
+							join "%s".users u on u.id = e.user_id
+							where user_id = %d and e."deleted_at" IS NULL `, DbSchema, DbSchema, DbSchema, userid)
+		if limit != 0 {
+			query = query + fmt.Sprintf("limit %d;", limit)
+		}
+		err := em.db.Debug().Raw(query).Scan(&exchange).Error
+		if err != nil {
+			log.Println("error get data", err)
+			return []exchanges.ListExchangeInterface{}, err
+		}
+		return toListExchangeInterface(exchange), nil
+	}
 }

@@ -78,6 +78,7 @@ func InitFactory(e *echo.Echo) {
 	exq := ex_rep.NewExchangeModel(db)
 	exs := ex_srv.NewExchangeService(exq)
 	exh := ex_hnd.NewExchangeHandler(exs, jwt)
+	exq.SetDbSchema(config.ImportSetting().Schema)
 
 	exclq := excl_rep.NewExcelQuery(db, excel, cloud)
 	exclq.SetDbSchema(config.ImportSetting().Schema)

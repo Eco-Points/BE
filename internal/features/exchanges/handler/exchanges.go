@@ -6,6 +6,7 @@ import (
 	"eco_points/internal/utils"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -49,5 +50,37 @@ func (eh *ExchangeHandler) AddExchange() echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "success", "Exchange was successfully created", nil))
+	}
+}
+
+func (eh *ExchangeHandler) GetExchangeHistory() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var userID uint
+		id := eh.tu.DecodToken(c.Get("user").(*jwt.Token))
+		if id < 1 {
+			log.Println("error from excel")
+			return helpers.EasyHelper(c, http.StatusBadRequest, "unautorized", "bad request/invalid jwt", nil)
+		}
+		limitQ, err := strconv.Atoi(c.QueryParam("limit"))
+		if err != nil {
+			limitQ = 10
+		}
+		isAdminQ, err := strconv.ParseBool(c.QueryParam("is_admin"))
+		if err != nil {
+			isAdminQ = false
+		}
+		if isAdminQ {
+			userID = 0
+		} else {
+			userID = uint(id)
+		}
+
+		result, err := eh.srv.GetExchangeHistory(userID, isAdminQ, uint(limitQ))
+
+		if err != nil {
+			log.Println("error get data", err)
+			return helpers.EasyHelper(c, http.StatusInternalServerError, "server error", "something wrong with server", nil)
+		}
+		return helpers.EasyHelper(c, http.StatusOK, "success", "success get data exchanges", toListExchange(result))
 	}
 }
