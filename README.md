@@ -49,10 +49,10 @@ EcoPoints adalah aplikasi yang mendorong pengguna untuk berpartisipasi dalam pen
 Explore EcoPoints Live Demo at : [EcoPoints](https://eco-point-ten.vercel.app/)
 
 ## 📋 API Documentation (OpenAPI Swagger) 
-Explore Details EcoPoints API :[OpenAPI](https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0)
+Explore Details EcoPoints Documentation (OpenAPI) :[OpenAPI](https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0)
 
 ## 🗳️ API Deployment 
-Start to use API at : [API Deployment](https://two.ybtech.online)
+Start to use EcoPoints API : [EcoPoints API](https://two.ybtech.online)
 
 ### How To Get Started
 1. **Install Postman**:<br>
