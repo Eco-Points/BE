@@ -1,4 +1,4 @@
-<div align="center">
+<div align="left">
   
 # ![EcoPoints Logo](https://i.imgur.com/CWiIsPB.png)  
 # **EcoPoints**
