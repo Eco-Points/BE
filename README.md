@@ -1,10 +1,10 @@
-# EcoPoints
+# EcoPoints ♻️
 
-EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih menyenangkan dan bermanfaat. Setiap user yang melakukan penyetoran sampah melalui EcoPoints maka akan diberikan point yang nantinya bisa ditukarkan dengan berbagai hadiah yang tersedia seperti voucher diskon makan, pulsa, maupun merchandise.
+EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih menyenangkan dan bermanfaat. Setiap user yang melakukan penyetoran sampah melalui EcoPoints akan diberikan poin yang nantinya bisa ditukarkan dengan berbagai hadiah menarik seperti voucher diskon makan, pulsa, maupun merchandise. 🎁
 
-## Features
+## Features 🌟
 
-### User Features
+### User Features 👤
 
 - **User Registration and Login**: Daftar dan login untuk akses penuh ke aplikasi.
 - **Dashboard User**: Halaman utama pengguna yang menampilkan informasi penting.
@@ -19,7 +19,7 @@ EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih me
 - **About Us**: Informasi mengenai tim dan tujuan aplikasi.
 - **Suspended Account**: Halaman untuk akun yang ditangguhkan.
 
-### Admin Features
+### Admin Features 👨‍💼
 
 - **Admin Dashboard**: Halaman utama admin dengan kontrol penuh.
 - **Manage Users**: Kelola informasi pengguna dan kontrol akses.
@@ -30,15 +30,16 @@ EcoPoints adalah aplikasi inovatif yang membuat pengelolaan sampah jadi lebih me
 - **Add Reward**: Menambahkan hadiah baru ke dalam aplikasi.
 - **Add Location**: Menambahkan lokasi baru untuk penyetoran sampah.
 
-## ER Diagram
+## ER Diagram 🗺️
 
-![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://res.cloudinary.com/duuv3bqdc/image/upload/v1722391307/images/ptiltvwc9c2lpsnl7uv8.png)
+![ER Diagram](https://res.cloudinary.com/duuv3bqdc/image/upload/v1722391307/images/ptiltvwc9c2lpsnl7uv8.png)
 
-## API Documentation (OpenApi Swagger)
+## API Documentation (OpenAPI Swagger) 📄
+
 https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0
 
-## Library & Tools
+## Library & Tools 🛠️
 
-## API Deployment
+## API Deployment 🚀
 
 ### How To Get Started
