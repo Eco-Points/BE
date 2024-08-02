@@ -29,6 +29,7 @@ type ExcelExchange struct {
 
 type ServiceMakeExcelInterface interface {
 	MakeExcel(date string, table string, userid uint, isVerif bool, limit uint) (string, error)
+	DeleteFile(filePath string) error
 }
 
 type HandlerMakeExcelInterface interface {

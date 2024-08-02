@@ -46,6 +46,11 @@ func (q *excelMakeQuery) MakeExcelFromDeposit(table string, date string, userid 
 								join "%s".trashes t on t.id = wd.trash_id 
 								join "%s".users u on u.id = wd.user_id 
 								where wd."deleted_at" IS NULL `, DbSchema, DbSchema, DbSchema)
+			if !isVerif {
+				query = query + `and wd."status" <> 'verified' `
+			} else {
+				query = query + `and wd."status" <> 'rejected' `
+			}
 			if limit != 0 {
 				query = query + fmt.Sprintf("limit %d", limit)
 			}
@@ -64,7 +69,13 @@ func (q *excelMakeQuery) MakeExcelFromDeposit(table string, date string, userid 
 			query := fmt.Sprintf(`select wd.id, t.trash_type, wd.point, wd.status, wd.quantity, u.fullname, wd.created_at from "%s".waste_deposits wd 
 								join "%s".trashes t on t.id = wd.trash_id 
 								join "%s".users u on u.id = wd.user_id 
-								where u.user_id = %d wd."deleted_at" IS NULL `, DbSchema, DbSchema, DbSchema, userid)
+								where wd.user_id = %d and wd."deleted_at" IS NULL `, DbSchema, DbSchema, DbSchema, userid)
+
+			if !isVerif {
+				query = query + ` and wd."status" <> 'verified' `
+			} else {
+				query = query + ` and wd."status" <> 'rejected' `
+			}
 			if limit != 0 {
 				query = query + fmt.Sprintf("limit %d", limit)
 			}
