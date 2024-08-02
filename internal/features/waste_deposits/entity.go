@@ -28,9 +28,10 @@ type ListWasteDepositInterface []struct {
 type QueryDepoInterface interface {
 	SetDbSchema(schema string)
 	DepositTrash(data WasteDepositInterface) error
-	UpdateWasteDepositStatus(waste_id uint, status string) error
+	UpdateWasteDepositStatus(waste_id uint, status string) (uint, int, error)
 	GetUserDeposit(id uint, limit uint, offset uint, is_admin bool) (ListWasteDepositInterface, error)
 	GetDepositbyId(deposit_id uint) (WasteDepositInterface, error)
+	GetUserEmailData(ID uint) (string, string, error)
 }
 
 type ServiceDepoInterface interface {

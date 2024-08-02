@@ -41,9 +41,10 @@ func (q *depositQuery) DepositTrash(data deposits.WasteDepositInterface) error {
 	return nil
 }
 
-func (d *depositQuery) UpdateWasteDepositStatus(wasteID uint, status string) error {
-	return d.db.Transaction(func(tx *gorm.DB) error {
-		var deposit WasteDeposit
+func (d *depositQuery) UpdateWasteDepositStatus(wasteID uint, status string) (uint, int, error) {
+
+	var deposit WasteDeposit
+	err := d.db.Transaction(func(tx *gorm.DB) error {
 		err := tx.Debug().Model(&WasteDeposit{}).Where("id = ?", wasteID).Updates(WasteDeposit{Status: status}).First(&deposit, wasteID).Error
 		if err != nil {
 			log.Println("error updating waste deposit status", err)
@@ -59,6 +60,10 @@ func (d *depositQuery) UpdateWasteDepositStatus(wasteID uint, status string) err
 		}
 		return nil
 	})
+	if err != nil {
+		return 0, 0, err
+	}
+	return deposit.UserID, int(deposit.Point), nil
 }
 
 func (q *depositQuery) GetUserDeposit(id uint, limit uint, offset uint, is_admin bool) (deposits.ListWasteDepositInterface, error) {
@@ -110,4 +115,15 @@ func (d *depositQuery) GetDepositbyId(deposit_id uint) (deposits.WasteDepositInt
 	}
 
 	return toWasteDepositInterface(result, trashData, userData), err.Error
+}
+
+func (um *depositQuery) GetUserEmailData(ID uint) (string, string, error) {
+	var result User
+	err := um.db.Where("id = ?", ID).First(&result).Error
+
+	if err != nil {
+		return "", "", err
+	}
+
+	return result.Email, result.Fullname, nil
 }

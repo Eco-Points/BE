@@ -3,6 +3,7 @@ package service_test
 import (
 	deposits "eco_points/internal/features/waste_deposits"
 	"eco_points/internal/features/waste_deposits/service"
+	"eco_points/internal/utils"
 	"eco_points/mocks"
 	"errors"
 	"testing"
@@ -11,10 +12,13 @@ import (
 )
 
 func TestUpdateDepositStatus(t *testing.T) {
+	email := mocks.NewGomailUtilityInterface(t)
 	qry := mocks.NewQueryDepoInterface(t)
-	srv := service.NewDepositsService(qry)
+	srv := service.NewDepositsService(qry, email)
 	t.Run("success Update Deposit Status", func(t *testing.T) {
-		qry.On("UpdateWasteDepositStatus", uint(1), "accepted").Return(nil).Once()
+		qry.On("UpdateWasteDepositStatus", uint(1), "accepted").Return(uint(1), 100, nil).Once()
+		qry.On("GetUserEmailData", uint(1)).Return("a@gmail.com", "a", nil).Once()
+		email.On("SendEmail", 100, "a@gmail.com", "a").Return(nil).Once()
 		err := srv.UpdateWasteDepositStatus(uint(1), "accepted")
 
 		assert.Nil(t, err)
@@ -22,17 +26,19 @@ func TestUpdateDepositStatus(t *testing.T) {
 
 	t.Run("failed Update Deposit Status", func(t *testing.T) {
 		expectedError := errors.New("error update deposit status")
-		qry.On("UpdateWasteDepositStatus", uint(1), "accepted").Return(expectedError).Once()
+		qry.On("UpdateWasteDepositStatus", uint(1), "accepted").Return(uint(0), 0, expectedError).Once()
 		err := srv.UpdateWasteDepositStatus(uint(1), "accepted")
 
 		assert.NotNil(t, err)
 		assert.ErrorContains(t, expectedError, err.Error())
 	})
+
 }
 
 func TestGetDeposit(t *testing.T) {
+	email := utils.NewGomailUtility()
 	qry := mocks.NewQueryDepoInterface(t)
-	srv := service.NewDepositsService(qry)
+	srv := service.NewDepositsService(qry, email)
 
 	expectedOutput := deposits.ListWasteDepositInterface{}
 	dataList := struct {
@@ -74,8 +80,9 @@ func TestGetDeposit(t *testing.T) {
 }
 
 func TestGetDepositbyId(t *testing.T) {
+	email := utils.NewGomailUtility()
 	qry := mocks.NewQueryDepoInterface(t)
-	srv := service.NewDepositsService(qry)
+	srv := service.NewDepositsService(qry, email)
 
 	expectedOutput := deposits.WasteDepositInterface{
 		Type:     "plastik",
@@ -107,8 +114,9 @@ func TestGetDepositbyId(t *testing.T) {
 }
 
 func TestDepositTrash(t *testing.T) {
+	email := utils.NewGomailUtility()
 	qry := mocks.NewQueryDepoInterface(t)
-	srv := service.NewDepositsService(qry)
+	srv := service.NewDepositsService(qry, email)
 
 	input := deposits.WasteDepositInterface{
 		Type:       "plastik",

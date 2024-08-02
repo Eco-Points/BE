@@ -48,6 +48,7 @@ func InitFactory(e *echo.Echo) {
 	jwt := utils.NewJwtUtility()
 	cloud := utils.NewCloudinaryUtility()
 	excel := utils.NewExcelMake()
+	email := utils.NewGomailUtility()
 
 	uq := u_rep.NewUserQuery(db)
 	us := u_srv.NewUserService(uq, pu, jwt, cloud)
@@ -60,7 +61,7 @@ func InitFactory(e *echo.Echo) {
 	dq := d_rep.NewDepoQuery(db)
 	dq.SetDbSchema(config.ImportSetting().Schema)
 
-	du := d_srv.NewDepositsService(dq)
+	du := d_srv.NewDepositsService(dq, email)
 	dh := d_hnd.NewDepositHandler(du, jwt)
 
 	lq := l_rep.NewLocQuery(db)

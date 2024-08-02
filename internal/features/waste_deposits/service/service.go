@@ -2,16 +2,19 @@ package service
 
 import (
 	deposits "eco_points/internal/features/waste_deposits"
+	"eco_points/internal/utils"
 	"log"
 )
 
 type depositService struct {
-	qry deposits.QueryDepoInterface
+	qry   deposits.QueryDepoInterface
+	email utils.GomailUtilityInterface
 }
 
-func NewDepositsService(q deposits.QueryDepoInterface) deposits.ServiceDepoInterface {
+func NewDepositsService(q deposits.QueryDepoInterface, e utils.GomailUtilityInterface) deposits.ServiceDepoInterface {
 	return &depositService{
-		qry: q,
+		qry:   q,
+		email: e,
 	}
 }
 
@@ -26,9 +29,19 @@ func (s *depositService) DepositTrash(data deposits.WasteDepositInterface) error
 }
 
 func (q *depositService) UpdateWasteDepositStatus(wasteID uint, status string) error {
-	err := q.qry.UpdateWasteDepositStatus(wasteID, status)
+	userID, points, err := q.qry.UpdateWasteDepositStatus(wasteID, status)
 	if err != nil {
 		log.Println("error updating waste deposit status", err)
+		return err
+	}
+	userEmail, userName, err := q.qry.GetUserEmailData(userID)
+	if err != nil {
+		log.Println("error send email", err)
+		return err
+	}
+	err = q.email.SendEmail(points, userEmail, userName)
+	if err != nil {
+		log.Println("error send email", err)
 		return err
 	}
 	return nil
