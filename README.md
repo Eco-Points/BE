@@ -42,14 +42,14 @@ EcoPoints adalah aplikasi yang mendorong pengguna untuk berpartisipasi dalam pen
 
 ![ER Diagram](https://res.cloudinary.com/duuv3bqdc/image/upload/v1722391307/images/ptiltvwc9c2lpsnl7uv8.png)
 
-## 📋 API Documentation (OpenAPI Swagger) 
-[OpenAPI](https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0)
-
 ## 🛠️ Library & Tools 
 - [Docker]
 
 ## 🚀 Live Demo EcoPoints
 Explore EcoPoints Live Demo at : [EcoPoints](https://eco-point-ten.vercel.app/)
+
+## 📋 API Documentation (OpenAPI Swagger) 
+Explore Details EcoPoints API :[OpenAPI](https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0)
 
 ## 🗳️ API Deployment 
 Start to use API at : [API Deployment](https://two.ybtech.online)
@@ -58,9 +58,9 @@ Start to use API at : [API Deployment](https://two.ybtech.online)
 1. **Install Postman**:<br>
     [Download Postman](https://www.postman.com/downloads/)
     
-2. **Input API address**:<br>
-    Follow the API documentation to see detail API usage
-    Example : POST:https://two.ybtech.online/login
+2. **Input API EndPoint**:<br>
+    Follow the API documentation to see detail API usage, example :<br>
+    POST:https://two.ybtech.online/login
     
 3. **Send the Data from Request Body or Query**:<br>
     ```bash
