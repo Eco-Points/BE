@@ -21,18 +21,24 @@ func (s *excelMake) MakeExcel(date string, table string, userid uint, isVerif bo
 	name, link, err := s.qry.MakeExcelFromDeposit(table, date, userid, isVerif, limit)
 	if err != nil {
 		log.Println("error from service ", err)
-		if err := deleteFile(fmt.Sprintf("./%s", name)); err != nil {
+		if name != "" {
+			if err := s.DeleteFile(fmt.Sprintf("./%s", name)); err != nil {
+				log.Println("Error deleting file: ", err)
+			}
+		}
+		return "", err
+	}
+
+	if name != "" {
+
+		if err := s.DeleteFile(fmt.Sprintf("./%s", name)); err != nil {
 			log.Println("Error deleting file: ", err)
 		}
-		return "", nil
-	}
-	if err := deleteFile(fmt.Sprintf("./%s", name)); err != nil {
-		log.Println("Error deleting file: ", err)
 	}
 	return link, nil
 }
 
-func deleteFile(filePath string) error {
+func (s *excelMake) DeleteFile(filePath string) error {
 	err := os.Remove(filePath)
 	if err != nil {
 		log.Printf("Failed to delete file %s: %v\n", filePath, err)
