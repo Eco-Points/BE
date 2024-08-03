@@ -89,27 +89,79 @@ func (_m *QueryDepoInterface) GetUserDeposit(id uint, limit uint, offset uint, i
 	return r0, r1
 }
 
+// GetUserEmailData provides a mock function with given fields: ID
+func (_m *QueryDepoInterface) GetUserEmailData(ID uint) (string, string, error) {
+	ret := _m.Called(ID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserEmailData")
+	}
+
+	var r0 string
+	var r1 string
+	var r2 error
+	if rf, ok := ret.Get(0).(func(uint) (string, string, error)); ok {
+		return rf(ID)
+	}
+	if rf, ok := ret.Get(0).(func(uint) string); ok {
+		r0 = rf(ID)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	if rf, ok := ret.Get(1).(func(uint) string); ok {
+		r1 = rf(ID)
+	} else {
+		r1 = ret.Get(1).(string)
+	}
+
+	if rf, ok := ret.Get(2).(func(uint) error); ok {
+		r2 = rf(ID)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // SetDbSchema provides a mock function with given fields: schema
 func (_m *QueryDepoInterface) SetDbSchema(schema string) {
 	_m.Called(schema)
 }
 
 // UpdateWasteDepositStatus provides a mock function with given fields: waste_id, status
-func (_m *QueryDepoInterface) UpdateWasteDepositStatus(waste_id uint, status string) error {
+func (_m *QueryDepoInterface) UpdateWasteDepositStatus(waste_id uint, status string) (uint, int, error) {
 	ret := _m.Called(waste_id, status)
 
 	if len(ret) == 0 {
 		panic("no return value specified for UpdateWasteDepositStatus")
 	}
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(uint, string) error); ok {
+	var r0 uint
+	var r1 int
+	var r2 error
+	if rf, ok := ret.Get(0).(func(uint, string) (uint, int, error)); ok {
+		return rf(waste_id, status)
+	}
+	if rf, ok := ret.Get(0).(func(uint, string) uint); ok {
 		r0 = rf(waste_id, status)
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(uint)
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(uint, string) int); ok {
+		r1 = rf(waste_id, status)
+	} else {
+		r1 = ret.Get(1).(int)
+	}
+
+	if rf, ok := ret.Get(2).(func(uint, string) error); ok {
+		r2 = rf(waste_id, status)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
 }
 
 // NewQueryDepoInterface creates a new instance of QueryDepoInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.

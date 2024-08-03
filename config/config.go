@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -27,6 +28,34 @@ type setting struct {
 	CldKey      string
 	MidTransKey string
 	Schema      string
+}
+
+type mailSetting struct {
+	Host     string
+	Port     int
+	Name     string
+	Email    string
+	Password string
+}
+
+func ImportGomailSetting() mailSetting {
+	var result mailSetting
+
+	if _, err := os.Stat(".env"); !os.IsNotExist(err) {
+		err := godotenv.Load(".env")
+		if err != nil {
+			return mailSetting{}
+		}
+	} else {
+		log.Println("file not exist")
+	}
+	result.Host = os.Getenv("GOMAIL_HOST")
+	result.Port, _ = strconv.Atoi(os.Getenv("GOMAIL_PORT"))
+	result.Name = os.Getenv("GOMAIL_NAME")
+	result.Email = os.Getenv("GOMAIL_EMAIL")
+	result.Password = os.Getenv("GOMAIL_PASSWORD")
+	return result
+
 }
 
 func ImportSetting() setting {
