@@ -76,7 +76,7 @@ This is an explanation User section.
  
 <div>
   
-| Feature User | Endpoint | Param | JWT Token | Function |
+| Feature | Endpoint | Param | JWT Token | Function |
 | --- | --- | --- | --- | --- |
 | POST | /login  | - | NO | User log in  |
 | POST | /register | - | NO | User register |
@@ -85,6 +85,79 @@ This is an explanation User section.
 | PUT | /user | - | YES | Update profile |
 
 </details>
+
+<div>
+<details>
+<User>
+<summary>Trash</summary>
+  
+  <!---
+  | Command | Description |
+| --- | --- |
+  --->
+  
+This is an explanation Trash section.
+ 
+<div>
+  
+| Feature | Endpoint | Param | JWT Token | Function |
+| --- | --- | --- | --- | --- |
+| POST | /trash  | - | YES | Add a trash  |
+| GET | /trash | - | YES | Get all trash data |
+| GET | /trash{trash_id} | trash_id | YES | Get trash by ID |
+| DELETE | /trash{trash_id} | trash_id | YES | Delete a trash by ID |
+| PUT | /trash{trash_id} | trash_id | YES | Update a trash by ID |
+
+</details>
+
+<div>
+<details>
+<User>
+<summary>Waste Deposit</summary>
+  
+  <!---
+  | Command | Description |
+| --- | --- |
+  --->
+  
+This is an explanation Waste Deposit section.
+ 
+<div>
+  
+| Feature | Endpoint | Param | JWT Token | Function |
+| --- | --- | --- | --- | --- |
+| POST | /deposit  | - | YES | Add a deposit  |
+| GET | /deposit | - | YES | Get deposit history |
+| PUT | /deposit | trash_id | YES | Update deposit status for approval admin |
+| GET | /deposit{deposit_id} | deposit_id | YES | Get a deposit data by ID |
+
+</details>
+
+<div>
+<details>
+<Reward>
+<summary>Reward</summary>
+  
+  <!---
+  | Command | Description |
+| --- | --- |
+  --->
+  
+This is an explanation Reward section.
+ 
+<div>
+  
+| Feature | Endpoint | Param | JWT Token | Function |
+| --- | --- | --- | --- | --- |
+| POST | /reward  | - | YES | Add a reward  |
+| GET | /reward | - | NO | Get all reward data |
+| GET | /reward{reward_id} | reward_id | NO | Get reward by ID |
+| DELETE | /reward{reward_id} | reward_id | YES | Delete a reward by ID |
+| PUT | /reward{reward_id} | reward_id | YES | Update a reward by ID |
+
+</details>
+
+
 
 
 ## 🗳️ API Deployment 
