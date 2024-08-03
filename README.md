@@ -157,6 +157,93 @@ This is an explanation Reward section.
 
 </details>
 
+<div>
+<details>
+<Exchange>
+<summary>Exchange</summary>
+  
+  <!---
+  | Command | Description |
+| --- | --- |
+  --->
+  
+This is an explanation Reward Exchange section.
+ 
+<div>
+  
+| Feature | Endpoint | Param | JWT Token | Function |
+| --- | --- | --- | --- | --- |
+| POST | /exchange  | - | YES | Add a reward exchange  |
+| GET | /exchange | - | YES | Get exchange history |
+
+</details>
+
+<div>
+<details>
+<Excel>
+<summary>Excel</summary>
+  
+  <!---
+  | Command | Description |
+| --- | --- |
+  --->
+  
+This is an explanation Excel section.
+ 
+<div>
+  
+| Feature | Endpoint | Param | JWT Token | Function |
+| --- | --- | --- | --- | --- |
+| GET | /excel | - | YES | Get report with excel |
+
+</details>
+
+<div>
+<details>
+<Dashboard>
+<summary>Dashboard</summary>
+  
+  <!---
+  | Command | Description |
+| --- | --- |
+  --->
+  
+This is an explanation Dashboard section.
+ 
+<div>
+  
+| Feature | Endpoint | Param | JWT Token | Function |
+| --- | --- | --- | --- | --- |
+| GET | /dashboard  | - | YES | Get total user, deposit, and reward exchange count |
+| GET | /dashboard/users | - | YES | Get total users information |
+| GET | /dashboard/users/{user_id} | user_id | YES | Get users information by ID |
+| PUT | /dashboard/users{user_id} | user_id | YES | Update users information |
+| DELETE | /dashboard/users{user_id} | user_id | YES | Delete users account |
+| GET | /dashboard/depositstat | - | YES | Get deposit statistic data |
+| GET | /dashboard/rewardstat | - | YES | Get reawrd statistik data |
+
+</details>
+
+<div>
+<details>
+<Location>
+<summary>Location</summary>
+  
+  <!---
+  | Command | Description |
+| --- | --- |
+  --->
+  
+This is an explanation Location section.
+ 
+<div>
+  
+| Feature | Endpoint | Param | JWT Token | Function |
+| --- | --- | --- | --- | --- |
+| POST | /location  | - | YES | Add a location |
+| GET | /location | - | YES | Get location data |
+
+</details>
 
 
 
