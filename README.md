@@ -62,6 +62,31 @@ Explore EcoPoints Live Demo at : [EcoPoints](https://eco-point-ten.vercel.app/)
 ## 📋 API Documentation (OpenAPI Swagger) 
 Explore Details EcoPoints Documentation (OpenAPI) :[OpenAPI](https://app.swaggerhub.com/apis-docs/TNLKFANS/EchoPoint/1.0.0)
 
+<div>
+<details>
+<User>
+<summary>User</summary>
+  
+  <!---
+  | Command | Description |
+| --- | --- |
+  --->
+  
+This is an explanation User section.
+ 
+<div>
+  
+| Feature User | Endpoint | Param | JWT Token | Function |
+| --- | --- | --- | --- | --- |
+| POST | /login  | - | NO | User log in  |
+| POST | /register | - | NO | User register |
+| GET | /user | - | NO | Get user data |
+| DELETE | /user | - | YES | Delete an account |
+| PUT | /user | - | YES | Update profile |
+
+</details>
+
+
 ## 🗳️ API Deployment 
 Start to use EcoPoints API : [EcoPoints API](https://two.ybtech.online)
 
