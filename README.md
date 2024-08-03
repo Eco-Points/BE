@@ -72,7 +72,7 @@ Explore Details EcoPoints Documentation (OpenAPI) :[OpenAPI](https://app.swagger
 | --- | --- |
   --->
   
-This is an explanation User section.
+This is an explanation of the User section.
  
 <div>
   
@@ -96,7 +96,7 @@ This is an explanation User section.
 | --- | --- |
   --->
   
-This is an explanation Trash section.
+This is an explanation of the Trash section.
  
 <div>
   
@@ -120,7 +120,7 @@ This is an explanation Trash section.
 | --- | --- |
   --->
   
-This is an explanation Waste Deposit section.
+This is an explanation of the Waste Deposit section.
  
 <div>
   
@@ -143,7 +143,7 @@ This is an explanation Waste Deposit section.
 | --- | --- |
   --->
   
-This is an explanation Reward section.
+This is an explanation of the Reward section.
  
 <div>
   
@@ -167,7 +167,7 @@ This is an explanation Reward section.
 | --- | --- |
   --->
   
-This is an explanation Reward Exchange section.
+This is an explanation of the Reward Exchange section.
  
 <div>
   
@@ -188,7 +188,7 @@ This is an explanation Reward Exchange section.
 | --- | --- |
   --->
   
-This is an explanation Excel section.
+This is an explanation of the Excel section.
  
 <div>
   
@@ -208,7 +208,7 @@ This is an explanation Excel section.
 | --- | --- |
   --->
   
-This is an explanation Dashboard section.
+This is an explanation of the Dashboard section.
  
 <div>
   
@@ -234,7 +234,7 @@ This is an explanation Dashboard section.
 | --- | --- |
   --->
   
-This is an explanation Location section.
+This is an explanation of the Location section.
  
 <div>
   
