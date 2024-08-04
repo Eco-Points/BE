@@ -11,26 +11,87 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUpdateDepositStatus(t *testing.T) {
+func TestUpdateWasteDepositStatus(t *testing.T) {
 	email := mocks.NewGomailUtilityInterface(t)
 	qry := mocks.NewQueryDepoInterface(t)
 	srv := service.NewDepositsService(qry, email)
-	t.Run("success Update Deposit Status", func(t *testing.T) {
-		qry.On("UpdateWasteDepositStatus", uint(1), "accepted").Return(uint(1), 100, nil).Once()
+
+	t.Run("success Update Deposit Status - verified", func(t *testing.T) {
+		qry.On("UpdateWasteDepositStatus", uint(1), "verified").Return(uint(1), 100, nil).Once()
 		qry.On("GetUserEmailData", uint(1)).Return("a@gmail.com", "a", nil).Once()
-		email.On("SendEmail", 100, "a@gmail.com", "a").Return(nil).Once()
-		err := srv.UpdateWasteDepositStatus(uint(1), "accepted")
+		email.On("SendEmail", 100, "Halo, <b>a</b><br/> Pengajuan deposit sampahmu sudah diverifikasi oleh admin keren dari tim Eco Points. <br/>Selamat kamu mendapatkan <b>100 poin</b> ", "a@gmail.com", "a").Return(nil).Once()
+
+		err := srv.UpdateWasteDepositStatus(uint(1), "verified")
 
 		assert.Nil(t, err)
+
+		qry.AssertExpectations(t)
+		email.AssertExpectations(t)
 	})
 
-	t.Run("failed Update Deposit Status", func(t *testing.T) {
-		expectedError := errors.New("error update deposit status")
-		qry.On("UpdateWasteDepositStatus", uint(1), "accepted").Return(uint(0), 0, expectedError).Once()
-		err := srv.UpdateWasteDepositStatus(uint(1), "accepted")
+	t.Run("Success Update Waste Deposit Status - rejected", func(t *testing.T) {
+		qry.On("UpdateWasteDepositStatus", uint(1), "rejected").Return(uint(1), 100, nil).Once()
+		qry.On("GetUserEmailData", uint(1)).Return("a@gmail.com", "a", nil).Once()
+		email.On("SendEmail", 100, "Halo, <b>a</b><br/> Pengajuan deposit sampahmu belum memenuhi syarat untuk mendapatkan poin", "a@gmail.com", "a").Return(nil).Once()
+
+		err := srv.UpdateWasteDepositStatus(uint(1), "rejected")
+
+		assert.Nil(t, err)
+
+		qry.AssertExpectations(t)
+		email.AssertExpectations(t)
+	})
+
+	t.Run("failed Update Deposit Status - unhandled status", func(t *testing.T) {
+		qry.On("UpdateWasteDepositStatus", uint(1), "unknown").Return(uint(1), 0, nil).Once()
+		qry.On("GetUserEmailData", uint(1)).Return("a@gmail.com", "a", nil).Once()
+		email.On("SendEmail", 0, "Halo, <b>a</b><br/> Pengajuan deposit sampahmu belum memenuhi syarat untuk mendapatkan poin", "a@gmail.com", "a").Return(nil).Once()
+		err := srv.UpdateWasteDepositStatus(uint(1), "unknown")
+
+		assert.Nil(t, err)
+
+		qry.AssertExpectations(t)
+		email.AssertExpectations(t)
+	})
+
+	t.Run("failed Update Waste Deposit Status - GetUserEmailData", func(t *testing.T) {
+		qry.On("UpdateWasteDepositStatus", uint(1), "verified").Return(uint(1), 100, nil).Once()
+		expectedError := errors.New("error getting user email data")
+		qry.On("GetUserEmailData", uint(1)).Return("", "", expectedError).Once()
+
+		err := srv.UpdateWasteDepositStatus(uint(1), "verified")
 
 		assert.NotNil(t, err)
-		assert.ErrorContains(t, expectedError, err.Error())
+		assert.ErrorIs(t, err, expectedError)
+		qry.AssertExpectations(t)
+		email.AssertExpectations(t)
+	})
+
+	t.Run("failed Update Waste Deposit Status - SendEmail", func(t *testing.T) {
+		qry.On("UpdateWasteDepositStatus", uint(1), "verified").Return(uint(1), 100, nil).Once()
+		qry.On("GetUserEmailData", uint(1)).Return("a@gmail.com", "a", nil).Once()
+		expectedError := errors.New("error sending email")
+		email.On("SendEmail", 100, "Halo, <b>a</b><br/> Pengajuan deposit sampahmu sudah diverifikasi oleh admin keren dari tim Eco Points. <br/>Selamat kamu mendapatkan <b>100 poin</b> ", "a@gmail.com", "a").Return(expectedError).Once()
+
+		err := srv.UpdateWasteDepositStatus(uint(1), "verified")
+
+		assert.NotNil(t, err)
+		assert.ErrorIs(t, err, expectedError)
+		qry.AssertExpectations(t)
+		email.AssertExpectations(t)
+	})
+
+	t.Run("failed SendEmail with formatted message", func(t *testing.T) {
+		qry.On("UpdateWasteDepositStatus", uint(1), "verified").Return(uint(1), 100, nil).Once()
+		qry.On("GetUserEmailData", uint(1)).Return("a@gmail.com", "a", nil).Once()
+		email.On("SendEmail", 100, "Halo, <b>a</b><br/> Pengajuan deposit sampahmu sudah diverifikasi oleh admin keren dari tim Eco Points. <br/>Selamat kamu mendapatkan <b>100 poin</b> ", "a@gmail.com", "a").Return(errors.New("email send error")).Once()
+		err := srv.UpdateWasteDepositStatus(uint(1), "verified")
+
+		assert.NotNil(t, err)
+		assert.Equal(t, "email send error", err.Error())
+
+		qry.AssertExpectations(t)
+		email.AssertExpectations(t)
 	})
 
 }
@@ -68,7 +129,7 @@ func TestGetDeposit(t *testing.T) {
 		assert.Equal(t, result, expectedOutput)
 	})
 
-	t.Run("failed Update Deposit", func(t *testing.T) {
+	t.Run("failed Get Deposit", func(t *testing.T) {
 		expectedError := errors.New("error get deposit data")
 		qry.On("GetUserDeposit", uint(1), uint(10), uint(0), true).Return(deposits.ListWasteDepositInterface{}, expectedError).Once()
 		result, err := srv.GetUserDeposit(uint(1), uint(10), uint(0), true)
@@ -102,7 +163,7 @@ func TestGetDepositbyId(t *testing.T) {
 		assert.Equal(t, result, expectedOutput)
 	})
 
-	t.Run("failed Update Deposit  By ID", func(t *testing.T) {
+	t.Run("failed Get Deposit  By ID", func(t *testing.T) {
 		expectedError := errors.New("error get deposit data")
 		qry.On("GetDepositbyId", uint(1)).Return(deposits.WasteDepositInterface{}, expectedError).Once()
 		result, err := srv.GetDepositbyId(uint(1))

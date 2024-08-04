@@ -4,6 +4,7 @@ import (
 	"eco_points/internal/features/excelize/service"
 	"eco_points/mocks"
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,5 +34,13 @@ func TestMakeExcel(t *testing.T) {
 		assert.ErrorContains(t, expectedError, err.Error())
 		assert.Equal(t, "", link)
 
+	})
+
+	t.Run("error deleting file", func(t *testing.T) {
+		nonExistentFilePath := "./nonexistentfile.txt"
+
+		err := srv.DeleteFile(nonExistentFilePath)
+		assert.NotNil(t, err)
+		assert.True(t, os.IsNotExist(err))
 	})
 }
