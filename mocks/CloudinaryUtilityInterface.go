@@ -44,6 +44,36 @@ func (_m *CloudinaryUtilityInterface) FileCheck(file *multipart.FileHeader) (mul
 	return r0, r1
 }
 
+// FileOpener provides a mock function with given fields: file
+func (_m *CloudinaryUtilityInterface) FileOpener(file *multipart.FileHeader) (multipart.File, error) {
+	ret := _m.Called(file)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FileOpener")
+	}
+
+	var r0 multipart.File
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*multipart.FileHeader) (multipart.File, error)); ok {
+		return rf(file)
+	}
+	if rf, ok := ret.Get(0).(func(*multipart.FileHeader) multipart.File); ok {
+		r0 = rf(file)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(multipart.File)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*multipart.FileHeader) error); ok {
+		r1 = rf(file)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // UploadToCloudinary provides a mock function with given fields: file, filename
 func (_m *CloudinaryUtilityInterface) UploadToCloudinary(file io.Reader, filename string) (string, error) {
 	ret := _m.Called(file, filename)
