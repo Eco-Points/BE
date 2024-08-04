@@ -8,358 +8,550 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
+	"gorm.io/gorm"
 )
 
 func TestGetDashboard(t *testing.T) {
-	mockQuery := new(mocks.DshQuery)
-	dashboardService := service.NewDashboardService(mockQuery)
+	qry := mocks.NewDshQuery(t)
+	srv := service.NewDashboardService(qry)
 
+	expectedResult := dashboards.Dashboard{
+		UserCount:     1,
+		DepositCount:  2,
+		ExchangeCount: 3,
+	}
 	t.Run("success get dashboard", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetUserCount").Return(10, nil).Once()
-		mockQuery.On("GetDepositCount").Return(20, nil).Once()
-		mockQuery.On("GetExchangeCount").Return(30, nil).Once()
-
-		result, err := dashboardService.GetDashboard(1)
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetUserCount").Return(1, nil).Once()
+		qry.On("GetDepositCount").Return(2, nil).Once()
+		qry.On("GetExchangeCount").Return(3, nil).Once()
+		result, err := srv.GetDashboard(uint(1))
 		assert.Nil(t, err)
-		assert.Equal(t, dashboards.Dashboard{
-			UserCount:     10,
-			DepositCount:  20,
-			ExchangeCount: 30,
-		}, result)
+		assert.NotNil(t, result)
+		assert.Equal(t, expectedResult, result)
 	})
 
-	t.Run("failure - not admin", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
-
-		result, err := dashboardService.GetDashboard(1)
-		assert.NotNil(t, err)
-		assert.Equal(t, "not allowed", err.Error())
+	t.Run("success get dashboard 2", func(t *testing.T) {
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetUserCount").Return(0, gorm.ErrRecordNotFound).Once()
+		qry.On("GetDepositCount").Return(2, nil).Once()
+		qry.On("GetExchangeCount").Return(3, nil).Once()
+		result, err := srv.GetDashboard(uint(1))
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, 0, result.UserCount)
+		assert.Equal(t, expectedResult.DepositCount, result.DepositCount)
+		assert.Equal(t, expectedResult.ExchangeCount, result.ExchangeCount)
+	})
+	t.Run("success get dashboard 3", func(t *testing.T) {
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetUserCount").Return(0, gorm.ErrRecordNotFound).Once()
+		qry.On("GetDepositCount").Return(0, gorm.ErrRecordNotFound).Once()
+		qry.On("GetExchangeCount").Return(3, nil).Once()
+		result, err := srv.GetDashboard(uint(1))
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, 0, result.UserCount)
+		assert.Equal(t, 0, result.DepositCount)
+		assert.Equal(t, expectedResult.ExchangeCount, result.ExchangeCount)
+	})
+	t.Run("success get dashboard 4", func(t *testing.T) {
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetUserCount").Return(0, gorm.ErrRecordNotFound).Once()
+		qry.On("GetDepositCount").Return(0, gorm.ErrRecordNotFound).Once()
+		qry.On("GetExchangeCount").Return(0, gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetDashboard(uint(1))
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, 0, result.UserCount)
+		assert.Equal(t, 0, result.DepositCount)
+		assert.Equal(t, 0, result.ExchangeCount)
+	})
+	t.Run("error on check isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetDashboard(uint(1))
+		assert.NotNil(t, result, err)
 		assert.Equal(t, dashboards.Dashboard{}, result)
+		assert.Equal(t, expectedError, err)
 	})
-
-	t.Run("failure - query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetUserCount").Return(0, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetDashboard(1)
-		assert.NotNil(t, err)
-		assert.Equal(t, "an unexpected error occurred", err.Error())
+	t.Run("error on check isNotAdmin query error", func(t *testing.T) {
+		expectedError := errors.New("query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, errors.New("query error")).Once()
+		result, err := srv.GetDashboard(uint(1))
+		assert.NotNil(t, result, err)
 		assert.Equal(t, dashboards.Dashboard{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - CheckIsAdmin query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetDashboard(1)
-		assert.NotNil(t, err)
-		assert.Equal(t, "query error", err.Error())
+	t.Run("error on user isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
+		result, err := srv.GetDashboard(uint(1))
+		assert.NotNil(t, result, err)
 		assert.Equal(t, dashboards.Dashboard{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - GetUserCount query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetUserCount").Return(0, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetDashboard(1)
-		assert.NotNil(t, err)
-		assert.Equal(t, "an unexpected error occurred", err.Error())
+	t.Run("error on user count query", func(t *testing.T) {
+		expectedError := errors.New("an unexpected error occurred")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetUserCount").Return(0, errors.New("some error")).Once()
+		result, err := srv.GetDashboard(uint(1))
+		assert.NotNil(t, result, err)
 		assert.Equal(t, dashboards.Dashboard{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - GetDepositCount query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetUserCount").Return(10, nil).Once()
-		mockQuery.On("GetDepositCount").Return(0, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetDashboard(1)
-		assert.NotNil(t, err)
-		assert.Equal(t, "an unexpected error occurred", err.Error())
+	t.Run("error on Deposit count query", func(t *testing.T) {
+		expectedError := errors.New("an unexpected error occurred")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetUserCount").Return(1, nil).Once()
+		qry.On("GetDepositCount").Return(0, errors.New("some error")).Once()
+		result, err := srv.GetDashboard(uint(1))
+		assert.NotNil(t, result, err)
 		assert.Equal(t, dashboards.Dashboard{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - GetExchangeCount query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetUserCount").Return(10, nil).Once()
-		mockQuery.On("GetDepositCount").Return(20, nil).Once()
-		mockQuery.On("GetExchangeCount").Return(0, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetDashboard(1)
-		assert.NotNil(t, err)
-		assert.Equal(t, "an unexpected error occurred", err.Error())
+	t.Run("error on Exchange count query", func(t *testing.T) {
+		expectedError := errors.New("an unexpected error occurred")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetUserCount").Return(1, nil)
+		qry.On("GetDepositCount").Return(2, nil)
+		qry.On("GetExchangeCount").Return(0, errors.New("some error"))
+		result, err := srv.GetDashboard(uint(1))
+		assert.NotNil(t, result, err)
 		assert.Equal(t, dashboards.Dashboard{}, result)
+		assert.Equal(t, expectedError, err)
 	})
-
 }
 
 func TestGetAllUsers(t *testing.T) {
-	mockQuery := new(mocks.DshQuery)
-	dashboardService := service.NewDashboardService(mockQuery)
+	qry := mocks.NewDshQuery(t)
+	srv := service.NewDashboardService(qry)
 
-	users := []dashboards.User{
-		{ID: 1, Fullname: "John Doe"},
-		{ID: 2, Fullname: "Jane Doe"},
+	expectedResult1 := dashboards.User{
+		ID:       1,
+		Fullname: "a",
 	}
+	expectedResult2 := dashboards.User{
+		ID:       2,
+		Fullname: "b",
+	}
+	var expectedResult []dashboards.User
+	expectedResult = append(expectedResult, expectedResult1, expectedResult2)
 
 	t.Run("success get all users", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetAllUsers", "%John%").Return(users, nil).Once()
-
-		result, err := dashboardService.GetAllUsers(1, "John")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetAllUsers", "%%").Return(expectedResult, nil).Once()
+		result, err := srv.GetAllUsers(uint(1), "")
 		assert.Nil(t, err)
-		assert.Equal(t, users, result)
+		assert.NotNil(t, result)
+		assert.Equal(t, expectedResult, result)
 	})
-
-	t.Run("failure - not admin", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
-
-		result, err := dashboardService.GetAllUsers(1, "John")
-		assert.NotNil(t, err)
-		assert.Equal(t, "not allowed", err.Error())
+	t.Run("error on check isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetAllUsers(uint(1), "")
+		assert.NotNil(t, result, err)
 		assert.Equal(t, []dashboards.User{}, result)
+		assert.Equal(t, expectedError, err)
 	})
-
-	t.Run("failure - query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetAllUsers", "%John%").Return(nil, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetAllUsers(1, "John")
-		assert.NotNil(t, err)
-		assert.Equal(t, "query error", err.Error())
+	t.Run("error on check isNotAdmin query error", func(t *testing.T) {
+		expectedError := errors.New("query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, errors.New("query error")).Once()
+		result, err := srv.GetAllUsers(uint(1), "")
+		assert.NotNil(t, result, err)
 		assert.Equal(t, []dashboards.User{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - CheckIsAdmin query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetAllUsers(1, "John")
-		assert.NotNil(t, err)
-		assert.Equal(t, "query error", err.Error())
+	t.Run("error on user isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
+		result, err := srv.GetAllUsers(uint(1), "")
+		assert.NotNil(t, result, err)
 		assert.Equal(t, []dashboards.User{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - GetAllUsers query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetAllUsers", "%John%").Return(nil, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetAllUsers(1, "John")
-		assert.NotNil(t, err)
-		assert.Equal(t, "query error", err.Error())
+	t.Run("error on user user not found", func(t *testing.T) {
+		expectedError := errors.New("not found")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetAllUsers", "%%").Return([]dashboards.User{}, gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetAllUsers(uint(1), "")
+		assert.NotNil(t, result, err)
 		assert.Equal(t, []dashboards.User{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
+	t.Run("error on Deposit get all users query", func(t *testing.T) {
+		expectedError := errors.New("query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetAllUsers", "%%").Return([]dashboards.User{}, errors.New("other error")).Once()
+		result, err := srv.GetAllUsers(uint(1), "")
+		assert.NotNil(t, result, err)
+		assert.Equal(t, []dashboards.User{}, result)
+		assert.Equal(t, expectedError, err)
+	})
 }
 
 func TestGetUser(t *testing.T) {
-	mockQuery := new(mocks.DshQuery)
-	dashboardService := service.NewDashboardService(mockQuery)
+	qry := mocks.NewDshQuery(t)
+	srv := service.NewDashboardService(qry)
 
-	user := dashboards.User{ID: 1, Fullname: "John Doe"}
+	expectedResult := dashboards.User{
+		ID:       1,
+		Fullname: "a",
+	}
 
-	t.Run("success get user", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetUser", uint(2)).Return(user, nil).Once()
-
-		result, err := dashboardService.GetUser(1, 2)
+	t.Run("success get all users", func(t *testing.T) {
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetUser", uint(1)).Return(expectedResult, nil).Once()
+		result, err := srv.GetUser(uint(1), uint(1))
 		assert.Nil(t, err)
-		assert.Equal(t, user, result)
+		assert.NotNil(t, result)
+		assert.Equal(t, expectedResult, result)
 	})
 
-	t.Run("failure - not admin", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
-
-		result, err := dashboardService.GetUser(1, 2)
-		assert.NotNil(t, err)
-		assert.Equal(t, "not allowed", err.Error())
+	t.Run("error on check isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetUser(uint(1), uint(1))
+		assert.NotNil(t, result, err)
 		assert.Equal(t, dashboards.User{}, result)
+		assert.Equal(t, expectedError, err)
 	})
-
-	t.Run("failure - CheckIsAdmin query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, errors.New("check admin query error")).Once()
-
-		result, err := dashboardService.GetUser(1, 2)
-		assert.NotNil(t, err)
-		assert.Equal(t, "check admin query error", err.Error())
+	t.Run("error on check isNotAdmin query error", func(t *testing.T) {
+		expectedError := errors.New("check admin query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, errors.New("query error")).Once()
+		result, err := srv.GetUser(uint(1), uint(1))
+		assert.NotNil(t, result, err)
 		assert.Equal(t, dashboards.User{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - GetUser query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetUser", uint(2)).Return(dashboards.User{}, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetUser(1, 2)
-		assert.NotNil(t, err)
-		assert.Equal(t, "query error", err.Error())
+	t.Run("error on user isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
+		result, err := srv.GetUser(uint(1), uint(1))
+		assert.NotNil(t, result, err)
 		assert.Equal(t, dashboards.User{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - user not found", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetUser", uint(2)).Return(dashboards.User{}, errors.New("record not found")).Once()
-
-		result, err := dashboardService.GetUser(1, 2)
-		assert.NotNil(t, err)
-		assert.Equal(t, "not found", err.Error())
+	t.Run("error on user on other user not found", func(t *testing.T) {
+		expectedError := errors.New("not found")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetUser", uint(1)).Return(dashboards.User{}, gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetUser(uint(1), uint(1))
+		assert.NotNil(t, result, err)
 		assert.Equal(t, dashboards.User{}, result)
+		assert.Equal(t, expectedError, err)
 	})
+
+	t.Run("error on get user query error", func(t *testing.T) {
+		expectedError := errors.New("query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetUser", uint(1)).Return(dashboards.User{}, errors.New("some other error")).Once()
+		result, err := srv.GetUser(uint(1), uint(1))
+		assert.NotNil(t, result, err)
+		assert.Equal(t, dashboards.User{}, result)
+		assert.Equal(t, expectedError, err)
+	})
+
 }
 
 func TestUpdateUserStatus(t *testing.T) {
-	mockQuery := new(mocks.DshQuery)
-	dashboardService := service.NewDashboardService(mockQuery)
+	qry := mocks.NewDshQuery(t)
+	srv := service.NewDashboardService(qry)
 
-	t.Run("success update user status", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("UpdateUserStatus", uint(2), "active").Return(nil).Once()
-
-		err := dashboardService.UpdateUserStatus(1, 2, "active")
+	t.Run("success get update user status", func(t *testing.T) {
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("UpdateUserStatus", uint(2), "suspended").Return(nil).Once()
+		err := srv.UpdateUserStatus(uint(1), uint(2), "suspended")
 		assert.Nil(t, err)
 	})
 
-	t.Run("failure - not admin", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
-
-		err := dashboardService.UpdateUserStatus(1, 2, "active")
+	t.Run("error on check isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, gorm.ErrRecordNotFound).Once()
+		err := srv.UpdateUserStatus(uint(1), uint(2), "suspended")
 		assert.NotNil(t, err)
-		assert.Equal(t, "not allowed", err.Error())
+		assert.Equal(t, expectedError, err)
+	})
+	t.Run("error on check isNotAdmin query error", func(t *testing.T) {
+		expectedError := errors.New("check admin query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, errors.New("query error")).Once()
+		err := srv.UpdateUserStatus(uint(1), uint(2), "suspended")
+		assert.NotNil(t, err)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - CheckIsAdmin query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, errors.New("check admin query error")).Once()
-
-		err := dashboardService.UpdateUserStatus(1, 2, "active")
+	t.Run("error on user isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
+		err := srv.UpdateUserStatus(uint(1), uint(2), "suspended")
 		assert.NotNil(t, err)
-		assert.Equal(t, "check admin query error", err.Error())
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - UpdateUserStatus query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("UpdateUserStatus", uint(2), "active").Return(errors.New("query error")).Once()
-
-		err := dashboardService.UpdateUserStatus(1, 2, "active")
+	t.Run("error on target user not found", func(t *testing.T) {
+		expectedError := errors.New("not found")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("UpdateUserStatus", uint(2), "suspended").Return(gorm.ErrRecordNotFound).Once()
+		err := srv.UpdateUserStatus(uint(1), uint(2), "suspended")
 		assert.NotNil(t, err)
-		assert.Equal(t, "query error", err.Error())
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - user not found for update", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("UpdateUserStatus", uint(2), "active").Return(errors.New("record not found")).Once()
-
-		err := dashboardService.UpdateUserStatus(1, 2, "active")
+	t.Run("error on update user query error", func(t *testing.T) {
+		expectedError := errors.New("query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("UpdateUserStatus", uint(2), "suspended").Return(errors.New("some query error")).Once()
+		err := srv.UpdateUserStatus(uint(1), uint(2), "suspended")
 		assert.NotNil(t, err)
-		assert.Equal(t, "not found", err.Error())
+		assert.Equal(t, expectedError, err)
 	})
+
 }
 
 func TestGetDepositStat(t *testing.T) {
-	mockQuery := new(mocks.DshQuery)
-	dashboardService := service.NewDashboardService(mockQuery)
+	qry := mocks.NewDshQuery(t)
+	srv := service.NewDashboardService(qry)
 
-	stats := []dashboards.StatData{
-		{Date: "01-08-2024", Total: 100},
+	expectedResult1 := dashboards.StatData{
+		Date:  "01-02-2024",
+		Total: 10,
 	}
+	expectedResult2 := dashboards.StatData{
+		Date:  "02-02-2024",
+		Total: 9,
+	}
+	var expectedResult []dashboards.StatData
+	expectedResult = append(expectedResult, expectedResult1, expectedResult2)
 
-	t.Run("success get deposit stats", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetDepositStat", mock.Anything).Return(stats, nil).Once()
-
-		result, err := dashboardService.GetDepositStat(1, "", "", "01-08-2024", "01-08-2024")
+	t.Run("success get deposit stat", func(t *testing.T) {
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetDepositStat", "status = 'verified'").Return(expectedResult, nil).Once()
+		result, err := srv.GetDepositStat(uint(1), "", "", "", "")
 		assert.Nil(t, err)
-		assert.Equal(t, stats, result)
+		assert.NotNil(t, result)
+		assert.Equal(t, expectedResult, result)
 	})
-
-	t.Run("failure - not admin", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
-
-		result, err := dashboardService.GetDepositStat(1, "", "", "01-08-2024", "01-08-2024")
-		assert.NotNil(t, err)
-		assert.Equal(t, "not allowed", err.Error())
+	t.Run("success get deposit stat with params", func(t *testing.T) {
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetDepositStat", "status = 'verified' AND trash_id = 1 AND location_id = 1 AND created_at BETWEEN '2024-02-01 00:00:00' AND date '2024-02-02 00:00:00' + interval '1 day'").Return(expectedResult, nil).Once()
+		result, err := srv.GetDepositStat(uint(1), "1", "1", "01-02-2024", "02-02-2024")
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, expectedResult, result)
+	})
+	t.Run("error on check isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetDepositStat(uint(1), "", "", "", "")
+		assert.NotNil(t, result, err)
 		assert.Equal(t, []dashboards.StatData{}, result)
+		assert.Equal(t, expectedError, err)
 	})
-
-	t.Run("failure - query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetDepositStat", mock.Anything).Return(nil, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetDepositStat(1, "", "", "01-08-2024", "01-08-2024")
-		assert.NotNil(t, err)
-		assert.Equal(t, "query error", err.Error())
+	t.Run("error on check isNotAdmin query error", func(t *testing.T) {
+		expectedError := errors.New("check admin query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, errors.New("query error")).Once()
+		result, err := srv.GetDepositStat(uint(1), "", "", "", "")
+		assert.NotNil(t, result, err)
 		assert.Equal(t, []dashboards.StatData{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
+	t.Run("error on user isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
+		result, err := srv.GetDepositStat(uint(1), "", "", "", "")
+		assert.NotNil(t, result, err)
+		assert.Equal(t, []dashboards.StatData{}, result)
+		assert.Equal(t, expectedError, err)
+	})
+
+	t.Run("error on data stat not found", func(t *testing.T) {
+		expectedError := errors.New("not found")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetDepositStat", "status = 'verified'").Return([]dashboards.StatData{}, gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetDepositStat(uint(1), "", "", "", "")
+		assert.NotNil(t, result, err)
+		assert.Equal(t, []dashboards.StatData{}, result)
+		assert.Equal(t, expectedError, err)
+	})
+	t.Run("error on get stat data query error", func(t *testing.T) {
+		expectedError := errors.New("query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetDepositStat", "status = 'verified'").Return([]dashboards.StatData{}, errors.New("some other error")).Once()
+		result, err := srv.GetDepositStat(uint(1), "", "", "", "")
+		assert.NotNil(t, result, err)
+		assert.Equal(t, []dashboards.StatData{}, result)
+		assert.Equal(t, expectedError, err)
+	})
 }
 
 func TestGetRewardStatData(t *testing.T) {
-	mockQuery := new(mocks.DshQuery)
-	dashboardService := service.NewDashboardService(mockQuery)
+	qry := mocks.NewDshQuery(t)
+	srv := service.NewDashboardService(qry)
 
-	stats := []dashboards.RewardStatData{
-		{RewardID: 1, Total: 50},
+	expectedResult1 := dashboards.RewardStatData{
+		RewardID:   1,
+		RewardName: "Pesawat",
+		Total:      2,
 	}
+	expectedResult2 := dashboards.RewardStatData{
+		RewardID:   3,
+		RewardName: "Becak",
+		Total:      4,
+	}
+	var expectedResult []dashboards.RewardStatData
+	expectedResult = append(expectedResult, expectedResult1, expectedResult2)
 
-	t.Run("success get reward stats", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetRewardStatData", mock.Anything).Return(stats, nil).Once()
-		mockQuery.On("GetRewardNameByID", uint(1)).Return("Reward Name", nil).Once()
-
-		result, err := dashboardService.GetRewardStatData(1, "01-08-2024", "01-08-2024")
+	t.Run("success get reward stat data", func(t *testing.T) {
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetRewardStatData", "").Return(expectedResult, nil).Once()
+		qry.On("GetRewardNameByID", uint(1)).Return("Pesawat", nil).Once()
+		qry.On("GetRewardNameByID", uint(3)).Return("Becak", nil).Once()
+		result, err := srv.GetRewardStatData(uint(1), "", "")
 		assert.Nil(t, err)
-		assert.Equal(t, stats, result)
+		assert.NotNil(t, result)
+		assert.Equal(t, expectedResult, result)
+	})
+	t.Run("success get reward stat data with params", func(t *testing.T) {
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetRewardStatData", "created_at BETWEEN date '2024-02-01 00:00:00' - INTERVAL '1 DAY' AND date '2024-02-02 00:00:00' + INTERVAL '1 DAY'").Return(expectedResult, nil).Once()
+		qry.On("GetRewardNameByID", uint(1)).Return("Pesawat", nil).Once()
+		qry.On("GetRewardNameByID", uint(3)).Return("Becak", nil).Once()
+		result, err := srv.GetRewardStatData(uint(1), "01-02-2024", "02-02-2024")
+		assert.Nil(t, err)
+		assert.NotNil(t, result)
+		assert.Equal(t, expectedResult, result)
+	})
+	t.Run("error on check isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetRewardStatData(uint(1), "", "")
+		assert.NotNil(t, result, err)
+		assert.Equal(t, []dashboards.RewardStatData{}, result)
+		assert.Equal(t, expectedError, err)
+	})
+	t.Run("error on check isNotAdmin query error", func(t *testing.T) {
+		expectedError := errors.New("check admin query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, errors.New("query error")).Once()
+		result, err := srv.GetRewardStatData(uint(1), "", "")
+		assert.NotNil(t, result, err)
+		assert.Equal(t, []dashboards.RewardStatData{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - not admin", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
-
-		result, err := dashboardService.GetRewardStatData(1, "01-08-2024", "01-08-2024")
-		assert.NotNil(t, err)
-		assert.Equal(t, "not allowed", err.Error())
+	t.Run("error on user isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
+		result, err := srv.GetRewardStatData(uint(1), "", "")
+		assert.NotNil(t, result, err)
 		assert.Equal(t, []dashboards.RewardStatData{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("GetRewardStatData", mock.Anything).Return(nil, errors.New("query error")).Once()
-
-		result, err := dashboardService.GetRewardStatData(1, "01-08-2024", "01-08-2024")
-		assert.NotNil(t, err)
-		assert.Equal(t, "query error", err.Error())
+	t.Run("error on reward data stat not found", func(t *testing.T) {
+		expectedError := errors.New("not found")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetRewardStatData", "").Return([]dashboards.RewardStatData{}, gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetRewardStatData(uint(1), "", "")
+		assert.NotNil(t, result, err)
 		assert.Equal(t, []dashboards.RewardStatData{}, result)
+		assert.Equal(t, expectedError, err)
+	})
+	t.Run("error on get reward stat data query error", func(t *testing.T) {
+		expectedError := errors.New("query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetRewardStatData", "").Return([]dashboards.RewardStatData{}, errors.New("some other error")).Once()
+		result, err := srv.GetRewardStatData(uint(1), "", "")
+		assert.NotNil(t, result, err)
+		assert.Equal(t, []dashboards.RewardStatData{}, result)
+		assert.Equal(t, expectedError, err)
+	})
+	t.Run("error on reward data stat name not found", func(t *testing.T) {
+		expectedError := errors.New("not found")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetRewardStatData", "").Return(expectedResult, nil).Once()
+		qry.On("GetRewardNameByID", uint(1)).Return("", gorm.ErrRecordNotFound).Once()
+		result, err := srv.GetRewardStatData(uint(1), "", "")
+		assert.NotNil(t, result, err)
+		assert.Equal(t, []dashboards.RewardStatData{}, result)
+		assert.Equal(t, expectedError, err)
+	})
+	t.Run("error on reward data stat name query error", func(t *testing.T) {
+		expectedError := errors.New("query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("GetRewardStatData", "").Return(expectedResult, nil).Once()
+		qry.On("GetRewardNameByID", uint(1)).Return("", errors.New("some other error")).Once()
+		result, err := srv.GetRewardStatData(uint(1), "", "")
+		assert.NotNil(t, result, err)
+		assert.Equal(t, []dashboards.RewardStatData{}, result)
+		assert.Equal(t, expectedError, err)
 	})
 }
 
 func TestDeleteUserByAdmin(t *testing.T) {
-	mockQuery := new(mocks.DshQuery)
-	dashboardService := service.NewDashboardService(mockQuery)
+	qry := mocks.NewDshQuery(t)
+	srv := service.NewDashboardService(qry)
 
-	t.Run("success delete user", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("DeleteUserByAdmin", uint(2)).Return(nil).Once()
-
-		err := dashboardService.DeleteUserByAdmin(1, 2)
+	t.Run("success delete user account", func(t *testing.T) {
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("DeleteUserByAdmin", uint(2)).Return(nil).Once()
+		err := srv.DeleteUserByAdmin(uint(1), uint(2))
 		assert.Nil(t, err)
 	})
 
-	t.Run("failure - not admin", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
-
-		err := dashboardService.DeleteUserByAdmin(1, 2)
+	t.Run("error on admin try to delete itself", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		err := srv.DeleteUserByAdmin(uint(1), uint(1))
 		assert.NotNil(t, err)
-		assert.Equal(t, "not allowed", err.Error())
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - self deletion", func(t *testing.T) {
-		err := dashboardService.DeleteUserByAdmin(1, 1)
+	t.Run("error on check isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, gorm.ErrRecordNotFound).Once()
+		err := srv.DeleteUserByAdmin(uint(1), uint(2))
 		assert.NotNil(t, err)
-		assert.Equal(t, "not allowed", err.Error())
+		assert.Equal(t, expectedError, err)
+	})
+	t.Run("error on check isNotAdmin query error", func(t *testing.T) {
+		expectedError := errors.New("check admin query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, errors.New("query error")).Once()
+		err := srv.DeleteUserByAdmin(uint(1), uint(2))
+		assert.NotNil(t, err)
+		assert.Equal(t, expectedError, err)
 	})
 
-	t.Run("failure - query error", func(t *testing.T) {
-		mockQuery.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
-		mockQuery.On("DeleteUserByAdmin", uint(2)).Return(errors.New("query error")).Once()
-
-		err := dashboardService.DeleteUserByAdmin(1, 2)
+	t.Run("error on user isNotAdmin", func(t *testing.T) {
+		expectedError := errors.New("not allowed")
+		qry.On("CheckIsAdmin", uint(1)).Return(false, nil).Once()
+		err := srv.DeleteUserByAdmin(uint(1), uint(2))
 		assert.NotNil(t, err)
-		assert.Equal(t, "query error", err.Error())
+		assert.Equal(t, expectedError, err)
+	})
+
+	t.Run("error on user account not found", func(t *testing.T) {
+		expectedError := errors.New("not found")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("DeleteUserByAdmin", uint(2)).Return(gorm.ErrRecordNotFound).Once()
+		err := srv.DeleteUserByAdmin(uint(1), uint(2))
+		assert.NotNil(t, err)
+		assert.Equal(t, expectedError, err)
+	})
+	t.Run("error on delet user account query error", func(t *testing.T) {
+		expectedError := errors.New("query error")
+		qry.On("CheckIsAdmin", uint(1)).Return(true, nil).Once()
+		qry.On("DeleteUserByAdmin", uint(2)).Return(errors.New("other error")).Once()
+		err := srv.DeleteUserByAdmin(uint(1), uint(2))
+		assert.NotNil(t, err)
+		assert.Equal(t, expectedError, err)
 	})
 }
