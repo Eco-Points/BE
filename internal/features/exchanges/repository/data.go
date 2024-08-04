@@ -2,6 +2,7 @@ package repository
 
 import (
 	"eco_points/internal/features/exchanges"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -26,6 +27,14 @@ type User struct {
 	Point    uint
 	ImgURL   string
 	Exchange []Exchange `gorm:"foreignKey:UserID"`
+}
+
+type ListExchange struct {
+	gorm.Model
+	ID        uint   `gorm:"column:id"`
+	PointUsed uint   `gorm:"column:point_used"`
+	Fullname  string `gorm:"column:name"`
+	Reward    string `gorm:"column:rewards"`
 }
 
 type Reward struct {
@@ -54,4 +63,27 @@ func ToExchangeData(input exchanges.Exchange) Exchange {
 		UserID:    input.UserID,
 		PointUsed: input.PointUsed,
 	}
+}
+
+func ConvertDateTime(data string) string {
+	find := strings.SplitAfter(data, ".")[1]
+	depotime := strings.Replace(data, find, "", 1)
+	find = strings.SplitAfter(depotime, ".")[1]
+	depotime = strings.Replace(depotime, find, "", 1)
+	return strings.Replace(depotime, ".", "", 1)
+}
+
+func toListExchangeInterface(data []ListExchange) []exchanges.ListExchangeInterface {
+	var returnValue []exchanges.ListExchangeInterface
+	for _, v := range data {
+		exchange := exchanges.ListExchangeInterface{
+			ID:           v.ID,
+			PointUsed:    v.PointUsed,
+			ExchangeTime: ConvertDateTime(v.CreatedAt.String()),
+			Fullname:     v.Fullname,
+			Reward:       v.Reward,
+		}
+		returnValue = append(returnValue, exchange)
+	}
+	return returnValue
 }

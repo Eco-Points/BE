@@ -38,3 +38,42 @@ func TestAddExchange(t *testing.T) {
 		qry.AssertExpectations(t)
 	})
 }
+
+func TestGetExchange(t *testing.T) {
+	qry := mocks.NewExQuery(t)
+	srv := service.NewExchangeService(qry)
+
+	returnValue := []exchanges.ListExchangeInterface{}
+	exchange := struct {
+		ID           uint
+		PointUsed    uint
+		Fullname     string
+		Reward       string
+		ExchangeTime string
+	}{
+		ID:           1,
+		PointUsed:    100,
+		Fullname:     "anggi eko",
+		Reward:       "Voucher Telkomsel",
+		ExchangeTime: "2020-12-12 00:00:00",
+	}
+	returnValue = append(returnValue, exchange)
+
+	t.Run("success Get exchange", func(t *testing.T) {
+		qry.On("GetExchangeHistory", uint(1), true, uint(10)).Return(returnValue, nil).Once()
+		result, err := srv.GetExchangeHistory(uint(1), true, uint(10))
+		assert.Nil(t, err)
+		assert.Equal(t, result, returnValue)
+	})
+
+	t.Run("fail Get exchange", func(t *testing.T) {
+		expectedError := errors.New("failed to create exchange")
+		qry.On("GetExchangeHistory", uint(1), true, uint(10)).Return([]exchanges.ListExchangeInterface{}, expectedError).Once()
+
+		result, err := srv.GetExchangeHistory(uint(1), true, uint(10))
+		assert.NotNil(t, err)
+		assert.ErrorContains(t, expectedError, err.Error())
+		assert.Equal(t, []exchanges.ListExchangeInterface{}, result)
+
+	})
+}

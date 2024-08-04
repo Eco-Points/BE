@@ -31,6 +31,36 @@ func (_m *ExServices) AddExchange(newExchange exchanges.Exchange) error {
 	return r0
 }
 
+// GetExchangeHistory provides a mock function with given fields: userid, isAdmin, limit
+func (_m *ExServices) GetExchangeHistory(userid uint, isAdmin bool, limit uint) ([]exchanges.ListExchangeInterface, error) {
+	ret := _m.Called(userid, isAdmin, limit)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetExchangeHistory")
+	}
+
+	var r0 []exchanges.ListExchangeInterface
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint, bool, uint) ([]exchanges.ListExchangeInterface, error)); ok {
+		return rf(userid, isAdmin, limit)
+	}
+	if rf, ok := ret.Get(0).(func(uint, bool, uint) []exchanges.ListExchangeInterface); ok {
+		r0 = rf(userid, isAdmin, limit)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]exchanges.ListExchangeInterface)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uint, bool, uint) error); ok {
+		r1 = rf(userid, isAdmin, limit)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // NewExServices creates a new instance of ExServices. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewExServices(t interface {
