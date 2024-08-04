@@ -21,12 +21,11 @@ func NewTrashService(q trashes.QueryTrashInterface, c utils.CloudinaryUtilityInt
 
 func (t *TrashService) AddTrash(tData trashes.TrashEntity, file *multipart.FileHeader) error {
 
-	src, err := file.Open()
+	src, err := t.cloud.FileOpener(file)
 	if err != nil {
 		log.Println("error when open image", err)
 		return err
 	}
-	defer src.Close()
 
 	imageUrl, err := t.cloud.UploadToCloudinary(src, file.Filename)
 	if err != nil {
