@@ -2,6 +2,7 @@ package repository
 
 import (
 	exQuery "eco_points/internal/features/exchanges/repository"
+	feedQuery "eco_points/internal/features/feedbacks/repository"
 	lochQuery "eco_points/internal/features/locations/repository"
 	trashQuery "eco_points/internal/features/trashes/repository"
 	"eco_points/internal/features/users"
@@ -25,6 +26,7 @@ type User struct {
 	Location []lochQuery.Location     `gorm:"foreignKey:UserID"`
 	Deposit  []depoQuery.WasteDeposit `gorm:"foreignKey:UserID"`
 	Exchange []exQuery.Exchange       `gorm:"foreignKey:UserID"`
+	Feedback []feedQuery.Feedback     `gorm:"foreignKey:UserID"`
 }
 
 // dari database di pindah ke entity

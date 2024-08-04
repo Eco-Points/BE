@@ -34,6 +34,10 @@ import (
 	excl_rep "eco_points/internal/features/excelize/repository"
 	excl_srv "eco_points/internal/features/excelize/service"
 
+	feed_hnd "eco_points/internal/features/feedbacks/handler"
+	feed_rep "eco_points/internal/features/feedbacks/repository"
+	feed_srv "eco_points/internal/features/feedbacks/service"
+
 	"eco_points/internal/routes"
 	"eco_points/internal/utils"
 
@@ -86,9 +90,13 @@ func InitFactory(e *echo.Echo) {
 	excls := excl_srv.NewExcelMake(exclq)
 	exclh := excl_hnd.NewExcelHandler(excls, jwt)
 
+	fq := feed_rep.NewFeedbackModel(db)
+	fs := feed_srv.NewFeedbackService(fq)
+	fh := feed_hnd.NewFeedbackHandler(fs, jwt)
+
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORS())
 
-	routes.InitRoute(e, uh, th, dh, lh, rh, exh, dbh, exclh)
+	routes.InitRoute(e, uh, th, dh, lh, rh, exh, dbh, exclh, fh)
 }
