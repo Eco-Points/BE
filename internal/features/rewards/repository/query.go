@@ -67,19 +67,16 @@ func (rm *RewardModel) GetAllRewards(limit int, offset int, search string) ([]re
 	var rewardsList []Reward
 	var totalItems int64
 
-	// Hitung total item termasuk yang sudah soft deleted
 	err := rm.db.Model(&Reward{}).Where("name LIKE ?", "%"+search+"%").Count(&totalItems).Error
 	if err != nil {
 		return nil, 0, err
 	}
 
-	// Ambil data reward dengan batas limit dan offset, tidak termasuk yang sudah soft deleted
 	err = rm.db.Where("name LIKE ?", "%"+search+"%").Limit(limit).Offset(offset).Find(&rewardsList).Error
 	if err != nil {
 		return nil, 0, err
 	}
 
-	// Konversi data reward ke entity
 	rewardsEntities := make([]rewards.Reward, len(rewardsList))
 	for i, reward := range rewardsList {
 		rewardsEntities[i] = reward.ToRewardEntity()

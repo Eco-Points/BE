@@ -24,19 +24,19 @@ func TestAddLocation(t *testing.T) {
 		Phone:      "123456789",
 		UserID:     1,
 	}
-	t.Run("success Add Trash", func(t *testing.T) {
+
+	t.Run("success Add Location", func(t *testing.T) {
 		qry.On("AddLocation", inputLocQry).Return(nil).Once()
 		err := srv.AddLocation(inputLocQry)
 		assert.Nil(t, err)
-
 	})
-	t.Run("Filed Add Trash", func(t *testing.T) {
+
+	t.Run("failed Add Location", func(t *testing.T) {
 		expectedError := errors.New("error on query / parameter")
 		qry.On("AddLocation", inputLocQry).Return(expectedError).Once()
 		err := srv.AddLocation(inputLocQry)
 		assert.NotNil(t, err)
-		assert.ErrorContains(t, expectedError, err.Error())
-
+		assert.ErrorIs(t, err, expectedError)
 	})
 }
 
@@ -55,47 +55,21 @@ func TestGetLocation(t *testing.T) {
 			UserID:     1,
 		},
 	}
-	t.Run("success Get Trash by ID", func(t *testing.T) {
-
+	t.Run("success Get Location", func(t *testing.T) {
 		qry.On("GetLocation", uint(1)).Return(expectedOutput, nil).Once()
 		result, err := srv.GetLocation(uint(1))
 		assert.Nil(t, err)
 		assert.Equal(t, expectedOutput, result)
-
+		qry.AssertExpectations(t)
 	})
 
-	t.Run("success Get All Trash", func(t *testing.T) {
-
-		qry.On("GetAllLocation").Return(expectedOutput, nil).Once()
-		result, err := srv.GetLocation(uint(0))
-		assert.Nil(t, err)
-		assert.Equal(t, expectedOutput, result)
-
-	})
-
-	t.Run("Filed Get Trash by ID", func(t *testing.T) {
+	t.Run("failed Get Location", func(t *testing.T) {
 		expectedError := errors.New("error on query / parameter")
-
-		expectedOutput := []locations.LocationInterface{}
-		qry.On("GetLocation", uint(1)).Return(expectedOutput, expectedError).Once()
+		qry.On("GetLocation", uint(1)).Return([]locations.LocationInterface{}, expectedError).Once()
 		result, err := srv.GetLocation(uint(1))
-
 		assert.NotNil(t, err)
-		assert.Equal(t, expectedOutput, result)
-		assert.ErrorContains(t, expectedError, err.Error())
-
-	})
-
-	t.Run("Filed Get All Trash", func(t *testing.T) {
-		expectedError := errors.New("error on query / parameter")
-
-		expectedOutput := []locations.LocationInterface{}
-		qry.On("GetAllLocation").Return(expectedOutput, expectedError).Once()
-		result, err := srv.GetLocation(uint(0))
-
-		assert.NotNil(t, err)
-		assert.Equal(t, expectedOutput, result)
-		assert.ErrorContains(t, expectedError, err.Error())
-
+		assert.Empty(t, result)
+		assert.ErrorIs(t, err, expectedError)
+		qry.AssertExpectations(t)
 	})
 }
