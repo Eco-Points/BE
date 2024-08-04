@@ -5,6 +5,7 @@ import (
 	"eco_points/internal/features/dashboards"
 	"eco_points/internal/features/excelize"
 	"eco_points/internal/features/exchanges"
+	"eco_points/internal/features/feedbacks"
 	"eco_points/internal/features/locations"
 	"eco_points/internal/features/rewards"
 	"eco_points/internal/features/trashes"
@@ -17,7 +18,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerDepoInterface, l locations.HandlerLocInterface, rh rewards.RHandler, exh exchanges.ExHandler, dsh dashboards.DshHandler, excl excelize.HandlerMakeExcelInterface) {
+func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface, dh deposits.HandlerDepoInterface, l locations.HandlerLocInterface, rh rewards.RHandler, exh exchanges.ExHandler, dsh dashboards.DshHandler, excl excelize.HandlerMakeExcelInterface, fh feedbacks.FHandler) {
 
 	e.POST("/login", uh.Login())
 	e.POST("/register", uh.Register())
@@ -29,7 +30,7 @@ func InitRoute(e *echo.Echo, uh users.UHandler, th trashes.HandlerTrashInterface
 	RewardRoute(e, rh)
 	ExchangeRoute(e, exh)
 	excelMakeRoute(e, excl)
-
+	FeedbackRoute(e, fh)
 }
 
 func UsersRoute(e *echo.Echo, uh users.UHandler) {
@@ -92,6 +93,17 @@ func ExchangeRoute(e *echo.Echo, exh exchanges.ExHandler) {
 	t.Use(JWTConfig())
 	t.POST("", exh.AddExchange())
 	t.GET("", exh.GetExchangeHistory())
+}
+
+func FeedbackRoute(e *echo.Echo, fh feedbacks.FHandler) {
+	t := e.Group("/feedback")
+	t.Use(JWTConfig())
+	t.POST("", fh.AddFeedback())
+	t.PUT("/:id", fh.UpdateFeedback())
+	t.DELETE("/:id", fh.DeleteFeedback())
+
+	e.GET("/feedback/:id", fh.GetFeedbackByID())
+	e.GET("/feedback", fh.GetAllFeedbacks())
 }
 
 func excelMakeRoute(e *echo.Echo, excl excelize.HandlerMakeExcelInterface) {

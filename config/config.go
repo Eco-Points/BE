@@ -2,6 +2,7 @@ package config
 
 import (
 	ex_rep "eco_points/internal/features/exchanges/repository"
+	f_rep "eco_points/internal/features/feedbacks/repository"
 	l_rep "eco_points/internal/features/locations/repository"
 	r_rep "eco_points/internal/features/rewards/repository"
 	t_rep "eco_points/internal/features/trashes/repository"
@@ -94,7 +95,7 @@ func ConnectDB() (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = db.AutoMigrate(&u_rep.User{}, &t_rep.Trash{}, &d_rep.WasteDeposit{}, &l_rep.Location{}, &r_rep.Reward{}, &ex_rep.Exchange{})
+	err = db.AutoMigrate(&u_rep.User{}, &t_rep.Trash{}, &d_rep.WasteDeposit{}, &l_rep.Location{}, &r_rep.Reward{}, &ex_rep.Exchange{}, &f_rep.Feedback{})
 	if err != nil {
 		return nil, err
 	}
