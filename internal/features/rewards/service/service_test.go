@@ -63,6 +63,24 @@ func TestAddReward(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.Equal(t, "gagal mengunggah gambar ke cloudinary", err.Error())
 	})
+
+	t.Run("failure - invalid file format", func(t *testing.T) {
+		invalidFile := &multipart.FileHeader{
+			Filename: "invalid_file.txt",
+			Header:   h,
+			Size:     123,
+		}
+		src, _ := invalidFile.Open()
+		defer src.Close()
+
+		mockQuery.On("IsAdmin", uint(1)).Return(true, nil).Once()
+		mockCloudinary.On("UploadToCloudinary", src, invalidFile.Filename).Return("", errors.New("invalid file format")).Once()
+
+		err := rewardService.AddReward(1, rewardRequest, src, invalidFile.Filename)
+		assert.NotNil(t, err)
+		assert.Equal(t, "gagal mengunggah gambar ke cloudinary", err.Error())
+	})
+
 }
 
 func TestUpdateReward(t *testing.T) {
@@ -112,6 +130,23 @@ func TestUpdateReward(t *testing.T) {
 		mockCloudinary.On("UploadToCloudinary", src, file.Filename).Return("", errors.New("upload error")).Once()
 
 		err := rewardService.UpdateReward(1, 1, rewardRequest, src, file.Filename)
+		assert.NotNil(t, err)
+		assert.Equal(t, "failed to upload image to Cloudinary", err.Error())
+	})
+
+	t.Run("failure - invalid file format", func(t *testing.T) {
+		invalidFile := &multipart.FileHeader{
+			Filename: "invalid_file.txt",
+			Header:   h,
+			Size:     123,
+		}
+		src, _ := invalidFile.Open()
+		defer src.Close()
+
+		mockQuery.On("IsAdmin", uint(1)).Return(true, nil).Once()
+		mockCloudinary.On("UploadToCloudinary", src, invalidFile.Filename).Return("", errors.New("invalid file format")).Once()
+
+		err := rewardService.UpdateReward(1, 1, rewardRequest, src, invalidFile.Filename)
 		assert.NotNil(t, err)
 		assert.Equal(t, "failed to upload image to Cloudinary", err.Error())
 	})

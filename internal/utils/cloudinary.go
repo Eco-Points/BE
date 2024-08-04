@@ -4,6 +4,7 @@ import (
 	"context"
 	"eco_points/config"
 	"io"
+	"log"
 	"mime/multipart"
 
 	"github.com/cloudinary/cloudinary-go/v2"
@@ -13,6 +14,7 @@ import (
 type CloudinaryUtilityInterface interface {
 	FileCheck(file *multipart.FileHeader) (multipart.File, error)
 	UploadToCloudinary(file io.Reader, filename string) (string, error)
+	FileOpener(file *multipart.FileHeader) (multipart.File, error)
 }
 
 type CloudinaryUtility struct{}
@@ -49,5 +51,16 @@ func (c *CloudinaryUtility) FileCheck(file *multipart.FileHeader) (multipart.Fil
 		return nil, err
 	}
 	defer src.Close()
+	return src, nil
+}
+func (c *CloudinaryUtility) FileOpener(file *multipart.FileHeader) (multipart.File, error) {
+
+	src, err := file.Open()
+	if err != nil {
+		log.Println("error when open image", err)
+		return src, err
+	}
+	defer src.Close()
+
 	return src, nil
 }

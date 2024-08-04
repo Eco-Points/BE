@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUpdateDepositStatus(t *testing.T) {
+func TestUpdateWasteDepositStatus(t *testing.T) {
 	email := mocks.NewGomailUtilityInterface(t)
 	qry := mocks.NewQueryDepoInterface(t)
 	srv := service.NewDepositsService(qry, email)
@@ -32,6 +32,9 @@ func TestUpdateDepositStatus(t *testing.T) {
 		err := srv.UpdateWasteDepositStatus(uint(1), "rejected")
 
 		assert.Nil(t, err)
+
+		qry.AssertExpectations(t)
+		email.AssertExpectations(t)
 	})
 
 	t.Run("failed Update Deposit Status", func(t *testing.T) {
@@ -96,7 +99,7 @@ func TestGetDeposit(t *testing.T) {
 		assert.Equal(t, result, expectedOutput)
 	})
 
-	t.Run("failed Update Deposit", func(t *testing.T) {
+	t.Run("failed Get Deposit", func(t *testing.T) {
 		expectedError := errors.New("error get deposit data")
 		qry.On("GetUserDeposit", uint(1), uint(10), uint(0), true).Return(deposits.ListWasteDepositInterface{}, expectedError).Once()
 		result, err := srv.GetUserDeposit(uint(1), uint(10), uint(0), true)
@@ -130,7 +133,7 @@ func TestGetDepositbyId(t *testing.T) {
 		assert.Equal(t, result, expectedOutput)
 	})
 
-	t.Run("failed Update Deposit  By ID", func(t *testing.T) {
+	t.Run("failed Get Deposit  By ID", func(t *testing.T) {
 		expectedError := errors.New("error get deposit data")
 		qry.On("GetDepositbyId", uint(1)).Return(deposits.WasteDepositInterface{}, expectedError).Once()
 		result, err := srv.GetDepositbyId(uint(1))
