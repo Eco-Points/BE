@@ -41,7 +41,7 @@ func (c *CloudinaryUtility) UploadToCloudinary(file io.Reader, filename string) 
 		return "", err
 	}
 
-	publicURL := uploadResult.URL
+	publicURL := uploadResult.SecureURL
 	return publicURL, nil
 }
 
